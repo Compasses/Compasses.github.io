@@ -21,7 +21,7 @@
 
 
 
-  <meta name="keywords" content="thoughts," />
+  <meta name="keywords" content="MYSQL," />
 
 
 
@@ -32,7 +32,7 @@
 
 
 
-  <title> What if the storm ends? // 三十重围 </title>
+  <title> 高性能MySQL 读书摘要 一 // 三十重围 </title>
 </head>
 
 <body>
@@ -120,7 +120,7 @@
           
           
             
-              What if the storm ends?
+              高性能MySQL 读书摘要 一
             
           
         </h1>
@@ -128,7 +128,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-05-07
+          发表于 2015-05-19
         </span>
 
         
@@ -145,13 +145,20 @@
       
 
       
-        <p>没错这是一首歌:</p>
-<p>What if the storm ends and I don’t see you<br>As you are now ever again?<br>The perfect halo of gold hair and lightning<br>Sets you off against the planet’s last dance</p>
-<p>Just for a minute the silver-forked sky<br>Lifts you up like a star that I will follow<br>But now it’s found us like I have a found you<br>I don’t wanna run, just overwhelm me</p>
-<p>What if the storm ends? At least that’s nothing<br>Except the memory, a distant echo I won’t pin down<br>I’ve walked unsettled rattle cage after cage<br>Until my blood boils</p>
-<p>I wanna see you as you are now<br>Every single day that I am living<br>Painted in flames, a peeling thunder<br>Be the lightning in me that strikes relentless</p>
-<p>What if the storm ends and I don’t see you<br>As you are now ever again?<br>The perfect halo of gold hair and lightning<br>Sets you off against the planet’s last dance</p>
-<p>Just for a minute the silver-forked sky<br>Lifts you up like a star that I will follow<br>But now it’s found us like I have a found you<br>I don’t wanna run, just overwhelm me</p>
+        <h2 id="前言">前言</h2><p>因工作需要，要不断的使用MySQL，前段时间还参与了MySQL的性能测试，及profiling。发现MySQL还是非常有意思的，自己也非常感兴趣，于是买了本牛逼的书：《高性能MySQL 第三版》。书是很好，但是第一遍基本没什么感觉，基本上是粗略了解，很多细节还是掌握不好。现在重新学习希望能够有更好的提高。<br>读书摘要，既然是读书摘要就不会照搬原书，我会侧重点的做笔记，有意思的地方会多写，自己觉得不是很重要的东西会少写或者不写。但是内容的范围不会超出这本书。OK, Let’s Start。</p>
+<h2 id="MySQL逻辑结构">MySQL逻辑结构</h2><p>逻辑架构图如下：<br><img src="/img/MySqlCapture.PNG" alt="Mysql"><br>分为三层结构，需要重点研究的是存储引擎层和查询优化层。存储引擎也主要研究InnoDB。</p>
+<h2 id="并发控制">并发控制</h2><ol>
+<li>读写锁： 在并发读写数据库表时使用，也叫共享锁和排他锁，读锁是共享的，是互不阻塞的，写锁是排他的，一个写锁会阻塞其他的读锁和写锁。</li>
+<li>锁粒度： 锁的数据越少，并发程度就越高，但锁的数量就会大增，锁的开销也会增加。这就需要一种平衡，即锁策略的选择。</li>
+<li>锁策略，包含<strong>表锁</strong>和<strong>行级锁</strong>。</li>
+<li>死锁： 多个事务以不同的顺序锁定资源时，就会可能产生死锁。InnoDB能检测到死锁的循环依赖（<strong>how?</strong>），对死锁的处理方法是回滚最少行级排它锁的事务。</li>
+<li>MVCC： 多版本并发控制，是行级锁的变种，在很多情况下避免的加锁操作。工作在REPEATABLE READ 和 REPEATABLE COMMITTED两个隔离级别下。</li>
+<li>事务日志： 提高事务效率的一种方法，也叫预写式日志。日志操作是磁盘上小块区域内的顺序I/O，不是随机I/O，会快很多。关于顺序和随机I/O，需要后面讨论下。</li>
+</ol>
+<p>如何检测死锁，在复杂系统里面是要重点考虑的，目前没有研究InnoDB的源码，不知道他是怎么判定死锁产生的。但是基于一般理论大致可以想一下它是怎么产生的，即多个线程加锁的顺序不一致，产生了循环依赖，基于此，可以设计一种数据结构，每个线程在试图加锁的时候就将该线程作为该锁的所有者，如果出现加锁失败，就要进行一次检测。每个锁的所有者里面是否有环，有环就说明有循环依赖，即可判定死锁，然后进行死锁解除。解除的策略估计会比较暴力，通过销毁某个死锁线程或者强制锁释放等等。<a href="http://web.mit.edu/6.033/1997/reports/r03-ben.html" target="_blank" rel="external">这篇文章</a>也有类似的讨论。</p>
+<h2 id="参考文献">参考文献</h2><ol>
+<li>《高性能MySQL 第三版》</li>
+</ol>
 
       
     </div>
@@ -160,7 +167,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/thoughts/"> #thoughts </a>
+            <a href="/tags/MYSQL/"> #MYSQL </a>
           
         </div>
       
@@ -169,11 +176,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/05/09/Let-s-start/">Let's start</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/05/18/zaji-1/">杂记 一</a>
             
           </div>
         </div>
@@ -271,7 +278,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL逻辑结构"><span class="nav-number">2.</span> <span class="nav-text">MySQL逻辑结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发控制"><span class="nav-number">3.</span> <span class="nav-text">并发控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

@@ -32,11 +32,11 @@
 
 
 
-  <title> 标签: MYSQL // 三十重围 </title>
+  <title> 归档 // 三十重围 </title>
 </head>
 
 <body>
-  <div class="container-fluid ">
+  <div class="container-fluid  page-archive ">
   <div class="row">
   <div class="col-xs-12"> 
       <div id="header" class="header">
@@ -109,14 +109,30 @@
           
 
   <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        MYSQL
-        <small>标签</small>
-      </h2>
-    </div>
+    <span class="archive-move-on"></span>
+
+    <span class="archive-page-counter">
+      
+      
+       
+      
+      嗯..! 目前共计 6 篇日志。 继续努力。
+    </span>
 
     
+
+      
+      
+      
+
+      
+        
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2015">2015</h2>
+        </div>
+      
+      
+
       
 
   <div class="post post-type-normal">
@@ -124,68 +140,31 @@
 
       <div class="post-title">
         
-            <a class="post-title-link" href="/2015/05/19/MySql-note/">
-              高性能MySQL 读书摘要 一
+            <a class="post-title-link" href="/2015/05/07/songs-What-if-the-storm-ends/">
+              What if the storm ends?
             </a>
         
       </div>
 
       <div class="post-meta">
-        <span class="post-time"> 05-19 </span>
+        <span class="post-time"> 05-07 </span>
       </div>
 
     </div>
   </div>
 
 
-    
-      
-
-  <div class="post post-type-normal">
-    <div class="post-header">
-
-      <div class="post-title">
-        
-            <a class="post-title-link" href="/2015/05/13/WooCommerce-variant-product-表设计/">
-              WooCommerce variant product 表设计
-            </a>
-        
-      </div>
-
-      <div class="post-meta">
-        <span class="post-time"> 05-13 </span>
-      </div>
-
-    </div>
-  </div>
-
 
     
-      
 
-  <div class="post post-type-normal">
-    <div class="post-header">
-
-      <div class="post-title">
-        
-            <a class="post-title-link" href="/2015/05/12/MYSQL的中文排序问题/">
-              MYSQL的中文排序问题
-            </a>
-        
-      </div>
-
-      <div class="post-meta">
-        <span class="post-time"> 05-12 </span>
-      </div>
-
-    </div>
-  </div>
-
-
-    
   </div>
 
   
+  <div class="pagination">
+    <a class="extend prev" rel="prev" href="/archives/">&laquo;</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
+  </div>
+
+
 
         </div>
       </div>      
@@ -366,6 +345,12 @@
 
 
   
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
+
 
   
 
