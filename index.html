@@ -70,14 +70,6 @@
       </li>
     
       
-      <li class="menu-item menu-item-categories">
-        <a href="/categories">
-          <i class="menu-item-icon icon-categories"></i> <br />
-          分类
-        </a>
-      </li>
-    
-      
       <li class="menu-item menu-item-archives">
         <a href="/archives">
           <i class="menu-item-icon icon-archives"></i> <br />
@@ -90,6 +82,14 @@
         <a href="/tags">
           <i class="menu-item-icon icon-tags"></i> <br />
           标签
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
         </a>
       </li>
        
@@ -110,6 +110,76 @@
         <div id="content" class="content">
           
   <div id="posts" class="posts-expand">
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              <a class="post-title-link" href="/2015/06/03/libuv-start/">
+                libuv 学习
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-06-03
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>说明： 本篇文章主要从<a href="http://nikhilm.github.io/uvbook/" target="_blank" rel="external">An Introduction to libuv</a>这本书翻译学习而来。</p>
+<h2 id="开始">开始</h2><p>libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。</p>
+<h3 id="事件循环">事件循环</h3><p>libuv的编译就不用多说，参考libuv的<a href="https://github.com/libuv/libuv" target="_blank" rel="external">github网址</a>。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。</p>
+<p>先从运行一个程序开始：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "uv.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    uv_loop_t *loop = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(uv_loop_t));</span><br><span class="line">    uv_loop_init(loop);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Now quitting.\n"</span>);</span><br><span class="line">    uv_run(loop, UV_RUN_DEFAULT);</span><br><span class="line">    uv_loop_close(loop);</span><br><span class="line">    <span class="built_in">free</span>(loop);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">'targets'</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">'dependencies'</span>: [<span class="string">'../../uv.gyp:libuv'</span>],</span><br><span class="line">      <span class="string">'target_name'</span>: <span class="string">'helloword'</span>,</span><br><span class="line">      <span class="string">'type'</span>: <span class="string">'executable'</span>,</span><br><span class="line">      <span class="string">'sources'</span>: [</span><br><span class="line">        <span class="string">'main.c'</span>,</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后执行<strong> gyp —format=make -Duv_library=static_library —depth=$PWD build.gyp </strong>生产相应的makefile，最后直接执行<strong>make</strong>，就会生成自己想要的可执行文件。<br>gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平台方面也表现很好，后续有时间也好好学习下。<br>待续。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/"> #C++ </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
     
       
 
@@ -758,85 +828,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/12/MYSQL的中文排序问题/">
-                MYSQL的中文排序问题
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-05-12
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>最近在做一个产品filter的功能，遇到一个问题需要对中文的label进行排序，开始以为在数据库层就应该可以轻松解决。但是发现在英文的时候排序是ok的，但是中文的时候结果就不再让人满意了。<br>例如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> <span class="keyword">distinct</span> m.meta_value <span class="keyword">as</span> <span class="keyword">value</span>, m.meta_key <span class="keyword">as</span> prefix <span class="keyword">from</span> wp_postmeta m <span class="keyword">where</span> m.meta_key <span class="keyword">like</span> <span class="string">'UDF::5'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">CONVERT</span>(<span class="keyword">value</span> <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci;</span></span><br></pre></td></tr></table></figure></p>
-<p>结果如下：</p>
-<table id="table_results" class="ajax pma_table"><thead><tr><th colspan="2"><span></span></th></tr><tr><th class="draggable column_heading pointer marker" data-column="value"><span><a>value<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="prefix"><span><a>prefix<input type="hidden" value=""></a></span></th><td><span></span></td></tr></thead><tbody><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>二年级</span></td><td data-decimals="0" data-type="string" class="right data      nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>三年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>四年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>五年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>学前</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>一年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>婴幼儿</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>幼儿园</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr></tbody></table>
-
-<p>上面就是按照中文排序的结果，排序的标准就是按照中文的拼音排序，但是排序的结果还是符合正常的逻辑。<br>进一步可以看下排序的标准是什么：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> <span class="keyword">distinct</span> m.meta_value <span class="keyword">as</span> <span class="keyword">value</span>, m.meta_key <span class="keyword">as</span> prefix, <span class="keyword">CONVERT</span>(meta_value <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci <span class="keyword">as</span> base <span class="keyword">from</span> wp_postmeta m <span class="keyword">where</span> m.meta_key <span class="keyword">like</span> <span class="string">'UDF::5'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">CONVERT</span>(<span class="keyword">value</span> <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci;</span></span><br></pre></td></tr></table></figure></p>
-<p>结果如下：</p>
-<table id="table_results" class="ajax pma_table"><thead><tr><th colspan="3"><span></span></th></tr><tr><th class="draggable column_heading pointer marker" data-column="value" style="cursor: inherit;"><span><a>value<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="prefix" style="cursor: inherit;"><span><a>prefix<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="base" style="cursor: inherit;"><span><a>base<input type="hidden" value=""></a></span></th><td><span></span></td></tr></thead><tbody><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>二年级</span></td><td data-decimals="0" data-type="string" class="right datanowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>二年级</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>三年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>三年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>四年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>四年级</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>五年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>五年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>学前</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>学前</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>一年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>一年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>婴幼儿</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>婴幼儿</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>幼儿园</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>幼儿园</span></td></tr></tbody></table>
-
-<p>可以看出排序的标准为拼音的首字母。<br>网上也有说可以使用中文笔画进行排序：<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> CAST(CONVERT(`value` <span class="keyword">using</span> big5) <span class="keyword">AS</span> <span class="keyword">BINARY</span>);</span><br></pre></td></tr></table></figure></p>
-<p>结果：</p>
-<table id="table_results" class="ajax pma_table"><thead><tr><th colspan="3"><span></span></th></tr><tr><th class="draggable column_heading pointer marker" data-column="value" style="cursor: inherit;"><span><a>value<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="prefix"><span><a>prefix<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="base"><span><a>base<input type="hidden" value=""></a></span></th><td><span></span></td></tr></thead><tbody><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>婴幼儿</span></td><td data-decimals="0" data-type="string" class="right data      nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>学前</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>一年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>二年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>三年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>五年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>四年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap"><span>幼儿园</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right data      nowrap "><span></span></td></tr></tbody></table>
-
-<p>但此时的排序标准却是NULL的，也就是说其排序的标准是无法确定的。</p>
-<p>不过回头想一下让Mysql能完好的支持中文排序根本是不可能的，就在上面的例子就可以看出，单靠Mysql的order by 是解决不了的了。那问题还是要解决的，最终的解决方案是将这些value语义化，在前端渲染的时候进行手动排序，幸好TWIG能支持中文字符。当然这也只是个workaround。最终的解决方案还要回归问题本身。这样的排序显然是有意义的，也就是在人的理解基础上进行的排序。SQL是无法理解的，最后也只能由人来解决，即在创建数据源头处规定好次序，这就需要增加一个列表示sequence，或单独增加一个order表，这都是可行，看具体业务场景了。</p>
-<p>问题虽然简单，但是说明了一个道理：原生方法解决不了原生问题，就要从源头上重新考虑问题的解决方案。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/MYSQL/"> #MYSQL </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -869,21 +860,21 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
-            <a href="/categories">
+            
               <span class="site-state-item-count">0</span>
               <span class="site-state-item-name">分类</span>
-              </a>
+              
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

@@ -21,7 +21,7 @@
 
 
 
-  <meta name="keywords" content="thoughts," />
+  <meta name="keywords" content="C++," />
 
 
 
@@ -32,7 +32,7 @@
 
 
 
-  <title> What if the storm ends? // 三十重围 </title>
+  <title> libuv 学习 // 三十重围 </title>
 </head>
 
 <body>
@@ -120,7 +120,7 @@
           
           
             
-              What if the storm ends?
+              libuv 学习
             
           
         </h1>
@@ -128,7 +128,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-05-07
+          发表于 2015-06-03
         </span>
 
         
@@ -145,13 +145,12 @@
       
 
       
-        <p>没错这是一首歌:</p>
-<p>What if the storm ends and I don’t see you<br>As you are now ever again?<br>The perfect halo of gold hair and lightning<br>Sets you off against the planet’s last dance</p>
-<p>Just for a minute the silver-forked sky<br>Lifts you up like a star that I will follow<br>But now it’s found us like I have a found you<br>I don’t wanna run, just overwhelm me</p>
-<p>What if the storm ends? At least that’s nothing<br>Except the memory, a distant echo I won’t pin down<br>I’ve walked unsettled rattle cage after cage<br>Until my blood boils</p>
-<p>I wanna see you as you are now<br>Every single day that I am living<br>Painted in flames, a peeling thunder<br>Be the lightning in me that strikes relentless</p>
-<p>What if the storm ends and I don’t see you<br>As you are now ever again?<br>The perfect halo of gold hair and lightning<br>Sets you off against the planet’s last dance</p>
-<p>Just for a minute the silver-forked sky<br>Lifts you up like a star that I will follow<br>But now it’s found us like I have a found you<br>I don’t wanna run, just overwhelm me</p>
+        <p>说明： 本篇文章主要从<a href="http://nikhilm.github.io/uvbook/" target="_blank" rel="external">An Introduction to libuv</a>这本书翻译学习而来。</p>
+<h2 id="开始">开始</h2><p>libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。</p>
+<h3 id="事件循环">事件循环</h3><p>libuv的编译就不用多说，参考libuv的<a href="https://github.com/libuv/libuv" target="_blank" rel="external">github网址</a>。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。</p>
+<p>先从运行一个程序开始：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "uv.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    uv_loop_t *loop = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(uv_loop_t));</span><br><span class="line">    uv_loop_init(loop);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Now quitting.\n"</span>);</span><br><span class="line">    uv_run(loop, UV_RUN_DEFAULT);</span><br><span class="line">    uv_loop_close(loop);</span><br><span class="line">    <span class="built_in">free</span>(loop);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">'targets'</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">'dependencies'</span>: [<span class="string">'../../uv.gyp:libuv'</span>],</span><br><span class="line">      <span class="string">'target_name'</span>: <span class="string">'helloword'</span>,</span><br><span class="line">      <span class="string">'type'</span>: <span class="string">'executable'</span>,</span><br><span class="line">      <span class="string">'sources'</span>: [</span><br><span class="line">        <span class="string">'main.c'</span>,</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后执行<strong> gyp —format=make -Duv_library=static_library —depth=$PWD build.gyp </strong>生产相应的makefile，最后直接执行<strong>make</strong>，就会生成自己想要的可执行文件。<br>gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平台方面也表现很好，后续有时间也好好学习下。<br>待续。</p>
 
       
     </div>
@@ -160,7 +159,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/thoughts/"> #thoughts </a>
+            <a href="/tags/C/"> #C++ </a>
           
         </div>
       
@@ -169,11 +168,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/05/09/Let-s-start/">Let's start</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/05/24/aio-block/">同步、异步、阻塞、非阻塞I/O</a>
             
           </div>
         </div>
@@ -271,7 +270,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开始"><span class="nav-number">1.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#事件循环"><span class="nav-number">1.1.</span> <span class="nav-text">事件循环</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
