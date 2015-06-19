@@ -21,7 +21,7 @@
 
 
 
-  <meta name="keywords" content="MYSQL," />
+  <meta name="keywords" content="docker," />
 
 
 
@@ -32,7 +32,7 @@
 
 
 
-  <title> WooCommerce variant product 表设计 // 三十重围 </title>
+  <title> docker docker // 三十重围 </title>
 </head>
 
 <body>
@@ -120,7 +120,7 @@
           
           
             
-              WooCommerce variant product 表设计
+              docker docker
             
           
         </h1>
@@ -128,7 +128,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-05-13
+          发表于 2015-06-19
         </span>
 
         
@@ -145,358 +145,13 @@
       
 
       
-        <p>随着功能越来越多，越来越复杂，如果数据库表设计的不好，就会遇到各种各样的问题。<br>目前已经发现数据表设计的非常不合理，导致出现了大量tricky的PHP代码。由于是在Wordpress平台上搭建的电商平台，免不了要借鉴下<a href="http://docs.woothemes.com/documentation/plugins/woocommerce/" target="_blank" rel="external">WooCommerce</a>的表设计了。<br>WooCommerce是基于Wordpress的一个插件，也能实现快速开店。下面就来分析下WooCommerce中是如何存储和组织产品数据的。在产品数据中，variant product有事最为复杂的一种。比方一件衬衫，它的variant就包含Color和Size，现就以这个例子来分析下WooCommerce中的实现。对于WooCommerce中怎么添加variant product请参照<a href="http://docs.woothemes.com/document/variable-product/" target="_blank" rel="external">这个链接</a>。但有个主意点就是添加variant product前在Product下面的Attributes tab页里面添加系统级的variants。<br>首先添加两个attributes分别为Color和Size，添加完后会在wp_woocommerce_attribute_taxonomies出现以下数据：</p>
-<table>
-<thead>
-<tr>
-<th>attribute_id</th>
-<th style="text-align:left">attribute_name</th>
-<th style="text-align:center">attribute_label</th>
-<th style="text-align:right">attribute_type</th>
-<th style="text-align:right">attribute_orderby</th>
-<th style="text-align:right">attribute_public</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>4</td>
-<td style="text-align:left">color</td>
-<td style="text-align:center">Color</td>
-<td style="text-align:right">text</td>
-<td style="text-align:right">id</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>5</td>
-<td style="text-align:left">size</td>
-<td style="text-align:center">Size</td>
-<td style="text-align:right">text</td>
-<td style="text-align:right">id</td>
-<td style="text-align:right">0</td>
-</tr>
-</tbody>
-</table>
-<p><br\><br>接下来去添加variant product，Color下面添加两个值：Red和Green，Size下面也增加两个值：Small和Large。添加完后会有几个表发生变化。首先，wp_terms会增加相应的variant value：</br\></p>
-<table>
-<thead>
-<tr>
-<th>term_id</th>
-<th style="text-align:left">name</th>
-<th style="text-align:center">slug</th>
-<th style="text-align:right">term_group</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>15</td>
-<td style="text-align:left">Red</td>
-<td style="text-align:center">red</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>16</td>
-<td style="text-align:left">Green</td>
-<td style="text-align:center">green</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>17</td>
-<td style="text-align:left">Small</td>
-<td style="text-align:center">small</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>18</td>
-<td style="text-align:left">Large</td>
-<td style="text-align:center">large</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>19</td>
-<td style="text-align:left">variable</td>
-<td style="text-align:center">variable</td>
-<td style="text-align:right">0</td>
-</tr>
-</tbody>
-</table>
-<p><br\><br>wp_term_taxonomy中新增：</br\></p>
-<table>
-<thead>
-<tr>
-<th>term_taxonomy_id</th>
-<th style="text-align:left">term_id</th>
-<th style="text-align:center">taxonomy</th>
-<th style="text-align:right">description</th>
-<th style="text-align:right">parent</th>
-<th style="text-align:right">count</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>15</td>
-<td style="text-align:left">15</td>
-<td style="text-align:center">pa_color</td>
-<td style="text-align:right"></td>
-<td style="text-align:right">0</td>
-<td style="text-align:right">1</td>
-</tr>
-<tr>
-<td>16</td>
-<td style="text-align:left">16</td>
-<td style="text-align:center">pa_color</td>
-<td style="text-align:right"></td>
-<td style="text-align:right">0</td>
-<td style="text-align:right">1</td>
-</tr>
-<tr>
-<td>17</td>
-<td style="text-align:left">17</td>
-<td style="text-align:center">pa_size</td>
-<td style="text-align:right"></td>
-<td style="text-align:right">0</td>
-<td style="text-align:right">1</td>
-</tr>
-<tr>
-<td>18</td>
-<td style="text-align:left">18</td>
-<td style="text-align:center">pa_size</td>
-<td style="text-align:right"></td>
-<td style="text-align:right">0</td>
-<td style="text-align:right">1</td>
-</tr>
-<tr>
-<td>19</td>
-<td style="text-align:left">19</td>
-<td style="text-align:center">product_type</td>
-<td style="text-align:right"></td>
-<td style="text-align:right">0</td>
-<td style="text-align:right">1</td>
-</tr>
-</tbody>
-</table>
-<p><br\><br>  其对应的term meta储存在wp_woocommerce_termmeta表中：</br\></p>
-<table>
-<thead>
-<tr>
-<th>meta_id</th>
-<th style="text-align:left">woocommerce_term_id</th>
-<th style="text-align:center">meta_key</th>
-<th style="text-align:right">meta_value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>10</td>
-<td style="text-align:left">15</td>
-<td style="text-align:center">order_pa_color</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>11</td>
-<td style="text-align:left">16</td>
-<td style="text-align:center">order_pa_color</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>12</td>
-<td style="text-align:left">17</td>
-<td style="text-align:center">order_pa_size</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>13</td>
-<td style="text-align:left">18</td>
-<td style="text-align:center">order_pa_size</td>
-<td style="text-align:right">0</td>
-</tr>
-</tbody>
-</table>
-<p><br\><br>现在看主表，因为创建产品的时候选择’Link all variations’，因此会产生4个SKU，post表会5条数据，但他们是自关联的，使用查询:<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> id, post_title, post_name, post_type, post_parent <span class="keyword">from</span> wp_posts;</span></span><br></pre></td></tr></table></figure></br\></p>
-<p>得到结果如下：</p>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th style="text-align:left">post_title</th>
-<th style="text-align:center">post_name</th>
-<th style="text-align:right">post_type</th>
-<th style="text-align:right">post_parent</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>20</td>
-<td style="text-align:left">variant product</td>
-<td style="text-align:center">variant-product</td>
-<td style="text-align:right">product</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>21</td>
-<td style="text-align:left">Variation #21 of variant product</td>
-<td style="text-align:center">product-20-variation</td>
-<td style="text-align:right">product_variation</td>
-<td style="text-align:right">20</td>
-</tr>
-<tr>
-<td>22</td>
-<td style="text-align:left">Variation #22 of variant product</td>
-<td style="text-align:center">product-20-variation-2</td>
-<td style="text-align:right">product_variation</td>
-<td style="text-align:right">20</td>
-</tr>
-<tr>
-<td>23</td>
-<td style="text-align:left">Variation #23 of variant product</td>
-<td style="text-align:center">product-20-variation-3</td>
-<td style="text-align:right">product_variation</td>
-<td style="text-align:right">20</td>
-</tr>
-<tr>
-<td>24</td>
-<td style="text-align:left">Variation #24 of variant product</td>
-<td style="text-align:center">product-20-variation-4</td>
-<td style="text-align:right">product_variation</td>
-<td style="text-align:right">20</td>
-</tr>
-</tbody>
-</table>
-<p><br\><br>该主表对应的纵表即是这些属性的描述，产品在meta表里面存储了所有的属性序列化数组，例如id为20的是个产品，其在post_meta表中key为‘ _product_attributes’的值为所有属性描述的列表：</br\></p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">array</span> (size=<span class="number">2</span>)</span><br><span class="line">  <span class="symbol">'pa_color'</span> =&gt; </span><br><span class="line">    <span class="built_in">array</span> (size=<span class="number">6</span>)</span><br><span class="line">      <span class="symbol">'name'</span> =&gt; <span class="built_in">string</span> <span class="symbol">'pa_color'</span> (length=<span class="number">8</span>)</span><br><span class="line">      <span class="symbol">'value'</span> =&gt; <span class="built_in">string</span> <span class="char">''</span> (length=<span class="number">0</span>)</span><br><span class="line">      <span class="symbol">'position'</span> =&gt; <span class="built_in">string</span> <span class="char">'0'</span> (length=<span class="number">1</span>)</span><br><span class="line">      <span class="symbol">'is_visible'</span> =&gt; <span class="built_in">int</span> <span class="number">1</span></span><br><span class="line">      <span class="symbol">'is_variation'</span> =&gt; <span class="built_in">int</span> <span class="number">1</span></span><br><span class="line">      <span class="symbol">'is_taxonomy'</span> =&gt; <span class="built_in">int</span> <span class="number">1</span></span><br><span class="line">  <span class="symbol">'pa_size'</span> =&gt; </span><br><span class="line">    <span class="built_in">array</span> (size=<span class="number">6</span>)</span><br><span class="line">      <span class="symbol">'name'</span> =&gt; <span class="built_in">string</span> <span class="symbol">'pa_size'</span> (length=<span class="number">7</span>)</span><br><span class="line">      <span class="symbol">'value'</span> =&gt; <span class="built_in">string</span> <span class="char">''</span> (length=<span class="number">0</span>)</span><br><span class="line">      <span class="symbol">'position'</span> =&gt; <span class="built_in">string</span> <span class="char">'1'</span> (length=<span class="number">1</span>)</span><br><span class="line">      <span class="symbol">'is_visible'</span> =&gt; <span class="built_in">int</span> <span class="number">1</span></span><br><span class="line">      <span class="symbol">'is_variation'</span> =&gt; <span class="built_in">int</span> <span class="number">1</span></span><br><span class="line">      <span class="symbol">'is_taxonomy'</span> =&gt; <span class="built_in">int</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>即可以从产品表里面获取所有的variant值，当然需要关联上述的几个表。再如SKU的id为21的post_meta数据如下：例如SKU的id为21的post_meta数据如下：</p>
-<table>
-<thead>
-<tr>
-<th>meta_id</th>
-<th style="text-align:left">post_id</th>
-<th style="text-align:center">meta_key</th>
-<th style="text-align:right">meta_value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>295</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">attribute_pa_color</td>
-<td style="text-align:right">red</td>
-</tr>
-<tr>
-<td>296</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">attribute_pa_size</td>
-<td style="text-align:right">small</td>
-</tr>
-<tr>
-<td>326</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_sku</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>327</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_thumbnail_id</td>
-<td style="text-align:right">0</td>
-</tr>
-<tr>
-<td>328</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_virtual</td>
-<td style="text-align:right">no</td>
-</tr>
-<tr>
-<td>329</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_downloadable</td>
-<td style="text-align:right">no</td>
-</tr>
-<tr>
-<td>330</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_weight</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>331</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_length</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>332</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_width</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>333</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_height</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>334</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_manage_stock</td>
-<td style="text-align:right">no</td>
-</tr>
-<tr>
-<td>335</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_stock_status</td>
-<td style="text-align:right">instock</td>
-</tr>
-<tr>
-<td>336</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_regular_price</td>
-<td style="text-align:right">56</td>
-</tr>
-<tr>
-<td>337</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_sale_price</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>338</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_sale_price_dates_from</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>339</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_sale_price_dates_to</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>340</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_price</td>
-<td style="text-align:right">56</td>
-</tr>
-<tr>
-<td>341</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_download_limit</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>342</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_download_expiry</td>
-<td style="text-align:right"></td>
-</tr>
-<tr>
-<td>343</td>
-<td style="text-align:left">21</td>
-<td style="text-align:center">_downloadable_files</td>
-</tr>
-</tbody>
-</table>
-<p>通过这些表的相互关联即可完整描述所有的产品。</p>
-<p>上面分析完了WooCommerce对variant product表处理，但是实际的应用也不能完全照搬。其中产品数据表里面的default_attributs就不能满足我们的需求，需要重新加一张表做映射查询。具体就不再细说了。</p>
+        <p>一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。</p>
+<p>首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照官网即可，</p>
+<p>公司的镜像是基于Ubuntu+wordpress+Apache，MySQL在宿主机上。运行container的时候带上相应的参数，这里主要是端口映射，将docker里面的80端口映射到宿主机上的某一个端口例如7080，最后运行起来类似这个样子：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                                               NAMES</span><br><span class="line">ff1ad6f22e91        eshop_612:latest    <span class="string">"/var/eshop/install/   31 hours ago        Up 31 hours         0.0.0.0:7022-&gt;22/tcp, 0.0.0.0:7080-&gt;80/tcp, 0.0.0.0:7443-&gt;443/tcp   eshop_instance_7080</span></span><br></pre></td></tr></table></figure></p>
+<p>开始遇到一个问题就是这个端口的映射问题，起来后外部访问时还是用的宿主机的Apache，后续停掉宿主机的Apache，目的是干掉80监听端口，在docker里面增加proxy。后面就一路畅通了。</p>
+<p>修改源码如何更新到docker里面是个麻烦的事情，如果有个外挂文件目录的功能就好了，现在只能是修改后的代码传到docker里面。其实传代码也很简单，相比以前编写C++代码，先把本地代码传到Linux服务器上进行编译，编译完再传到运行的服务器上，已经简单多了。现在做的只是把修改后的代码通过filezilla传到docker里面，然后浏览器访问就ok了。</p>
+<p>dokcer的开发环境相对于本地的开发环境速度上有个质的飞跃，由于本地是XAMPP的，然后在windows上。很显然web的开发环境更适宜运行在docker里面了。</p>
+<p>当然还有个非常大的优点，你可以运行任意多个container，每个container里面的code版本可以不一样啊，尤其在多版本并行开发的时候，带来的开发体验是本地不能有的。</p>
 
       
     </div>
@@ -505,7 +160,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MYSQL/"> #MYSQL </a>
+            <a href="/tags/docker/"> #docker </a>
           
         </div>
       
@@ -514,13 +169,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/05/18/zaji-1/">杂记 一</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/05/12/MYSQL的中文排序问题/">MYSQL的中文排序问题</a>
+              <a href="/2015/06/08/straight-join/">straight_join when and why</a>
             
           </div>
         </div>
