@@ -146,7 +146,7 @@
 
       
         <p>一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。</p>
-<p>首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照官网即可，</p>
+<p>首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照<a href="https://docs.docker.com/installation/ubuntulinux/" target="_blank" rel="external">官网</a>即可</p>
 <p>公司的镜像是基于Ubuntu+wordpress+Apache，MySQL在宿主机上。运行container的时候带上相应的参数，这里主要是端口映射，将docker里面的80端口映射到宿主机上的某一个端口例如7080，最后运行起来类似这个样子：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                                               NAMES</span><br><span class="line">ff1ad6f22e91        eshop_612:latest    <span class="string">"/var/eshop/install/   31 hours ago        Up 31 hours         0.0.0.0:7022-&gt;22/tcp, 0.0.0.0:7080-&gt;80/tcp, 0.0.0.0:7443-&gt;443/tcp   eshop_instance_7080</span></span><br></pre></td></tr></table></figure></p>
 <p>开始遇到一个问题就是这个端口的映射问题，起来后外部访问时还是用的宿主机的Apache，后续停掉宿主机的Apache，目的是干掉80监听端口，在docker里面增加proxy。后面就一路畅通了。</p>
 <p>修改源码如何更新到docker里面是个麻烦的事情，如果有个外挂文件目录的功能就好了，现在只能是修改后的代码传到docker里面。其实传代码也很简单，相比以前编写C++代码，先把本地代码传到Linux服务器上进行编译，编译完再传到运行的服务器上，已经简单多了。现在做的只是把修改后的代码通过filezilla传到docker里面，然后浏览器访问就ok了。</p>
