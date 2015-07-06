@@ -21,7 +21,7 @@
 
 
 
-  <meta name="keywords" content="thoughts," />
+  <meta name="keywords" content="Ngnix," />
 
 
 
@@ -32,7 +32,7 @@
 
 
 
-  <title> Let's start // 三十重围 </title>
+  <title> Nginx + Docker Cluster & session sticky // 三十重围 </title>
 </head>
 
 <body>
@@ -120,7 +120,7 @@
           
           
             
-              Let's start
+              Nginx + Docker Cluster & session sticky
             
           
         </h1>
@@ -128,7 +128,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-05-09
+          发表于 2015-07-06
         </span>
 
         
@@ -145,11 +145,18 @@
       
 
       
-        <p>博客有了，就要开始写。<br>为什么要写博客呢？看了很多人都推荐写一下博客，这也完全不只是博客那么简单。平时工作谁会有时间写博客呢，当然没有Evernote来的方便，记忆下重要的技术点，以供后续研究学习。</p>
-<p>因换工作有将近9个月，做的东西也类似于全栈工程师，不管是前端还是后端，都要学习使用。这样可以接触很多东西，但是相当于拉长了战线，如果想要做的深、学的好，还是非常有挑战的。也就是因为这个新的工作让我接触了Web开发，使用了PHP、Javascript、Mysql，这让我这个之前做了多年C++通信方向开发的人打开眼界。很多东西很有趣但也很有挑战。Web开发虽然入门容易，但是做到专家也是离不开10000小时的规律的。所以像我这个刚刚进入这个领域的人，更要持续努力了。这个Blog不例外也是用hexo生成出来的，theme使用的是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">NexT</a>，自己在此基础上进行了修改，引入了Bootsrap，调整了些UI，符合我的审美观点吧，虽然非常业余。目前Blog基本功能还是有些bug，后续会慢慢修复和优化，也当成自己的一个训练场吧。</p>
-<p>就像这个Blog，GitHub提供了便利，可以随时随地的写，只要能上网就能更新到网站上，很方便。由于之前都没怎么写过博客，写博客还是非常有必要的，锻炼文字的组织能力、总结能力，更能促进学习进步。希望现在开始还一切来得及。</p>
-<p>名叫“三十重围”，因为自己已经年近30岁，感觉自己需要突出重围，获得自己理想的追求，把平时自己杂乱的东西要学会统一整理，系统规范。</p>
-<p>Blog的开始，重新开始。</p>
+        <h2 id="基本配置">基本配置</h2><p>本地开发环境和生产环境还是有很大的区分，最近性能测试发现结果很不好，于是想自己去搭建一个类似生产环境的性能测试环境。</p>
+<p>由于前期已经有了docker的开发环境，这里只需要增加Nginx 作为反向代理。<br>在/etc/nginx/conf.d目录下新建文件例如proxyServer.conf，添加如下内容</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">## Basic reverse proxy server ##</span></span><br><span class="line">upstream dockerServer  &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    <span class="keyword">server</span> <span class="number">10.128</span>.163.121:<span class="number">7080</span>;</span><br><span class="line">    <span class="keyword">server</span> <span class="number">10.128</span>.163.121:<span class="number">17080</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">upstream dockerServerSSL  &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    <span class="keyword">server</span> <span class="number">10.128</span>.163.121:<span class="number">7443</span>;</span><br><span class="line">    <span class="keyword">server</span> <span class="number">10.128</span>.163.121:<span class="number">17443</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">server</span> &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    server_name  <span class="number">10.128</span>.163.121;</span><br><span class="line"></span><br><span class="line">    <span class="preprocessor">##access_log  logs/60.access.log  main;</span></span><br><span class="line">    error_log  logs/<span class="number">60.</span>error.log;</span><br><span class="line">    root   html;</span><br><span class="line">    <span class="keyword">index</span>  <span class="keyword">index</span>.html <span class="keyword">index</span>.htm <span class="keyword">index</span>.php;</span><br><span class="line"></span><br><span class="line">    <span class="preprocessor">## send request back to apache ##</span></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass  http:<span class="comment">//dockerServer ;</span></span><br><span class="line"></span><br><span class="line">        <span class="preprocessor">#Proxy Settings</span></span><br><span class="line">        proxy_redirect     off;</span><br><span class="line">        proxy_set_header   Host             $host;</span><br><span class="line">        proxy_set_header   X-Real-IP        $remote_addr;</span><br><span class="line">        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;</span><br><span class="line">        proxy_max_temp_file_size <span class="number">0</span>;</span><br><span class="line">        proxy_connect_timeout      <span class="number">90</span>;</span><br><span class="line">        proxy_send_timeout         <span class="number">90</span>;</span><br><span class="line">        proxy_read_timeout         <span class="number">90</span>;</span><br><span class="line">        proxy_buffer_size          <span class="number">4</span>k;</span><br><span class="line">        proxy_buffers              <span class="number">4</span> <span class="number">32</span>k;</span><br><span class="line">        proxy_busy_buffers_size    <span class="number">64</span>k;</span><br><span class="line">        proxy_temp_file_write_size <span class="number">64</span>k;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">server</span> &#123;</span><br><span class="line">    listen <span class="number">443</span>;</span><br><span class="line">    server_name  <span class="number">10.128</span>.163.121;</span><br><span class="line">    ssl on;</span><br><span class="line">    ssl_certificate /etc/nginx/conf.d/<span class="keyword">server</span>.crt;</span><br><span class="line">    ssl_certificate_key /etc/nginx/conf.d/<span class="keyword">server</span>.key;</span><br><span class="line"></span><br><span class="line">    <span class="preprocessor">##access_log  logs/60.access.log  main;</span></span><br><span class="line">    error_log  logs/<span class="number">60.</span>error.log;</span><br><span class="line">    root   html;</span><br><span class="line">    <span class="keyword">index</span>  <span class="keyword">index</span>.html <span class="keyword">index</span>.htm <span class="keyword">index</span>.php;</span><br><span class="line"></span><br><span class="line">    <span class="preprocessor">## send request back to apache ##</span></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass  https:<span class="comment">//dockerServerSSL ;</span></span><br><span class="line"></span><br><span class="line">        <span class="preprocessor">#Proxy Settings</span></span><br><span class="line">        proxy_redirect     off;</span><br><span class="line">        proxy_set_header   Host             $host;</span><br><span class="line">        proxy_set_header   X-Real-IP        $remote_addr;</span><br><span class="line">        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;</span><br><span class="line">        proxy_max_temp_file_size <span class="number">0</span>;</span><br><span class="line">        proxy_connect_timeout      <span class="number">90</span>;</span><br><span class="line">        proxy_send_timeout         <span class="number">90</span>;</span><br><span class="line">        proxy_read_timeout         <span class="number">90</span>;</span><br><span class="line">        proxy_buffer_size          <span class="number">4</span>k;</span><br><span class="line">        proxy_buffers              <span class="number">4</span> <span class="number">32</span>k;</span><br><span class="line">        proxy_busy_buffers_size    <span class="number">64</span>k;</span><br><span class="line">        proxy_temp_file_write_size <span class="number">64</span>k;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意点：</p>
+<ol>
+<li>https需要单独配置，由于后端server在https下也要工作，因为某些页面安全性要求较高，需要转成https的。</li>
+<li>这里使用的是ip_hash的方式做负载均衡，但是也有一定的缺陷，即在代理访问的情况下客户端ip有可能是会发生改变的，还有就是ip在负载均衡上均衡比较困难。</li>
+<li>https的crt和key需要<a href="http://www.lovelucy.info/nginx-ssl-certificate-https-website.html" target="_blank" rel="external">自己生成</a>。<br>另外这个Nginx 是跑在宿主机上的，修改配置有要执行reload命令使其生效。</li>
+</ol>
+<h2 id="session_persistence">session persistence</h2><p>生产环境需要将一个用户的请求要路由到同一个server上面，因为server很多的业务处理还是需要server里面的session配合。上面用ip_hash方式做load balance，但是考虑到用户使用proxy或者流量不均衡等因素。还是要使用session sticky的方式。<br>Nginx默认不支持session sticky，需要重新编译安装这个插件；因为直接使用公司的Nginx版本，所以懒得重新编译了。使用很简单，直接拷贝个bin文件，然后修改成这个样子：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">upstream</span> dockerServer  &#123;</span><br><span class="line">      <span class="title">sticky</span> name=yourname httponly path=/ hash=md5;</span><br><span class="line">       <span class="title">server</span> <span class="number">10.128.163.121:17080</span>;</span><br><span class="line">       <span class="title">server</span> <span class="number">10.128.163.121:7080</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">  <span class="title">upstream</span> dockerServerSSL  &#123;</span><br><span class="line">     <span class="title">sticky</span> name=yourname httponly path=/ hash=md5;</span><br><span class="line">     <span class="title">server</span> <span class="number">10.128.163.121:17443</span>;</span><br><span class="line">     <span class="title">server</span> <span class="number">10.128.163.121:7443</span>;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>这样直接访问 <a href="http://10.128.163.121" target="_blank" rel="external">http://10.128.163.121</a> 即可，Nginx会自动路由请求到某一个server上。因为sticky是会话级别的，关掉浏览器会话就结束了。如果重新访问用户可能会被路由到另一个server上，可以通过查询Apache的accesslog来确认。</p>
 
       
     </div>
@@ -158,7 +165,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/thoughts/"> #thoughts </a>
+            <a href="/tags/Ngnix/"> #Ngnix </a>
           
         </div>
       
@@ -167,13 +174,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/05/12/MYSQL的中文排序问题/">MYSQL的中文排序问题</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/05/07/songs-What-if-the-storm-ends/">What if the storm ends?</a>
+              <a href="/2015/06/26/deadloc/">deadlock of mysql</a>
             
           </div>
         </div>
@@ -271,7 +276,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本配置"><span class="nav-number">1.</span> <span class="nav-text">基本配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#session_persistence"><span class="nav-number">2.</span> <span class="nav-text">session persistence</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>

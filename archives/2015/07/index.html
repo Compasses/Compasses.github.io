@@ -32,11 +32,11 @@
 
 
 
-  <title> 标签: JavaScript // 三十重围 </title>
+  <title> 归档 // 三十重围 </title>
 </head>
 
 <body>
-  <div class="container-fluid ">
+  <div class="container-fluid  page-archive ">
   <div class="row">
   <div class="col-xs-12"> 
       <div id="header" class="header">
@@ -109,14 +109,30 @@
           
 
   <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        JavaScript
-        <small>标签</small>
-      </h2>
-    </div>
+    <span class="archive-move-on"></span>
+
+    <span class="archive-page-counter">
+      
+      
+       
+      
+      嗯..! 目前共计 12 篇日志。 继续努力。
+    </span>
 
     
+
+      
+      
+      
+
+      
+        
+        <div class="collection-title">
+          <h2 class="archive-year motion-element" id="archive-year-2015">2015</h2>
+        </div>
+      
+      
+
       
 
   <div class="post post-type-normal">
@@ -124,24 +140,27 @@
 
       <div class="post-title">
         
-            <a class="post-title-link" href="/2015/05/24/aio-block/">
-              同步、异步、阻塞、非阻塞I/O
+            <a class="post-title-link" href="/2015/07/06/nginx-session/">
+              Nginx + Docker Cluster & session sticky
             </a>
         
       </div>
 
       <div class="post-meta">
-        <span class="post-time"> 05-24 </span>
+        <span class="post-time"> 07-06 </span>
       </div>
 
     </div>
   </div>
 
 
+
     
+
   </div>
 
   
+
 
         </div>
       </div>      
@@ -322,6 +341,12 @@
 
 
   
+  
+    <script type="text/javascript" id="motion.page.archive">
+      $('.archive-year').velocity('transition.slideLeftIn');
+    </script>
+  
+
 
   
 
