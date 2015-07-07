@@ -122,6 +122,83 @@
           
           
             
+              <a class="post-title-link" href="/2015/07/07/web-tech-1/">
+                WEB 开发点滴（一）
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-07-07
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。</p>
+<p>最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。</p>
+<h1 id="POSITION">POSITION</h1><p>解释说明：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">position</span><br><span class="line">    </span><br><span class="line">'position'</span><br><span class="line">Value:  </span><br><span class="line">static | relative | absolute | fixed | inherit</span><br><span class="line">Initial:  </span><br><span class="line">static</span><br><span class="line">Applies <span class="keyword">to</span>:  </span><br><span class="line">all elements</span><br><span class="line">Inherited:  </span><br><span class="line">no</span><br><span class="line">Percentages:  </span><br><span class="line">N/A</span><br><span class="line">Media:  </span><br><span class="line">visual</span><br><span class="line">Computed value:  </span><br><span class="line"><span class="keyword">as</span> specified</span><br><span class="line">The values <span class="keyword">of</span> this <span class="keyword">property</span> have <span class="keyword">the</span> following meanings:</span><br><span class="line">static</span><br><span class="line">The box <span class="keyword">is</span> a normal box, laid out according <span class="keyword">to</span> <span class="keyword">the</span> normal flow. The 'top', 'right', 'bottom', <span class="keyword">and</span> 'left' properties do <span class="keyword">not</span> apply.</span><br><span class="line">relative</span><br><span class="line">The box's position <span class="keyword">is</span> calculated according <span class="keyword">to</span> <span class="keyword">the</span> normal flow (this <span class="keyword">is</span> called <span class="keyword">the</span> position <span class="keyword">in</span> normal flow). Then <span class="keyword">the</span> box <span class="keyword">is</span> <span class="command">offset</span> relative <span class="keyword">to</span> <span class="keyword">its</span> normal position. When a box B <span class="keyword">is</span> relatively positioned, <span class="keyword">the</span> position <span class="keyword">of</span> <span class="keyword">the</span> following box <span class="keyword">is</span> calculated <span class="keyword">as</span> though B were <span class="keyword">not</span> <span class="command">offset</span>. The effect <span class="keyword">of</span> 'position:relative' <span class="function_start"><span class="keyword">on</span></span> table-row-group, table-header-group, table-footer-group, table-row, table-column-group, table-column, table-cell, <span class="keyword">and</span> table-caption elements <span class="keyword">is</span> undefined.</span><br><span class="line">absolute</span><br><span class="line">The box's position (<span class="keyword">and</span> possibly size) <span class="keyword">is</span> specified <span class="keyword">with</span> <span class="keyword">the</span> 'top', 'right', 'bottom', <span class="keyword">and</span> 'left' properties. These properties specify offsets <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">the</span> box's containing block. Absolutely positioned boxes are taken <span class="keyword">out of</span> <span class="keyword">the</span> normal flow. This means they have no impact <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> layout <span class="keyword">of</span> later siblings. Also, though absolutely positioned boxes have margins, they do <span class="keyword">not</span> collapse <span class="keyword">with</span> any other margins.</span><br><span class="line">fixed</span><br><span class="line">The box's position <span class="keyword">is</span> calculated according <span class="keyword">to</span> <span class="keyword">the</span> 'absolute' model, <span class="keyword">but</span> <span class="keyword">in</span> addition, <span class="keyword">the</span> box <span class="keyword">is</span> fixed <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">some</span> <span class="keyword">reference</span>. As <span class="keyword">with</span> <span class="keyword">the</span> 'absolute' model, <span class="keyword">the</span> box's margins do <span class="keyword">not</span> collapse <span class="keyword">with</span> any other margins. In <span class="keyword">the</span> case <span class="keyword">of</span> handheld, projection, screen, tty, <span class="keyword">and</span> tv media types, <span class="keyword">the</span> box <span class="keyword">is</span> fixed <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">the</span> viewport <span class="keyword">and</span> doesn't move when scrolled. In <span class="keyword">the</span> case <span class="keyword">of</span> <span class="keyword">the</span> print media type, <span class="keyword">the</span> box <span class="keyword">is</span> rendered <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">every</span> page, <span class="keyword">and</span> <span class="keyword">is</span> fixed <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">the</span> page box, even <span class="keyword">if</span> <span class="keyword">the</span> page <span class="keyword">is</span> seen <span class="keyword">through</span> a viewport (<span class="keyword">in</span> <span class="keyword">the</span> case <span class="keyword">of</span> a print-preview, <span class="keyword">for</span> example). For other media types, <span class="keyword">the</span> presentation <span class="keyword">is</span> undefined. Authors may wish <span class="keyword">to</span> specify 'fixed' <span class="keyword">in</span> a media-dependent way. For instance, an author may want a box <span class="keyword">to</span> remain <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> <span class="keyword">the</span> viewport <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> screen, <span class="keyword">but</span> <span class="keyword">not</span> <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> each printed page. The two specifications may be separated <span class="keyword">by</span> using an @media rule, <span class="keyword">as</span> <span class="keyword">in</span>:</span><br><span class="line">Example(s):</span><br><span class="line">  </span><br><span class="line">@media screen &#123;</span><br><span class="line">  h1<span class="comment">#first &#123; position: fixed &#125;</span></span><br><span class="line">&#125;</span><br><span class="line">@media print &#123;</span><br><span class="line">  h1<span class="comment">#first &#123; position: static &#125;</span></span><br><span class="line">&#125;</span><br><span class="line">UAs must <span class="keyword">not</span> paginate <span class="keyword">the</span> content <span class="keyword">of</span> fixed boxes. Note <span class="keyword">that</span> UAs may print invisible content <span class="keyword">in</span> other ways. See <span class="string">"Content outside the page box"</span> <span class="keyword">in</span> chapter <span class="number">13.</span></span><br><span class="line">User agents may treat position <span class="keyword">as</span> 'static' <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> root element.</span><br></pre></td></tr></table></figure></p>
+<p>元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。</p>
+<h2 id="relative_position">relative position</h2><p>相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。</p>
+<h2 id="absolute_position">absolute position</h2><p>类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。</p>
+<h2 id="fixed_position">fixed position</h2><p>是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。</p>
+<h2 id="floating">floating</h2><p>floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。</p>
+<h1 id="overflow">overflow</h1><p>解释：<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/07/07/web-tech-1/#more">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSS/"> #CSS </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/06/nginx-session/">
                 Nginx + Docker Cluster & session sticky
               </a>
@@ -399,76 +476,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/03/libuv-start/">
-                libuv 学习
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-06-03
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>说明： 本篇文章主要从<a href="http://nikhilm.github.io/uvbook/" target="_blank" rel="external">An Introduction to libuv</a>这本书翻译学习而来。</p>
-<h2 id="开始">开始</h2><p>libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。</p>
-<h3 id="事件循环">事件循环</h3><p>libuv的编译就不用多说，参考libuv的<a href="https://github.com/libuv/libuv" target="_blank" rel="external">github网址</a>。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。</p>
-<p>先从运行一个程序开始：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "uv.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    uv_loop_t *loop = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(uv_loop_t));</span><br><span class="line">    uv_loop_init(loop);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Now quitting.\n"</span>);</span><br><span class="line">    uv_run(loop, UV_RUN_DEFAULT);</span><br><span class="line">    uv_loop_close(loop);</span><br><span class="line">    <span class="built_in">free</span>(loop);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">'targets'</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">'dependencies'</span>: [<span class="string">'../../uv.gyp:libuv'</span>],</span><br><span class="line">      <span class="string">'target_name'</span>: <span class="string">'helloword'</span>,</span><br><span class="line">      <span class="string">'type'</span>: <span class="string">'executable'</span>,</span><br><span class="line">      <span class="string">'sources'</span>: [</span><br><span class="line">        <span class="string">'main.c'</span>,</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后执行<strong> gyp —format=make -Duv_library=static_library —depth=$PWD build.gyp </strong>生产相应的makefile，最后直接执行<strong>make</strong>，就会生成自己想要的可执行文件。<br>gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平台方面也表现很好，后续有时间也好好学习下。<br>待续。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/C/"> #C++ </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -501,7 +508,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -515,7 +522,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

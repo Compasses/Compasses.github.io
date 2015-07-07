@@ -1,0 +1,730 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+<link rel="stylesheet" type="text/css" href="/vendors/bootstrap/bootstrap.min.css"/>
+
+
+    <meta name="description" content="杂乱 并蓄" />
+
+
+
+  <meta name="keywords" content="CSS," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> WEB 开发点滴（一） // 三十重围 </title>
+</head>
+
+<body>
+  <div class="container-fluid page-post-detail">
+  <div class="row">
+  <div class="col-xs-12"> 
+      <div id="header" class="header">
+      <div class="header-inner">
+        <div class="row">
+<div class="col-xs-6"> 
+<h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">三十重围</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+</div>
+<div class="col-xs-6">
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-tags">
+        <a href="/tags">
+          <i class="menu-item-icon icon-tags"></i> <br />
+          标签
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+       
+  </ul>
+
+</div>
+</div>
+
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="row">
+    
+  <div class="col-xs-10">
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              WEB 开发点滴（一）
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-07-07
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <p>WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。</p>
+<p>最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。</p>
+<h1 id="POSITION">POSITION</h1><p>解释说明：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">position</span><br><span class="line">    </span><br><span class="line">'position'</span><br><span class="line">Value:  </span><br><span class="line">static | relative | absolute | fixed | inherit</span><br><span class="line">Initial:  </span><br><span class="line">static</span><br><span class="line">Applies <span class="keyword">to</span>:  </span><br><span class="line">all elements</span><br><span class="line">Inherited:  </span><br><span class="line">no</span><br><span class="line">Percentages:  </span><br><span class="line">N/A</span><br><span class="line">Media:  </span><br><span class="line">visual</span><br><span class="line">Computed value:  </span><br><span class="line"><span class="keyword">as</span> specified</span><br><span class="line">The values <span class="keyword">of</span> this <span class="keyword">property</span> have <span class="keyword">the</span> following meanings:</span><br><span class="line">static</span><br><span class="line">The box <span class="keyword">is</span> a normal box, laid out according <span class="keyword">to</span> <span class="keyword">the</span> normal flow. The 'top', 'right', 'bottom', <span class="keyword">and</span> 'left' properties do <span class="keyword">not</span> apply.</span><br><span class="line">relative</span><br><span class="line">The box's position <span class="keyword">is</span> calculated according <span class="keyword">to</span> <span class="keyword">the</span> normal flow (this <span class="keyword">is</span> called <span class="keyword">the</span> position <span class="keyword">in</span> normal flow). Then <span class="keyword">the</span> box <span class="keyword">is</span> <span class="command">offset</span> relative <span class="keyword">to</span> <span class="keyword">its</span> normal position. When a box B <span class="keyword">is</span> relatively positioned, <span class="keyword">the</span> position <span class="keyword">of</span> <span class="keyword">the</span> following box <span class="keyword">is</span> calculated <span class="keyword">as</span> though B were <span class="keyword">not</span> <span class="command">offset</span>. The effect <span class="keyword">of</span> 'position:relative' <span class="function_start"><span class="keyword">on</span></span> table-row-group, table-header-group, table-footer-group, table-row, table-column-group, table-column, table-cell, <span class="keyword">and</span> table-caption elements <span class="keyword">is</span> undefined.</span><br><span class="line">absolute</span><br><span class="line">The box's position (<span class="keyword">and</span> possibly size) <span class="keyword">is</span> specified <span class="keyword">with</span> <span class="keyword">the</span> 'top', 'right', 'bottom', <span class="keyword">and</span> 'left' properties. These properties specify offsets <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">the</span> box's containing block. Absolutely positioned boxes are taken <span class="keyword">out of</span> <span class="keyword">the</span> normal flow. This means they have no impact <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> layout <span class="keyword">of</span> later siblings. Also, though absolutely positioned boxes have margins, they do <span class="keyword">not</span> collapse <span class="keyword">with</span> any other margins.</span><br><span class="line">fixed</span><br><span class="line">The box's position <span class="keyword">is</span> calculated according <span class="keyword">to</span> <span class="keyword">the</span> 'absolute' model, <span class="keyword">but</span> <span class="keyword">in</span> addition, <span class="keyword">the</span> box <span class="keyword">is</span> fixed <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">some</span> <span class="keyword">reference</span>. As <span class="keyword">with</span> <span class="keyword">the</span> 'absolute' model, <span class="keyword">the</span> box's margins do <span class="keyword">not</span> collapse <span class="keyword">with</span> any other margins. In <span class="keyword">the</span> case <span class="keyword">of</span> handheld, projection, screen, tty, <span class="keyword">and</span> tv media types, <span class="keyword">the</span> box <span class="keyword">is</span> fixed <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">the</span> viewport <span class="keyword">and</span> doesn't move when scrolled. In <span class="keyword">the</span> case <span class="keyword">of</span> <span class="keyword">the</span> print media type, <span class="keyword">the</span> box <span class="keyword">is</span> rendered <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">every</span> page, <span class="keyword">and</span> <span class="keyword">is</span> fixed <span class="keyword">with</span> respect <span class="keyword">to</span> <span class="keyword">the</span> page box, even <span class="keyword">if</span> <span class="keyword">the</span> page <span class="keyword">is</span> seen <span class="keyword">through</span> a viewport (<span class="keyword">in</span> <span class="keyword">the</span> case <span class="keyword">of</span> a print-preview, <span class="keyword">for</span> example). For other media types, <span class="keyword">the</span> presentation <span class="keyword">is</span> undefined. Authors may wish <span class="keyword">to</span> specify 'fixed' <span class="keyword">in</span> a media-dependent way. For instance, an author may want a box <span class="keyword">to</span> remain <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> <span class="keyword">the</span> viewport <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> screen, <span class="keyword">but</span> <span class="keyword">not</span> <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">of</span> each printed page. The two specifications may be separated <span class="keyword">by</span> using an @media rule, <span class="keyword">as</span> <span class="keyword">in</span>:</span><br><span class="line">Example(s):</span><br><span class="line">  </span><br><span class="line">@media screen &#123;</span><br><span class="line">  h1<span class="comment">#first &#123; position: fixed &#125;</span></span><br><span class="line">&#125;</span><br><span class="line">@media print &#123;</span><br><span class="line">  h1<span class="comment">#first &#123; position: static &#125;</span></span><br><span class="line">&#125;</span><br><span class="line">UAs must <span class="keyword">not</span> paginate <span class="keyword">the</span> content <span class="keyword">of</span> fixed boxes. Note <span class="keyword">that</span> UAs may print invisible content <span class="keyword">in</span> other ways. See <span class="string">"Content outside the page box"</span> <span class="keyword">in</span> chapter <span class="number">13.</span></span><br><span class="line">User agents may treat position <span class="keyword">as</span> 'static' <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> root element.</span><br></pre></td></tr></table></figure></p>
+<p>元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。</p>
+<h2 id="relative_position">relative position</h2><p>相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。</p>
+<h2 id="absolute_position">absolute position</h2><p>类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。</p>
+<h2 id="fixed_position">fixed position</h2><p>是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。</p>
+<h2 id="floating">floating</h2><p>floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。</p>
+<h1 id="overflow">overflow</h1><p>解释：<br><a id="more"></a></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br></pre></td><td class="code"><pre><span class="line">overflow</span><br><span class="line">    </span><br><span class="line">'overflow'</span><br><span class="line">Value:  </span><br><span class="line">visible | hidden | scroll | auto | inherit</span><br><span class="line">Initial:  </span><br><span class="line">visible</span><br><span class="line">Applies <span class="keyword">to</span>:  </span><br><span class="line">non-replaced block-level elements, table cells, <span class="keyword">and</span> inline-block elements</span><br><span class="line">Inherited:  </span><br><span class="line">no</span><br><span class="line">Percentages:  </span><br><span class="line">N/A</span><br><span class="line">Media:  </span><br><span class="line">visual</span><br><span class="line">Computed value:  </span><br><span class="line"><span class="keyword">as</span> specified</span><br><span class="line">This <span class="keyword">property</span> specifies whether content <span class="keyword">of</span> a block-level element <span class="keyword">is</span> clipped when <span class="keyword">it</span> overflows <span class="keyword">the</span> element's box. It affects <span class="keyword">the</span> clipping <span class="keyword">of</span> all <span class="keyword">of</span> <span class="keyword">the</span> element's content except any descendant elements (<span class="keyword">and</span> their respective content <span class="keyword">and</span> descendants) <span class="keyword">whose</span> containing block <span class="keyword">is</span> <span class="keyword">the</span> viewport <span class="keyword">or</span> an ancestor <span class="keyword">of</span> <span class="keyword">the</span> element. Values have <span class="keyword">the</span> following meanings:</span><br><span class="line">visible</span><br><span class="line">This value indicates <span class="keyword">that</span> content <span class="keyword">is</span> <span class="keyword">not</span> clipped, i.e., <span class="keyword">it</span> may be rendered outside <span class="keyword">the</span> block box.</span><br><span class="line">hidden</span><br><span class="line">This value indicates <span class="keyword">that</span> <span class="keyword">the</span> content <span class="keyword">is</span> clipped <span class="keyword">and</span> <span class="keyword">that</span> no scrolling user interface should be provided <span class="keyword">to</span> view <span class="keyword">the</span> content outside <span class="keyword">the</span> clipping region.</span><br><span class="line">scroll</span><br><span class="line">This value indicates <span class="keyword">that</span> <span class="keyword">the</span> content <span class="keyword">is</span> clipped <span class="keyword">and</span> <span class="keyword">that</span> <span class="keyword">if</span> <span class="keyword">the</span> user agent uses a scrolling mechanism <span class="keyword">that</span> <span class="keyword">is</span> visible <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> screen (such <span class="keyword">as</span> a scroll bar <span class="keyword">or</span> a panner), <span class="keyword">that</span> mechanism should be displayed <span class="keyword">for</span> a box whether <span class="keyword">or</span> <span class="keyword">not</span> any <span class="keyword">of</span> <span class="keyword">its</span> content <span class="keyword">is</span> clipped. This avoids any problem <span class="keyword">with</span> scrollbars appearing <span class="keyword">and</span> disappearing <span class="keyword">in</span> a dynamic environment. When this value <span class="keyword">is</span> specified <span class="keyword">and</span> <span class="keyword">the</span> target medium <span class="keyword">is</span> 'print', overflowing content may be printed.</span><br><span class="line">auto</span><br><span class="line">The behavior <span class="keyword">of</span> <span class="keyword">the</span> 'auto' value <span class="keyword">is</span> user agent-dependent, <span class="keyword">but</span> should cause a scrolling mechanism <span class="keyword">to</span> be provided <span class="keyword">for</span> overflowing boxes.</span><br><span class="line">Even <span class="keyword">if</span> 'overflow' <span class="keyword">is</span> <span class="keyword">set</span> <span class="keyword">to</span> 'visible', content may be clipped <span class="keyword">to</span> a UA's document window <span class="keyword">by</span> <span class="keyword">the</span> native operating environment.</span><br><span class="line">UAs must apply <span class="keyword">the</span> 'overflow' <span class="keyword">property</span> <span class="keyword">set</span> <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> root element <span class="keyword">to</span> <span class="keyword">the</span> viewport. HTML UAs must instead apply <span class="keyword">the</span> 'overflow' <span class="keyword">property</span> <span class="keyword">from</span> <span class="keyword">the</span> BODY element <span class="keyword">to</span> <span class="keyword">the</span> viewport, <span class="keyword">if</span> <span class="keyword">the</span> value <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> HTML element <span class="keyword">is</span> 'visible'. The 'visible' value when used <span class="keyword">for</span> <span class="keyword">the</span> viewport must be interpreted <span class="keyword">as</span> 'auto'. The element <span class="keyword">from</span> which <span class="keyword">the</span> value <span class="keyword">is</span> propagated must have a used value <span class="keyword">for</span> 'overflow' <span class="keyword">of</span> 'visible'.</span><br><span class="line">In <span class="keyword">the</span> case <span class="keyword">of</span> a scrollbar being placed <span class="function_start"><span class="keyword">on</span></span> an edge <span class="keyword">of</span> <span class="keyword">the</span> element's box, <span class="keyword">it</span> should be inserted <span class="keyword">between</span> <span class="keyword">the</span> inner border edge <span class="keyword">and</span> <span class="keyword">the</span> outer padding edge. The <span class="constant">space</span> taken up <span class="keyword">by</span> <span class="keyword">the</span> scrollbars affects <span class="keyword">the</span> computation <span class="keyword">of</span> <span class="keyword">the</span> dimensions <span class="keyword">in</span> <span class="keyword">the</span> rendering model.</span><br><span class="line">Example(s):</span><br><span class="line">Consider <span class="keyword">the</span> following example <span class="keyword">of</span> a block quotation (&lt;blockquote&gt;) <span class="keyword">that</span> <span class="keyword">is</span> too big <span class="keyword">for</span> <span class="keyword">its</span> containing block (established <span class="keyword">by</span> a &lt;<span class="keyword">div</span>&gt;). Here <span class="keyword">is</span> <span class="keyword">the</span> source:</span><br><span class="line">&lt;<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;blockquote&gt;</span><br><span class="line">&lt;p&gt;I didn't like <span class="keyword">the</span> play, <span class="keyword">but</span> <span class="keyword">then</span> I saw</span><br><span class="line"><span class="keyword">it</span> under adverse conditions - <span class="keyword">the</span> curtain was up.&lt;/p&gt;</span><br><span class="line">&lt;cite&gt;- Groucho Marx&lt;/cite&gt;</span><br><span class="line">&lt;/blockquote&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">Here <span class="keyword">is</span> <span class="keyword">the</span> style sheet controlling <span class="keyword">the</span> sizes <span class="keyword">and</span> style <span class="keyword">of</span> <span class="keyword">the</span> generated boxes:</span><br><span class="line"><span class="keyword">div</span> &#123; width : <span class="number">100</span>px; height: <span class="number">100</span>px;</span><br><span class="line">      border: thin solid red;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">blockquote   &#123; width : <span class="number">125</span>px; height : <span class="number">100</span>px;</span><br><span class="line">      margin-top: <span class="number">50</span>px; margin-left: <span class="number">50</span>px;</span><br><span class="line">      border: thin dashed black</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">cite &#123; display: block;</span><br><span class="line">       <span class="type">text</span>-align : right;</span><br><span class="line">       border: none</span><br><span class="line">       &#125;</span><br><span class="line">The initial value <span class="keyword">of</span> 'overflow' <span class="keyword">is</span> 'visible', so <span class="keyword">the</span> &lt;blockquote&gt; would be formatted <span class="keyword">without</span> clipping, something like this:</span><br><span class="line">   [D]</span><br><span class="line">Setting 'overflow' <span class="keyword">to</span> 'hidden' <span class="keyword">for</span> <span class="keyword">the</span> &lt;<span class="keyword">div</span>&gt;, <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> other hand, causes <span class="keyword">the</span> &lt;blockquote&gt; <span class="keyword">to</span> be clipped <span class="keyword">by</span> <span class="keyword">the</span> containing block:</span><br><span class="line">   [D]</span><br><span class="line">A value <span class="keyword">of</span> 'scroll' would <span class="keyword">tell</span> UAs <span class="keyword">that</span> support a visible scrolling mechanism <span class="keyword">to</span> display one so <span class="keyword">that</span> users could access <span class="keyword">the</span> clipped content.</span><br><span class="line">Finally, consider this case <span class="keyword">where</span> an absolutely positioned element <span class="keyword">is</span> mixed <span class="keyword">with</span> an overflow parent.</span><br><span class="line">Style sheet:</span><br><span class="line">  container &#123; position: relative; border: solid; &#125;</span><br><span class="line">  scroller &#123; overflow: scroll; height: <span class="number">5</span>em; margin: <span class="number">5</span>em; &#125;</span><br><span class="line">  satellite &#123; position: absolute; top: <span class="number">0</span>; &#125;</span><br><span class="line">  body &#123; height: <span class="number">10</span>em; &#125;</span><br><span class="line">Document fragment:</span><br><span class="line">  &lt;container&gt;</span><br><span class="line">   &lt;scroller&gt;</span><br><span class="line">    &lt;satellite/&gt;</span><br><span class="line">    &lt;body/&gt;</span><br><span class="line">   &lt;/scroller&gt;</span><br><span class="line">  &lt;/container&gt;</span><br><span class="line">In this example, <span class="keyword">the</span> <span class="string">"scroller"</span> element will <span class="keyword">not</span> scroll <span class="keyword">the</span> <span class="string">"satellite"</span> element, because <span class="keyword">the</span> latter's containing block <span class="keyword">is</span> outside <span class="keyword">the</span> element <span class="keyword">whose</span> overflow <span class="keyword">is</span> being clipped <span class="keyword">and</span> scrolled.</span><br><span class="line"><span class="number">11.1</span>. The ‘overflow’, ‘overflow-x’ <span class="keyword">and</span> ‘overflow-y’ properties</span><br><span class="line">In <span class="keyword">the</span> preceding sections, several things (such <span class="keyword">as</span> flow roots) depend <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> value <span class="keyword">of</span> ‘overflow’. We probably need <span class="keyword">to</span> rewrite them <span class="keyword">in</span> terms <span class="keyword">of</span> “overflow-x <span class="keyword">and</span>/<span class="keyword">or</span> -y” <span class="keyword">or</span> similar.</span><br><span class="line">Name:</span><br><span class="line">overflow-x, overflow-y,</span><br><span class="line">Value:</span><br><span class="line">visible | hidden | scroll | auto | no-display | no-content</span><br><span class="line">Initial:</span><br><span class="line">visible</span><br><span class="line">Applies <span class="keyword">to</span>:</span><br><span class="line">non-replaced block-level elements <span class="keyword">and</span> non-replaced ‘inline-block’ elements</span><br><span class="line">Inherited:</span><br><span class="line">no</span><br><span class="line">Percentages:</span><br><span class="line">N/A</span><br><span class="line">Media:</span><br><span class="line">visual</span><br><span class="line">Computed value:</span><br><span class="line"><span class="keyword">as</span> specified, except ‘visible’, see <span class="type">text</span></span><br><span class="line">Name:</span><br><span class="line">overflow</span><br><span class="line">Value:</span><br><span class="line">[ visible | hidden | scroll | auto | no-display | no-content ]&#123;<span class="number">1</span>,<span class="number">2</span>&#125;</span><br><span class="line">Initial:</span><br><span class="line">see individual properties</span><br><span class="line">Applies <span class="keyword">to</span>:</span><br><span class="line">non-replaced block-level elements <span class="keyword">and</span> non-replaced ‘inline-block’ elements</span><br><span class="line">Inherited:</span><br><span class="line">no</span><br><span class="line">Percentages:</span><br><span class="line">N/A</span><br><span class="line">Media:</span><br><span class="line">visual</span><br><span class="line">Computed value:</span><br><span class="line"><span class="keyword">as</span> specified, except ‘visible’, see <span class="type">text</span></span><br><span class="line">These properties specify whether content <span class="keyword">is</span> clipped when <span class="keyword">it</span> overflows <span class="keyword">the</span> element's content area. It affects <span class="keyword">the</span> clipping <span class="keyword">of</span> all <span class="keyword">of</span> <span class="keyword">the</span> element's content except any descendant elements (<span class="keyword">and</span> their respective content <span class="keyword">and</span> descendants) <span class="keyword">whose</span> containing block <span class="keyword">is</span> <span class="keyword">the</span> viewport <span class="keyword">or</span> an ancestor <span class="keyword">of</span> <span class="keyword">the</span> element. ‘Overflow-x’ determines clipping <span class="keyword">at</span> <span class="keyword">the</span> left <span class="keyword">and</span> right edges, ‘overflow-y’ <span class="keyword">at</span> <span class="keyword">the</span> top <span class="keyword">and</span> bottom edges.</span><br><span class="line">‘Overflow’ <span class="keyword">is</span> a shorthand. If <span class="keyword">it</span> has one keyword, <span class="keyword">it</span> sets both ‘overflow-x’ <span class="keyword">and</span> ‘overflow-y’ <span class="keyword">to</span> <span class="keyword">that</span> keyword; <span class="keyword">if</span> <span class="keyword">it</span> has two, <span class="keyword">it</span> sets ‘overflow-x’ <span class="keyword">to</span> <span class="keyword">the</span> <span class="keyword">first</span> <span class="keyword">and</span> ‘overflow-y’ <span class="keyword">to</span> <span class="keyword">the</span> <span class="keyword">second</span>. Keywords have <span class="keyword">the</span> following meanings:</span><br><span class="line">visible</span><br><span class="line">This value indicates <span class="keyword">that</span> content <span class="keyword">is</span> <span class="keyword">not</span> clipped, i.e., <span class="keyword">it</span> may be rendered outside <span class="keyword">the</span> content box.</span><br><span class="line">hidden</span><br><span class="line">This value indicates <span class="keyword">that</span> <span class="keyword">the</span> content <span class="keyword">is</span> clipped <span class="keyword">and</span> <span class="keyword">that</span> no scrolling mechanism should be provided <span class="keyword">to</span> view <span class="keyword">the</span> content outside <span class="keyword">the</span> clipping region.</span><br><span class="line">scroll</span><br><span class="line">This value indicates <span class="keyword">that</span> <span class="keyword">the</span> content <span class="keyword">is</span> clipped <span class="keyword">and</span> <span class="keyword">that</span> <span class="keyword">if</span> <span class="keyword">the</span> user agent uses a scrolling mechanism <span class="keyword">that</span> <span class="keyword">is</span> visible <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> screen (such <span class="keyword">as</span> a scroll bar <span class="keyword">or</span> a panner), <span class="keyword">that</span> mechanism should be displayed <span class="keyword">for</span> a box whether <span class="keyword">or</span> <span class="keyword">not</span> any <span class="keyword">of</span> <span class="keyword">its</span> content <span class="keyword">is</span> clipped. This avoids any problem <span class="keyword">with</span> scrollbars appearing <span class="keyword">and</span> disappearing <span class="keyword">in</span> a dynamic environment. When this value <span class="keyword">is</span> specified <span class="keyword">and</span> <span class="keyword">the</span> target medium <span class="keyword">is</span> ‘print’, overflowing content may be printed.</span><br><span class="line">auto</span><br><span class="line">The behavior <span class="keyword">of</span> <span class="keyword">the</span> ‘auto’ value <span class="keyword">is</span> UA-dependent, <span class="keyword">but</span> should cause a scrolling mechanism <span class="keyword">to</span> be provided <span class="keyword">for</span> overflowing boxes.</span><br><span class="line">no-display</span><br><span class="line">When <span class="keyword">the</span> content doesn't fit <span class="keyword">in</span> <span class="keyword">the</span> content box, <span class="keyword">the</span> whole box <span class="keyword">is</span> removed, <span class="keyword">as</span> <span class="keyword">if</span> ‘display: none’ were specified. [This idea <span class="keyword">is</span> due <span class="keyword">to</span> Till Halbach &lt;tillh@opera.com&gt;, July <span class="number">21</span>, <span class="number">2005</span>]</span><br><span class="line">no-content</span><br><span class="line">When <span class="keyword">the</span> content doesn't fit <span class="keyword">in</span> <span class="keyword">the</span> content box, <span class="keyword">the</span> whole content <span class="keyword">is</span> hidden, <span class="keyword">as</span> <span class="keyword">if</span> ‘visibility: hidden’ were specified. [This idea <span class="keyword">is</span> due <span class="keyword">to</span> Till Halbach &lt;tillh@opera.com&gt;, July <span class="number">21</span>, <span class="number">2005</span>]</span><br><span class="line">Even <span class="keyword">if</span> ‘overflow’ <span class="keyword">is</span> <span class="keyword">set</span> <span class="keyword">to</span> ‘visible’, content may be clipped <span class="keyword">to</span> a UA's document window <span class="keyword">by</span> <span class="keyword">the</span> native operating environment.</span><br><span class="line">UAs must apply <span class="keyword">the</span> ‘overflow’ <span class="keyword">property</span> <span class="keyword">set</span> <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> root element <span class="keyword">to</span> <span class="keyword">the</span> viewport. HTML UAs must instead apply <span class="keyword">the</span> ‘overflow’ <span class="keyword">property</span> <span class="keyword">from</span> <span class="keyword">the</span> BODY element <span class="keyword">to</span> <span class="keyword">the</span> viewport, <span class="keyword">if</span> <span class="keyword">the</span> value <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> HTML element <span class="keyword">is</span> ‘visible’. The ‘visible’ value when used <span class="keyword">for</span> <span class="keyword">the</span> viewport must be interpreted <span class="keyword">as</span> ‘auto’. The element <span class="keyword">from</span> which <span class="keyword">the</span> value <span class="keyword">is</span> propagated must have a used value <span class="keyword">for</span> ‘overflow’ <span class="keyword">of</span> ‘visible’.</span><br><span class="line">The para <span class="keyword">above</span> <span class="keyword">is</span> <span class="keyword">from</span> CSS <span class="number">2.1</span>. Need <span class="keyword">to</span> check <span class="keyword">if</span> <span class="keyword">the</span> introduction <span class="keyword">of</span> overflow-x/y changes anything.</span><br><span class="line">In <span class="keyword">the</span> case <span class="keyword">of</span> a scrollbar being placed <span class="function_start"><span class="keyword">on</span></span> an edge <span class="keyword">of</span> <span class="keyword">the</span> element's box, <span class="keyword">it</span> should be inserted <span class="keyword">between</span> <span class="keyword">the</span> inner border edge <span class="keyword">and</span> <span class="keyword">the</span> outer padding edge. The <span class="constant">space</span> taken up <span class="keyword">by</span> <span class="keyword">the</span> scrollbars affects <span class="keyword">the</span> computation <span class="keyword">of</span> <span class="keyword">the</span> dimensions <span class="keyword">in</span> <span class="keyword">the</span> rendering model.</span><br><span class="line">A UA may use multiple scrolling mechanisms <span class="keyword">at</span> <span class="keyword">the</span> same <span class="property">time</span>. E.g., <span class="keyword">if</span> content overflows both <span class="keyword">to</span> <span class="keyword">the</span> right <span class="keyword">and</span> <span class="keyword">to</span> <span class="keyword">the</span> bottom, <span class="keyword">it</span> may use a marquee effect <span class="keyword">for</span> <span class="keyword">the</span> overflow <span class="keyword">to</span> <span class="keyword">the</span> right <span class="keyword">and</span> a scrollbar <span class="keyword">for</span> <span class="keyword">the</span> overflow <span class="keyword">to</span> <span class="keyword">the</span> bottom.</span><br><span class="line">Note <span class="keyword">that</span> a box <span class="keyword">with</span> ‘overflow’ other than ‘visible’ <span class="keyword">is</span> a flow root.</span><br><span class="line">Consider <span class="keyword">the</span> following example <span class="keyword">of</span> a block quotation (&lt;blockquote&gt;) <span class="keyword">that</span> <span class="keyword">is</span> too big <span class="keyword">for</span> <span class="keyword">its</span> containing block (established <span class="keyword">by</span> a &lt;<span class="keyword">div</span>&gt;). Here <span class="keyword">is</span> <span class="keyword">the</span> source:</span><br><span class="line">&lt;<span class="keyword">div</span>&gt;</span><br><span class="line">&lt;blockquote&gt;</span><br><span class="line">&lt;p&gt;I didn't like <span class="keyword">the</span> play, <span class="keyword">but</span> <span class="keyword">then</span> I saw</span><br><span class="line"><span class="keyword">it</span> under adverse conditions - <span class="keyword">the</span> curtain was up.&lt;/p&gt;</span><br><span class="line">&lt;cite&gt;- Groucho Marx&lt;/cite&gt;</span><br><span class="line">&lt;/blockquote&gt;</span><br><span class="line">&lt;/<span class="keyword">div</span>&gt;</span><br><span class="line">Here <span class="keyword">is</span> <span class="keyword">the</span> style sheet controlling <span class="keyword">the</span> sizes <span class="keyword">and</span> style <span class="keyword">of</span> <span class="keyword">the</span> generated boxes:</span><br><span class="line"><span class="keyword">div</span> &#123; width : <span class="number">100</span>px; height: <span class="number">100</span>px;</span><br><span class="line">      border: thin solid red;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">blockquote   &#123; width : <span class="number">125</span>px; height : <span class="number">100</span>px;</span><br><span class="line">      margin-top: <span class="number">50</span>px; margin-left: <span class="number">50</span>px;</span><br><span class="line">      border: thin dashed black</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">cite &#123; display: block;</span><br><span class="line">       <span class="type">text</span>-align : right;</span><br><span class="line">       border: none</span><br><span class="line">       &#125;</span><br><span class="line">The initial value <span class="keyword">of</span> ‘overflow’ <span class="keyword">is</span> ‘visible’, so <span class="keyword">the</span> &lt;blockquote&gt; would be formatted <span class="keyword">without</span> clipping, something like this:</span><br><span class="line"></span><br><span class="line">Possible rendering <span class="keyword">with</span> ‘overflow: visible’</span><br><span class="line">Setting ‘overflow’ <span class="keyword">to</span> ‘hidden’ <span class="keyword">for</span> <span class="keyword">the</span> &lt;<span class="keyword">div</span>&gt;, <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> other hand, causes <span class="keyword">the</span> &lt;blockquote&gt; <span class="keyword">to</span> be clipped <span class="keyword">by</span> <span class="keyword">the</span> containing block:</span><br><span class="line"></span><br><span class="line">Possible rendering <span class="keyword">with</span> ‘overflow: hidden’</span><br><span class="line">A value <span class="keyword">of</span> ‘scroll’ would <span class="keyword">tell</span> UAs <span class="keyword">that</span> support a visible scrolling mechanism <span class="keyword">to</span> display one so <span class="keyword">that</span> users could access <span class="keyword">the</span> clipped content.</span><br><span class="line">Consider this case <span class="keyword">where</span> an absolutely positioned element <span class="keyword">is</span> mixed <span class="keyword">with</span> an overflow parent. Style sheet:</span><br><span class="line">container &#123; position: relative; border: solid; &#125;</span><br><span class="line">scroller &#123; overflow: scroll; height: <span class="number">5</span>em; margin: <span class="number">5</span>em; &#125;</span><br><span class="line">satellite &#123; position: absolute; top: <span class="number">0</span>; &#125;</span><br><span class="line">body &#123; height: <span class="number">10</span>em; &#125;</span><br><span class="line">Document fragment:</span><br><span class="line">&lt;container&gt;</span><br><span class="line">&lt;scroller&gt;</span><br><span class="line">  &lt;satellite/&gt;</span><br><span class="line">  &lt;body/&gt;</span><br><span class="line">&lt;/scroller&gt;</span><br><span class="line">&lt;/container&gt;</span><br><span class="line">In this example, <span class="keyword">the</span> “scroller” element will <span class="keyword">not</span> scroll <span class="keyword">the</span> “satellite” element, because <span class="keyword">the</span> latter's containing block <span class="keyword">is</span> outside <span class="keyword">the</span> element <span class="keyword">whose</span> overflow <span class="keyword">is</span> being clipped <span class="keyword">and</span> scrolled.</span><br><span class="line">The combination <span class="keyword">of</span> collapsing margins, ‘max-height’ <span class="keyword">and</span> ‘overflow: auto’ can lead <span class="keyword">to</span> subtle differences <span class="keyword">in</span> implementations, unless special care <span class="keyword">is</span> taken. A UA should assume <span class="keyword">that</span> an element can be rendered <span class="keyword">without</span> a scrolling mechanism <span class="keyword">first</span>, perform all <span class="keyword">the</span> collapsing <span class="keyword">of</span> margins, <span class="keyword">and</span> check <span class="keyword">that</span> <span class="keyword">the</span> content height <span class="keyword">is</span> indeed <span class="keyword">less than</span> <span class="keyword">the</span> ‘max-height’. If <span class="keyword">it</span> <span class="keyword">is</span> <span class="keyword">not</span>, <span class="keyword">the</span> process <span class="keyword">is</span> repeated under <span class="keyword">the</span> assumption <span class="keyword">that</span> a scrolling mechanism <span class="keyword">is</span> needed.</span><br><span class="line">In <span class="keyword">the</span> following document fragment, <span class="keyword">the</span> outer DIV has ‘height: auto’, <span class="keyword">but</span> ‘max-height: <span class="number">5</span>em’. The inner DIV has large margins <span class="keyword">and</span> would normally just fit:</span><br><span class="line">...</span><br><span class="line">    <span class="comment">#d1 &#123; overflow: auto; max-height: 5em &#125;</span></span><br><span class="line">    <span class="comment">#d2 &#123; margin: 2em; line-height: 1 &#125;</span></span><br><span class="line">...</span><br><span class="line">&lt;<span class="keyword">div</span> <span class="property">id</span>=d1&gt;</span><br><span class="line">  &lt;<span class="keyword">div</span> <span class="property">id</span>=d2&gt;</span><br><span class="line">    This DIV has big margins.</span><br><span class="line">  &lt;/DIV&gt;</span><br><span class="line">&lt;/DIV&gt;</span><br><span class="line">If we assume <span class="keyword">that</span> d1 needs scroll bars, <span class="keyword">then</span> <span class="keyword">the</span> height <span class="keyword">of</span> d1, including <span class="keyword">the</span> single line <span class="keyword">of</span> <span class="type">text</span> <span class="keyword">and</span> twice <span class="number">2</span>em <span class="keyword">of</span> margins, adds up <span class="keyword">to</span> <span class="number">5</span>em plus a scrollbar. Since <span class="keyword">that</span> <span class="keyword">is</span> <span class="keyword">greater than</span> <span class="number">5</span>em, <span class="keyword">the</span> maximum allowed height, <span class="keyword">it</span> seems we made <span class="keyword">the</span> right assumption <span class="keyword">and</span> d1 indeed needs scrollbars.</span><br><span class="line">However, we should have started <span class="keyword">by</span> assuming <span class="keyword">that</span> no scrollbars are needed. In <span class="keyword">that</span> case <span class="keyword">the</span> content height <span class="keyword">of</span> d1 <span class="keyword">is</span> exactly <span class="keyword">the</span> maximum height <span class="keyword">of</span> <span class="number">5</span>em, proving <span class="keyword">that</span> <span class="keyword">the</span> assumption was correct <span class="keyword">and</span> d1 indeed should <span class="keyword">not</span> have scrollbars.</span><br><span class="line">The computed values <span class="keyword">of</span> ‘overflow-x’ <span class="keyword">and</span> ‘overflow-y’ are <span class="keyword">the</span> same <span class="keyword">as</span> their specified values, except <span class="keyword">that</span> <span class="keyword">some</span> combinations <span class="keyword">with</span> ‘visible’ are <span class="keyword">not</span> possible: <span class="keyword">if</span> one <span class="keyword">is</span> specified <span class="keyword">as</span> ‘visible’ <span class="keyword">and</span> <span class="keyword">the</span> other <span class="keyword">is</span> ‘scroll’ <span class="keyword">or</span> ‘auto’, <span class="keyword">then</span> ‘visible’ <span class="keyword">is</span> <span class="keyword">set</span> <span class="keyword">to</span> ‘auto’. The computed value <span class="keyword">of</span> ‘overflow’ <span class="keyword">is</span> <span class="keyword">equal</span> <span class="keyword">to</span> <span class="keyword">the</span> computed value <span class="keyword">of</span> ‘overflow-x’ <span class="keyword">if</span> ‘overflow-y’ <span class="keyword">is</span> <span class="keyword">the</span> same; otherwise <span class="keyword">it</span> <span class="keyword">is</span> <span class="keyword">the</span> pair <span class="keyword">of</span> computed values <span class="keyword">of</span> ‘overflow-x’ <span class="keyword">and</span> ‘overflow-y’.</span><br><span class="line">The scrolling mechanism depends <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> UA. The most common mechanism <span class="keyword">is</span> a scrollbar, <span class="keyword">but</span> panners, hand cursors, page flickers, etc. are also possible. A value <span class="keyword">of</span> ‘scroll’ would <span class="keyword">tell</span> UAs <span class="keyword">that</span> support a visible scrolling mechanism <span class="keyword">to</span> display one so <span class="keyword">that</span> users can access <span class="keyword">the</span> clipped content. The ‘overflow-style’ <span class="keyword">property</span> lets an author specify one <span class="keyword">or</span> more preferred scrolling mechanism.</span><br><span class="line">Note <span class="keyword">that</span> ‘overflow-x’ <span class="keyword">and</span> ‘overflow-y’ did <span class="keyword">not</span> exist <span class="keyword">in</span> CSS2.</span><br><span class="line">Note <span class="keyword">that</span> ‘<span class="type">text</span>-overflow’ (see [CSS3TEXT] ) can be used <span class="keyword">to</span> give a visual indication <span class="keyword">where</span> <span class="type">text</span> has been clipped.</span><br></pre></td></tr></table></figure>
+<p>overflow，常与定高的元素配合使用，如果元素定高，通过overflow-y: auto, 如果内容高度大于定高元素就会出现滚动条。如果定高元素内部需要出现overflow：visiable的元素，需要重新更改overflow的属性值。因为默认元素的overflow是继承父节点的。</p>
+
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSS/"> #CSS </a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/06/nginx-session/">Nginx + Docker Cluster & session sticky</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </div>
+  </div>
+
+
+
+    
+      <div class="comments" id="comments">
+        
+      </div>
+    
+  </div>
+
+
+        </div>
+      </div>      
+    </div>
+</div>
+<div class="col-xs-2">
+  
+  
+
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+
+          <canvas id="cube" width="102" height="90"></canvas>
+          <p class="site-author-name">Jet He</p>
+        </div>
+        <p class="site-description motion-element">杂乱 并蓄</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/Compasses" target="_blank">GitHub</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+
+      </div>
+
+      
+        <div class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#POSITION"><span class="nav-number">1.</span> <span class="nav-text">POSITION</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#relative_position"><span class="nav-number">1.1.</span> <span class="nav-text">relative position</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#absolute_position"><span class="nav-number">1.2.</span> <span class="nav-text">absolute position</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fixed_position"><span class="nav-number">1.3.</span> <span class="nav-text">fixed position</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#floating"><span class="nav-number">1.4.</span> <span class="nav-text">floating</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#overflow"><span class="nav-number">2.</span> <span class="nav-text">overflow</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </div>
+      
+
+    </div>
+  </div>
+
+
+
+</div>
+</div>
+
+<div class="row">
+    <div id="footer" class="footer">
+    <div class="row">
+    <div class="col-xs-11">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">Jet He</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/Compasses/blogFiles">
+    CHANGEFORFUTURE
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+    <div class="col-xs-1">
+      <div class="back-to-top"></div>
+    </div>
+  </div>
+    </div>
+    </div>
+</div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/vendors/bootstrap/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/siteJS/cube.js"></script>
+  <script type="text/javascript" src="/vendors/siteJS/site.js"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+  
+
+  
+
+
+
+
+  
+</body>
+</html>
