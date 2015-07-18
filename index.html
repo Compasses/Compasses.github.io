@@ -122,6 +122,154 @@
           
           
             
+              <a class="post-title-link" href="/2015/07/18/php-framework/">
+                PHP 框架之CodeIgniter & Laravel
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-07-18
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <h1 id="说明">说明</h1><p>最近产品考虑更换前端框架，重点考察了CodeIgniter 和 Laravel两个框架，现对其进行下对比分析。</p>
+<h1 id="总体对比">总体对比</h1><table>
+<thead>
+<tr>
+<th></th>
+<th style="text-align:left">CodeIgniter</th>
+<th style="text-align:center">Laravel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document</td>
+<td style="text-align:left">Good enough</td>
+<td style="text-align:center">Good enough</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td style="text-align:left">差不多 3倍于 Laravel</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>MVC</td>
+<td style="text-align:left">Good enough</td>
+<td style="text-align:center">Good enough</td>
+</tr>
+<tr>
+<td>TWIG</td>
+<td style="text-align:left">自己添加 TWIG lib</td>
+<td style="text-align:center">使用三方插件</td>
+</tr>
+<tr>
+<td>third-party</td>
+<td style="text-align:left">自己添加，放到指定目录</td>
+<td style="text-align:center">composer managment</td>
+</tr>
+<tr>
+<td>Route</td>
+<td style="text-align:left">default mapping ：”example.com/class/function/id/“ can be remap, more code than Laravel</td>
+<td style="text-align:center">Simple and clear</td>
+</tr>
+<tr>
+<td>summary</td>
+<td style="text-align:left">简单 精巧</td>
+<td style="text-align:center">易用，更为丰满</td>
+</tr>
+</tbody>
+</table>
+<p>CodeIgniter 基本上是个MVC的空架子，代码量极小，开发的花基本上 100%的掌控在自己手里。 Laravel还是加载了不少的三方 component，比CodeIgniter 庞大些。<br>对MVC的支持都很清晰，URL的路由也很简单易扩展。</p>
+<h1 id="测试环境：">测试环境：</h1><p>主要是使用了Laravel 的HomeStead环境，通过virtual box + vagrant标准用法，加载Laravel的框架代码；要使其加载CodeIgniter框架，需要修改Nginx的配置，增加新的server，只要端口号换成新的，root指定到CodeIgniter的跟目录即可。<br>总体上是Nginx+php5-fpm+mysql+ Ubuntu + CodeIgniter 源码包 + Laravel 源码包。源码包共享在本机上。</p>
+<h1 id="测试页面：">测试页面：</h1><p>Modal：使用product数据，获取某个product上的所有信息。<br>View：引入Twig模板引擎，创建几个twig模板，在controller层render。<br>Controller：调用modal获取数据，使用 twig render 页面。</p>
+<p>这两个框架都用非常清晰的 MVC结构，上述页面的代码几乎可以在两者之间无缝迁移。</p>
+<h1 id="性能对比测试：">性能对比测试：</h1><p>针对这个页面进行性能测试：页面大小为 8KB， 加载一个已有的CSS文件大小为 87.7KB。<br>使用Apache的ab test进行测试：<br>AB test:<br>ab -n 1000 -c 80 <a href="http://192.168.10.10:8080/productdetail/" target="_blank" rel="external">http://192.168.10.10:8080/productdetail/</a></p>
+<h2 id="Laravel_结果:">Laravel 结果:</h2><p>Server Software:        nginx/1.8.0<br>Server Hostname:        192.168.10.10<br>Server Port:            80</p>
+<p>Document Path:          /product/<br>Document Length:        200205 bytes</p>
+<p>Concurrency Level:      80<br>Time taken for tests:   112.455 seconds<br>Complete requests:      1000<br>Failed requests:        0<br>Total transferred:      200793036 bytes<br>HTML transferred:       200205000 bytes<br>Requests per second:    8.89 [#/sec] (mean)<br>Time per request:       8996.416 [ms] (mean)<br>Time per request:       112.455 [ms] (mean, across all concurrent requests)<br>Transfer rate:          1743.69 [Kbytes/sec] received</p>
+<p>Connection Times (ms)</p>
+<p>min  mean[+/-sd] median   max<br>Connect:        0    1   1.0      0      18<br>Processing:  2001 8604 1574.3   8488   17271<br>Waiting:     1999 8594 1572.4   8480   17269<br>Total:       2005 8604 1574.0   8490   17271<br>WARNING: The median and mean for the initial connection time are not within a normal deviation</p>
+<p>These results are probably not that reliable.</p>
+<p>Percentage of the requests served within a certain time (ms)</p>
+<p>  50%   8490</p>
+<p>  66%   8695</p>
+<p>  75%   8960</p>
+<p>  80%   9098</p>
+<p>  90%   9951</p>
+<p>  95%  12074</p>
+<p>  98%  12548</p>
+<p>  99%  12944</p>
+<p> 100%  17271 (longest request)</p>
+<h2 id="CodeIgniter_结果:">CodeIgniter 结果:</h2><p>Server Software:        nginx/1.8.0<br>Server Hostname:        192.168.10.10<br>Server Port:            8080</p>
+<p>Document Path:          /productdetail/<br>Document Length:        200205 bytes</p>
+<p>Concurrency Level:      80<br>Time taken for tests:   40.332 seconds<br>Complete requests:      1000<br>Failed requests:        0<br>Total transferred:      200341000 bytes<br>HTML transferred:       200205000 bytes<br>Requests per second:    24.79 [#/sec] (mean)<br>Time per request:       3226.569 [ms] (mean)<br>Time per request:       40.332 [ms] (mean, across all concurrent requests)<br>Transfer rate:          4850.86 [Kbytes/sec] received</p>
+<p>Connection Times (ms)</p>
+<p>min  mean[+/-sd] median   max<br>Connect:        0    1   1.3      0      23<br>Processing:   346 3097 456.3   3169    3649<br>Waiting:      343 3089 455.7   3161    3645<br>Total:        351 3098 455.5   3170    3649</p>
+<p>Percentage of the requests served within a certain time (ms)</p>
+<p>  50%   3170</p>
+<p>  66%   3216</p>
+<p>  75%   3250</p>
+<p>  80%   3270</p>
+<p>  90%   3326</p>
+<p>  95%   3467</p>
+<p>  98%   3551</p>
+<p>  99%   3582</p>
+<p> 100%   3649 (longest request)</p>
+<h1 id="总结">总结</h1><p>CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。<br>如果选择从头开始的话，感觉CodeIgniter更好些。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PHP/"> #PHP </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/09/Go-Go/">
                 Go Go
               </a>
@@ -159,7 +307,8 @@
 <li>并发编程的支持，可以写并发执行的代码，通过go关键字来完成。goroutine确是是个好东西，用户层上的并发协程，能有效的利用多核计算能力。Go能原生的支持并发编程并能很好的利用多核能力是个极大的优势。</li>
 </ol>
 <p>有人说不能把Go作为偏向Web的语言，这应该是比较片面的。就像Python一样，一直都是当成工具使用，能快速的开发一些小工具，而现在呢，Python的Web框架为Python的流行应该是起了主要作用。Go的使用应该要偏向云平台开发、Web开发，高性能、高并发的场景。试想下Docker的流行，国内七牛公司对Go语言的推崇。</p>
-<p>Go相对于PHP、JAVA年轻很多，但自己相信它会成为后起之秀，也做好了这个准备。很高兴开启Go语言之旅。</p>
+<p>Go相对于PHP、JAVA年轻很多，但自己相信它会成为后起之秀，也做好了这个准备。</p>
+<p>很高兴开启Go语言之旅。</p>
 
         
       
@@ -409,77 +558,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/19/docker-docker/">
-                docker docker
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-06-19
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。</p>
-<p>首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照<a href="https://docs.docker.com/installation/ubuntulinux/" target="_blank" rel="external">官网</a>即可</p>
-<p>公司的镜像是基于Ubuntu+wordpress+Apache，MySQL在宿主机上。运行container的时候带上相应的参数，这里主要是端口映射，将docker里面的80端口映射到宿主机上的某一个端口例如7080，最后运行起来类似这个样子：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                                               NAMES</span><br><span class="line">ff1ad6f22e91        eshop_612:latest    <span class="string">"/var/eshop/install/   31 hours ago        Up 31 hours         0.0.0.0:7022-&gt;22/tcp, 0.0.0.0:7080-&gt;80/tcp, 0.0.0.0:7443-&gt;443/tcp   eshop_instance_7080</span></span><br></pre></td></tr></table></figure></p>
-<p>开始遇到一个问题就是这个端口的映射问题，起来后外部访问时还是用的宿主机的Apache，后续停掉宿主机的Apache，目的是干掉80监听端口，在docker里面增加proxy。后面就一路畅通了。</p>
-<p>修改源码如何更新到docker里面是个麻烦的事情，如果有个外挂文件目录的功能就好了，现在只能是修改后的代码传到docker里面。其实传代码也很简单，相比以前编写C++代码，先把本地代码传到Linux服务器上进行编译，编译完再传到运行的服务器上，已经简单多了。现在做的只是把修改后的代码通过filezilla传到docker里面，然后浏览器访问就ok了。</p>
-<p>dokcer的开发环境相对于本地的开发环境速度上有个质的飞跃，由于本地是XAMPP的，然后在windows上。很显然web的开发环境更适宜运行在docker里面了。</p>
-<p>当然还有个非常大的优点，你可以运行任意多个container，每个container里面的code版本可以不一样啊，尤其在多版本并行开发的时候，带来的开发体验是本地不能有的。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/docker/"> #docker </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -512,7 +590,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -526,7 +604,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

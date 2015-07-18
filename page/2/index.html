@@ -122,6 +122,77 @@
           
           
             
+              <a class="post-title-link" href="/2015/06/19/docker-docker/">
+                docker docker
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-06-19
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。</p>
+<p>首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照<a href="https://docs.docker.com/installation/ubuntulinux/" target="_blank" rel="external">官网</a>即可</p>
+<p>公司的镜像是基于Ubuntu+wordpress+Apache，MySQL在宿主机上。运行container的时候带上相应的参数，这里主要是端口映射，将docker里面的80端口映射到宿主机上的某一个端口例如7080，最后运行起来类似这个样子：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                                               NAMES</span><br><span class="line">ff1ad6f22e91        eshop_612:latest    <span class="string">"/var/eshop/install/   31 hours ago        Up 31 hours         0.0.0.0:7022-&gt;22/tcp, 0.0.0.0:7080-&gt;80/tcp, 0.0.0.0:7443-&gt;443/tcp   eshop_instance_7080</span></span><br></pre></td></tr></table></figure></p>
+<p>开始遇到一个问题就是这个端口的映射问题，起来后外部访问时还是用的宿主机的Apache，后续停掉宿主机的Apache，目的是干掉80监听端口，在docker里面增加proxy。后面就一路畅通了。</p>
+<p>修改源码如何更新到docker里面是个麻烦的事情，如果有个外挂文件目录的功能就好了，现在只能是修改后的代码传到docker里面。其实传代码也很简单，相比以前编写C++代码，先把本地代码传到Linux服务器上进行编译，编译完再传到运行的服务器上，已经简单多了。现在做的只是把修改后的代码通过filezilla传到docker里面，然后浏览器访问就ok了。</p>
+<p>dokcer的开发环境相对于本地的开发环境速度上有个质的飞跃，由于本地是XAMPP的，然后在windows上。很显然web的开发环境更适宜运行在docker里面了。</p>
+<p>当然还有个非常大的优点，你可以运行任意多个container，每个container里面的code版本可以不一样啊，尤其在多版本并行开发的时候，带来的开发体验是本地不能有的。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/docker/"> #docker </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/06/08/straight-join/">
                 straight_join when and why
               </a>
@@ -414,74 +485,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/18/zaji-1/">
-                杂记 一
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-05-18
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>最近一直有所恍惚，不知道自己的定位是什么，未来要做什么。<br>极力的从一个公司挣脱到另一个公司，发现其实这种跳槽其实意义不大，发生这种事情还是自己考虑不周，不清楚自己的定位导致。<br>说到定位，想想自己想做什么样的人，未来要做什么样的事情。。。 </p>
-<p>自己总是一意孤行的想多做点技术方面的工作，不计损失，可要想到任何地方其实都是跟业务相关的，不做业务怎么赚钱呢？纯粹的技术工作会有吗？应该寥寥无几，自己哪有什么本事能去做那样的工作呢。<br>事情有因必有果，目前的境遇是我的造成的，是我应该面对的。工作和家庭，要轻松的工作可以更多的兼顾家庭，可是赚钱就不会太多；想要赚多点钱就要找奋斗型的公司，工作时间长，家庭生活要少很多。自己已经从后者的生活状态转变为前者，发现前者的生活更加让人迷茫。</p>
-<p>每天都很清闲，生活在外企的工作氛围中，你会觉得自己很是个另类，如此的轻松愉快，不好吗？为啥还要有那么多的想法和迷茫呢。<br>自己感觉是年轻的一类，而且也想更多的实现自身价值和获取更多的成就感。发现自己还是适合奋斗型的。</p>
-<p>热烈的想工作，渴望面对更多的技术问题，解决更多的问题。目前阶段算是给自己的一个放松的机会，希望下一次机会来临，自己能够擦亮眼睛获取自己想要的环境，不然你不会<strong>幸福的</strong>。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/thoughts/"> #thoughts </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -514,7 +517,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -528,7 +531,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
