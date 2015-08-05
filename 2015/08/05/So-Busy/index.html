@@ -21,7 +21,7 @@
 
 
 
-  <meta name="keywords" content="docker," />
+  <meta name="keywords" content="Work," />
 
 
 
@@ -32,7 +32,7 @@
 
 
 
-  <title> docker docker // 三十重围 </title>
+  <title> So Busy // 三十重围 </title>
 </head>
 
 <body>
@@ -120,7 +120,7 @@
           
           
             
-              docker docker
+              So Busy
             
           
         </h1>
@@ -128,7 +128,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-06-19
+          发表于 2015-08-05
         </span>
 
         
@@ -145,13 +145,7 @@
       
 
       
-        <p>一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。</p>
-<p>首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照<a href="https://docs.docker.com/installation/ubuntulinux/" target="_blank" rel="external">官网</a>即可</p>
-<p>公司的镜像是基于Ubuntu+wordpress+Apache，MySQL在宿主机上。运行container的时候带上相应的参数，这里主要是端口映射，将docker里面的80端口映射到宿主机上的某一个端口例如7080，最后运行起来类似这个样子：<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                                               NAMES</span><br><span class="line">ff1ad6f22e91        eshop_612:latest    <span class="string">"/var/eshop/install/   31 hours ago        Up 31 hours         0.0.0.0:7022-&gt;22/tcp, 0.0.0.0:7080-&gt;80/tcp, 0.0.0.0:7443-&gt;443/tcp   eshop_instance_7080</span></span><br></pre></td></tr></table></figure></p>
-<p>开始遇到一个问题就是这个端口的映射问题，起来后外部访问时还是用的宿主机的Apache，后续停掉宿主机的Apache，目的是干掉80监听端口，在docker里面增加proxy。后面就一路畅通了。</p>
-<p>修改源码如何更新到docker里面是个麻烦的事情，如果有个外挂文件目录的功能就好了，现在只能是修改后的代码传到docker里面。其实传代码也很简单，相比以前编写C++代码，先把本地代码传到Linux服务器上进行编译，编译完再传到运行的服务器上，已经简单多了。现在做的只是把修改后的代码通过filezilla传到docker里面，然后浏览器访问就ok了。</p>
-<p>dokcer的开发环境相对于本地的开发环境速度上有个质的飞跃，由于本地是XAMPP的，然后在windows上。很显然web的开发环境更适宜运行在docker里面了。</p>
-<p>当然还有个非常大的优点，你可以运行任意多个container，每个container里面的code版本可以不一样啊，尤其在多版本并行开发的时候，带来的开发体验是本地不能有的。</p>
+        <p>最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。<br>整理下最近都是忙了点啥。<br>由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。<br>这其中有个恶心的地方就是本来平台开发是基于wordpress的，而wordpress本身是个开箱即用的东西，完全不是MVC的框架。但需要提供的接口要满足REST Ful 的。所以很多url 的route 规则需要自己去实现。这样下来发现如果最早使用一个PHP的MVC框架会省不小心啊。<br>好在这个过程需要研究下PHP的MVC框架，为后续的演进做好了铺垫。<br>另外一个项目就是需要开发自己的CMS系统，这个系统以OPEN API为基础。框架采用后端Java Spring， 前端使用angularJS。<br>由于对java确是使用的较少，什么java框架也没玩过，所以就聚焦在了angularJS上了。angularJS是前端的MVC框架，能力出众。值得深入研究使用。最起码javaScripts方面的知识派上用场了。</p>
 
       
     </div>
@@ -160,7 +154,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/docker/"> #docker </a>
+            <a href="/tags/Work/"> #Work </a>
           
         </div>
       
@@ -169,13 +163,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/26/deadloc/">deadlock of mysql</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/06/08/straight-join/">straight_join when and why</a>
+              <a href="/2015/07/18/php-framework/">PHP 框架之CodeIgniter & Laravel</a>
             
           </div>
         </div>

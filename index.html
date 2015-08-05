@@ -122,6 +122,71 @@
           
           
             
+              <a class="post-title-link" href="/2015/08/05/So-Busy/">
+                So Busy
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-08-05
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。<br>整理下最近都是忙了点啥。<br>由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。<br>这其中有个恶心的地方就是本来平台开发是基于wordpress的，而wordpress本身是个开箱即用的东西，完全不是MVC的框架。但需要提供的接口要满足REST Ful 的。所以很多url 的route 规则需要自己去实现。这样下来发现如果最早使用一个PHP的MVC框架会省不小心啊。<br>好在这个过程需要研究下PHP的MVC框架，为后续的演进做好了铺垫。<br>另外一个项目就是需要开发自己的CMS系统，这个系统以OPEN API为基础。框架采用后端Java Spring， 前端使用angularJS。<br>由于对java确是使用的较少，什么java框架也没玩过，所以就聚焦在了angularJS上了。angularJS是前端的MVC框架，能力出众。值得深入研究使用。最起码javaScripts方面的知识派上用场了。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Work/"> #Work </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/07/18/php-framework/">
                 PHP 框架之CodeIgniter & Laravel
               </a>
@@ -487,82 +552,11 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/06/26/deadloc/">
-                deadlock of mysql
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-06-26
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>没有想到在看似简单的场景里面也能遇到mysql的deadlock。</p>
-<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">Thu</span> <span class="type">Jun</span> <span class="number">25</span> <span class="number">05</span>:<span class="number">18</span>:<span class="number">40.589897</span> <span class="number">2015</span>] [:error] [pid <span class="number">737</span>] [client <span class="number">172.17</span>.<span class="number">42.1</span>:<span class="number">41290</span>] <span class="type">WordPress</span> database error <span class="type">Deadlock</span> found <span class="keyword">when</span> trying <span class="keyword">to</span> get lock; <span class="keyword">try</span> restarting transaction <span class="keyword">for</span> query <span class="type">UPDATE</span> `wp_usermeta` <span class="type">SET</span> `meta_value` = <span class="symbol">'a</span>:<span class="number">2</span>:&#123;s:<span class="number">64</span>:\\<span class="string">"1161a6271c528045db428cc8698bbc8e3e26ad4fb9d7436e32cbbe01a00079d0\\"</span>;i:<span class="number">1436419120</span>;s:<span class="number">64</span>:\\<span class="string">"bf2e3582e17c7dfa1e6b02c700f537b8095f2b31ef58e4b448939eb9406e11f7\\"</span>;i:<span class="number">1435382320</span>;&#125;<span class="char">' WHERE `user_id` = 188 AND `meta_key` = '</span>session_tokens' made by require(<span class="symbol">'wp</span>-blog-header.php'), require_once(<span class="symbol">'wp</span>-includes/template-loader.php'), do_action(<span class="symbol">'template_redirect'</span>), call_user_func_array, anw_template_redirect, <span class="type">ANW_Base_Controller</span>-&gt;process, call_user_func, <span class="type">ANW_AccountOnePage_Controller</span>-&gt;authenticate, wp_signon, wp_set_auth_cookie, <span class="type">WP_Session_Tokens</span>-&gt;create, <span class="type">WP_Session_Tokens</span>-&gt;update, <span class="type">WP_User_Meta_Session_Tokens</span>-&gt;update_session, <span class="type">WP_User_Meta_Session_Tokens</span>-&gt;update_sessions, update_user_meta, update_metadata</span><br></pre></td></tr></table></figure>
-<p>这是wordpress本身的缺陷导致的，死锁的场景也是不复杂。即session_tokens的更新机制所致。<br>Session_tokens的更新是随着用户的login和 logout 更新的。Login时会增加session_tokens, 在不同的 浏览器 login会增加新的 tokens，在 logout时会删除这个 tokens。<br>这个死锁用户有两个 session，场景可能就是不同的浏览器同时做 login或者 logout，或者一个 login另一个 logout。看这个环境上有大量的用户存在，并且每个用户至多有两个 session，也只有跑性能脚本会有这个问题。现实情况比较难复现。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line">* Update a user's sessions in the usermeta table.</span><br><span class="line">*</span><br><span class="line">*<span class="phpdoc"> @since</span> 4.0.0</span><br><span class="line">*<span class="phpdoc"> @access</span> protected</span><br><span class="line">*</span><br><span class="line">*<span class="phpdoc"> @param</span> array $sessions Sessions.</span><br><span class="line">*/</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">update_sessions</span><span class="params">( <span class="variable">$sessions</span> )</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> ( ! has_filter( <span class="string">'attach_session_information'</span> ) ) &#123;</span><br><span class="line">                                <span class="variable">$sessions</span> = wp_list_pluck( <span class="variable">$sessions</span>, <span class="string">'expiration'</span> );</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ( <span class="variable">$sessions</span> ) &#123;</span><br><span class="line">                                update_user_meta( <span class="variable">$this</span>-&gt;user_id, <span class="string">'session_tokens'</span>, <span class="variable">$sessions</span> );</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                delete_user_meta( <span class="variable">$this</span>-&gt;user_id, <span class="string">'session_tokens'</span> );</span><br><span class="line">                &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>看到这里应该要在仔细深入了解下mysql的加锁机制，当然这个会比较复杂，也不能一蹴而就。整体上重新熟悉下。<br>事务的隔离级别有四种，分别是READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ、SERIALIZEABLE。mysql默认的是可重复读。</p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MariaDB [(none)]&gt; show global variables like <span class="emphasis">'%isolation%'</span>;</span><br><span class="line"><span class="code">+---------------+</span>-----------------+</span><br><span class="line"><span class="header">| Variable_name | Value           |</span><br><span class="line">+---------------+-----------------+</span></span><br><span class="line"><span class="header">| tx_isolation  | REPEATABLE-READ |</span><br><span class="line">+---------------+-----------------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
-<p>INNODB支持所有的事务隔离级别，但是MVCC只在REPEATABLE READ 和READ COMMITTED两个隔离级别下工作。<br>回到开始的问题。session_tokens 是真对用户在不同的终端上登录时进行更新的，value是个array，如上代码所示。如果同一个用户在两个终端上，可以是不同的浏览器即可，就会有不同的session_tokens，在登录登出的时候就会update改用户的数据，即同一行数据就可能产生死锁。这里必须是同时有两个事务。<br>现实中同一个用户在两个终端同时操作的可能性不大，但是也很难说。这也说明了wordpress的代码不够健壮吧。当然这里的死锁也并不可怕，INNODB会将持有最少行级排它锁的事务进行回滚。锁机制的了解还是要多多实践，网上也有较好的<a href="http://hedengcheng.com/?p=771" target="_blank" rel="external">文章参考</a>。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/MYSQL/"> #MYSQL </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
   <div class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
   </div>
 
 
@@ -590,7 +584,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-count">16</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -604,7 +598,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
