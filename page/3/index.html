@@ -122,6 +122,76 @@
           
           
             
+              <a class="post-title-link" href="/2015/05/24/aio-block/">
+                同步、异步、阻塞、非阻塞I/O
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-05-24
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>NodeJS倡导异步编程，高并发，高性能。他自然是异步非阻塞I/O。非阻塞I/O是不是就是异步的，跟异步编程又有什么区别呢？写到这里突然想到了大学里的辅导员，刚入大学的第一次开会，就告诫我们，<strong>学数学最重要的就是概念，概念不清就什么都学不好</strong>。我深深记住了这句话，受用至今。</p>
+<p>先看看阻塞和非阻塞，阻塞，顾名思义，即在读取数据时，阻塞在等待数据，或者监听事件时阻塞，有新的数据或者事件，事件是泛化概念，数据到达也是个事件。可以用事件代替一切吧，统称event。非阻塞即调用接口触发某种event，没有任何event也不会阻塞，而是直接返回。</p>
+<p>非阻塞返回后干什么，这就牵扯到同步和异步之分了。阻塞就不用多说了显而易见的同步行为。在非阻塞的基础上再进行区分同步和异步。非阻塞在Linux上一般都会使用性能较好的epoll实现，epoll会轮询这些阻塞上的事件，有事务返回便会调用相应的处理流程。那这个是不是异步的呢，还是要看在哪个角度上说，站在非阻塞的角度上，因同时处理多个事件，增加并发性，多个阻塞event进行了异步处理；在轮询线程上说，因还是在不断的轮询它所关心的事件，某一个事件返回时就要进行相应的处理，在这个角度上讲，这个线程可以同步处理多个异步事件，它是同步的。但是在一个框架上，如果实现了这种同步处理多个异步事件的行为，在基于这个框架上进行编码的时候，要进行事件回调，这也是NodeJS的行为。NodeJS需要异步编程思想，但是NodeJS是单线程的，NodeJS就是要不断回调那些需要异步处理的事件，但是异步编程会让代码变得难以维护和调试，<a href="http://www.zhihu.com/question/19585576" target="_blank" rel="external">这个链接</a>有较好的讨论。</p>
+<p>AIO是纯正的异步I/O且非阻塞的，本来应该想epoll一样被广泛使用，获得大赞的，但目前看来被<a href="http://www.wzxue.com/linux-kernel-aio%E8%BF%99%E4%B8%AA%E5%A5%87%E8%91%A9/" target="_blank" rel="external">诟病太多</a>。例如内核实现的AIO只能是直接I/O的方式，不能有效的利用系统缓存。glibc的AIO利用线程池模拟出来的，但是存在一系列的bug和<a href="http://www.lenky.info/archives/2013/01/2165" target="_blank" rel="external">缺陷</a>。也因此NodeJS的作者重新封装了一个异步非阻塞的库： libuv。</p>
+<p>由于NodeJS的异步编程思想，会让代码变得维护困难，调试也非常不直观，后面就出现了协程的思想。<a href="https://bjouhier.wordpress.com/2012/03/11/fibers-and-threads-in-node-js-what-for/" target="_blank" rel="external">这篇文章</a>对NodeJS的协程思想进行了介绍。<a href="https://github.com/laverdet/node-fibers" target="_blank" rel="external">node-fibers</a>尝试去协程花NodeJS的层层回调。这个module值得研究一下。后续会有个单独的文章对其进行详细的介绍。</p>
+<p>NodeJS底层事件循环使用了libuv库，跨平台Linux下使用libev实现，windows下使用IOCP实现，后续也要仔细研究下这个库，应用广泛的东西，必定是好东西，值得学习的东西。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/"> #JavaScript </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/05/19/MySql-note/">
                 高性能MySQL 读书摘要 
               </a>
@@ -633,75 +703,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/09/Let-s-start/">
-                Let's start
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-05-09
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>博客有了，就要开始写。<br>为什么要写博客呢？看了很多人都推荐写一下博客，这也完全不只是博客那么简单。平时工作谁会有时间写博客呢，当然没有Evernote来的方便，记忆下重要的技术点，以供后续研究学习。</p>
-<p>因换工作有将近9个月，做的东西也类似于全栈工程师，不管是前端还是后端，都要学习使用。这样可以接触很多东西，但是相当于拉长了战线，如果想要做的深、学的好，还是非常有挑战的。也就是因为这个新的工作让我接触了Web开发，使用了PHP、Javascript、Mysql，这让我这个之前做了多年C++通信方向开发的人打开眼界。很多东西很有趣但也很有挑战。Web开发虽然入门容易，但是做到专家也是离不开10000小时的规律的。所以像我这个刚刚进入这个领域的人，更要持续努力了。这个Blog不例外也是用hexo生成出来的，theme使用的是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">NexT</a>，自己在此基础上进行了修改，引入了Bootsrap，调整了些UI，符合我的审美观点吧，虽然非常业余。目前Blog基本功能还是有些bug，后续会慢慢修复和优化，也当成自己的一个训练场吧。</p>
-<p>就像这个Blog，GitHub提供了便利，可以随时随地的写，只要能上网就能更新到网站上，很方便。由于之前都没怎么写过博客，写博客还是非常有必要的，锻炼文字的组织能力、总结能力，更能促进学习进步。希望现在开始还一切来得及。</p>
-<p>名叫“三十重围”，因为自己已经年近30岁，感觉自己需要突出重围，获得自己理想的追求，把平时自己杂乱的东西要学会统一整理，系统规范。</p>
-<p>Blog的开始，重新开始。</p>
-
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/thoughts/"> #thoughts </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -734,7 +735,7 @@
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">16</span>
+              <span class="site-state-item-count">17</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -748,7 +749,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>

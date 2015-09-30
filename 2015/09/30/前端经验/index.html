@@ -21,7 +21,7 @@
 
 
 
-  <meta name="keywords" content="Work," />
+  <meta name="keywords" content="WEB," />
 
 
 
@@ -32,7 +32,7 @@
 
 
 
-  <title> So Busy // 三十重围 </title>
+  <title> 前端经验 // 三十重围 </title>
 </head>
 
 <body>
@@ -120,7 +120,7 @@
           
           
             
-              So Busy
+              前端经验
             
           
         </h1>
@@ -128,7 +128,7 @@
 
       <div class="post-meta">
         <span class="post-time">
-          发表于 2015-08-05
+          发表于 2015-09-30
         </span>
 
         
@@ -145,7 +145,51 @@
       
 
       
-        <p>最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。<br>整理下最近都是忙了点啥。<br>由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。<br>这其中有个恶心的地方就是本来平台开发是基于wordpress的，而wordpress本身是个开箱即用的东西，完全不是MVC的框架。但需要提供的接口要满足REST Ful 的。所以很多url 的route 规则需要自己去实现。这样下来发现如果最早使用一个PHP的MVC框架会省不小心啊。<br>好在这个过程需要研究下PHP的MVC框架，为后续的演进做好了铺垫。<br>另外一个项目就是需要开发自己的CMS系统，这个系统以OPEN API为基础。框架采用后端Java Spring， 前端使用angularJS。<br>由于对java确是使用的较少，什么java框架也没玩过，所以就聚焦在了angularJS上了。angularJS是前端的MVC框架，能力出众。值得深入研究使用。最起码javaScripts方面的知识派上用场了。</p>
+        <p>最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。</p>
+<h1 id="CSS相关">CSS相关</h1><p>因为开发是基于LESS的，所以代码相关的都是<a href="http://less.bootcss.com/" target="_blank" rel="external">LESS</a>的代码。</p>
+<h2 id="mixin">mixin</h2><p>可以看作是面向对象的CSS，直白的讲就是混合引入，也有翻译是混入或混合，这样感觉都是很模糊的。其实功能上就是定义一组属性、style在一个mixin中，可以让其他的class直接引用，作为公共的基础class。例如：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.ellipsis</span> (<span class="variable">@width</span>) &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="variable">@width</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个ellipsis class会将定宽文本进行截断，这样的class可能会在网站中多处使用，而且每次使用宽度可变，这样在使用时传入想要宽度的参数即可。例如产品名字的class：<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">product-name</span> &#123;</span><br><span class="line">     <span class="class">.ellipsis</span>(<span class="number">8em</span>);</span><br><span class="line">     ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="media">media</h2><p>由于前端一直在使用<a href="http://v3.bootcss.com/css/" target="_blank" rel="external">bootstrap</a>，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。<br>其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。</p>
+<p>使用<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media" target="_blank" rel="external">media query</a> 来索引屏幕尺寸并进行特定class的apply。可以让网页支持较好的自适应性。例如针对小屏幕某个class需要有些自适应的属性，下面这个css class在小屏幕上，屏幕宽度小于767px时，左侧增加20px的margin。<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class">.class-name</span> &#123;</span><br><span class="line">     <span class="at_rule">@media</span>(<span class="attribute">max-width</span>: <span class="number">767px</span>) &#123;</span><br><span class="line">          <span class="attribute">margin-left</span>: <span class="number">20px</span>;</span><br><span class="line">          ...</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面是在class里面进行屏幕适应，更多的时候是定义整个class为自适应：<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@media <span class="keyword">only</span> screen and (<span class="built_in">max</span>-width: 67px) &#123;</span><br><span class="line">     .<span class="keyword">class</span>-<span class="keyword">name</span> &#123;</span><br><span class="line">          ...</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>根据不同的尺寸class里面的style进行相应的变化。bootstrap也是这么玩的。<br>在移动设备上有横屏和竖屏的区分，也能做相应的自适应。<br>关键的属性：</p>
+<table>
+<thead>
+<tr>
+<th>media 属性</th>
+<th style="text-align:center">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>min-width</td>
+<td style="text-align:center">当任意浏览器宽度大于查询中定义的值时适用的规则。</td>
+</tr>
+<tr>
+<td>max-width</td>
+<td style="text-align:center">当任意浏览器宽度小于查询中定义的值时适用的规则。</td>
+</tr>
+<tr>
+<td>min-height</td>
+<td style="text-align:center">当任意浏览器高度大于查询中定义的值时适用的规则。</td>
+</tr>
+<tr>
+<td>max-height</td>
+<td style="text-align:center">当任意浏览器高度小于查询中定义的值时适用的规则。</td>
+</tr>
+<tr>
+<td>orientation=portrait</td>
+<td style="text-align:center">高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。</td>
+</tr>
+<tr>
+<td>orientation=landscape</td>
+<td style="text-align:center">宽度大于高度的任意浏览器适用的规则。相当于横屏。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="语义化标签">语义化标签</h2><p>写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。<br>这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。</p>
+<p>上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。</p>
+<h1 id="JS相关">JS相关</h1><p>JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。<br>封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。</p>
 
       
     </div>
@@ -154,7 +198,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Work/"> #Work </a>
+            <a href="/tags/WEB/"> #WEB </a>
           
         </div>
       
@@ -163,13 +207,11 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/09/30/前端经验/">前端经验</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/07/18/php-framework/">PHP 框架之CodeIgniter & Laravel</a>
+              <a href="/2015/08/05/So-Busy/">So Busy</a>
             
           </div>
         </div>
@@ -267,7 +309,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CSS相关"><span class="nav-number">1.</span> <span class="nav-text">CSS相关</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mixin"><span class="nav-number">1.1.</span> <span class="nav-text">mixin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#media"><span class="nav-number">1.2.</span> <span class="nav-text">media</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语义化标签"><span class="nav-number">1.3.</span> <span class="nav-text">语义化标签</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JS相关"><span class="nav-number">2.</span> <span class="nav-text">JS相关</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
