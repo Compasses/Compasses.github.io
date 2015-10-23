@@ -4,8 +4,10 @@
   
 
 <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
 
 
 
@@ -14,7 +16,6 @@
 
 
 <link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
-<link rel="stylesheet" type="text/css" href="/vendors/bootstrap/bootstrap.min.css"/>
 
 
     <meta name="description" content="杂乱 并蓄" />
@@ -36,16 +37,15 @@
 </head>
 
 <body>
-  <div class="container-fluid 
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column 
    page-home 
 ">
-  <div class="row">
-  <div class="col-xs-12"> 
-      <div id="header" class="header">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
       <div class="header-inner">
-        <div class="row">
-<div class="col-xs-6"> 
-<h1 class="site-meta">
+        <h1 class="site-meta">
   <span class="logo-line-before"><i></i></span>
   <a href="/" class="brand">
       <span class="logo">
@@ -55,8 +55,7 @@
   </a>
   <span class="logo-line-after"><i></i></span>
 </h1>
-</div>
-<div class="col-xs-6">
+
 
   <ul id="menu" class="menu">
      
@@ -85,31 +84,87 @@
         </a>
       </li>
     
-      
-      <li class="menu-item menu-item-about">
-        <a href="/about">
-          <i class="menu-item-icon icon-about"></i> <br />
-          关于
-        </a>
-      </li>
-       
   </ul>
 
-</div>
-</div>
 
       </div>
     </div>
-  </div>
-</div>
-  <div class="row">
-    
-  <div class="col-xs-10">
+
     <div id="main" class="main">
       <div class="main-inner">
         <div id="content" class="content">
           
   <div id="posts" class="posts-expand">
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              <a class="post-title-link" href="/2015/06/03/libuv-start/">
+                libuv 学习
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-06-03
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>说明： 本篇文章主要从<a href="http://nikhilm.github.io/uvbook/" target="_blank" rel="external">An Introduction to libuv</a>这本书翻译学习而来。</p>
+<h2 id="开始">开始</h2><p>libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。</p>
+<h3 id="事件循环">事件循环</h3><p>libuv的编译就不用多说，参考libuv的<a href="https://github.com/libuv/libuv" target="_blank" rel="external">github网址</a>。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。</p>
+<p>先从运行一个程序开始：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> "uv.h"</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    uv_loop_t *loop = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(uv_loop_t));</span><br><span class="line">    uv_loop_init(loop);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Now quitting.\n"</span>);</span><br><span class="line">    uv_run(loop, UV_RUN_DEFAULT);</span><br><span class="line">    uv_loop_close(loop);</span><br><span class="line">    <span class="built_in">free</span>(loop);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">'targets'</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">'dependencies'</span>: [<span class="string">'../../uv.gyp:libuv'</span>],</span><br><span class="line">      <span class="string">'target_name'</span>: <span class="string">'helloword'</span>,</span><br><span class="line">      <span class="string">'type'</span>: <span class="string">'executable'</span>,</span><br><span class="line">      <span class="string">'sources'</span>: [</span><br><span class="line">        <span class="string">'main.c'</span>,</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后执行<strong> gyp —format=make -Duv_library=static_library —depth=$PWD build.gyp </strong>生产相应的makefile，最后直接执行<strong>make</strong>，就会生成自己想要的可执行文件。<br>gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平台方面也表现很好，后续有时间也好好学习下。<br>待续。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/"> #C++ </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
     
       
 
@@ -628,81 +683,6 @@
 
 
     
-      
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/05/12/MYSQL的中文排序问题/">
-                MYSQL的中文排序问题
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于 2015-05-12
-        </span>
-
-        
-
-        
-          
-        
-      </div>
-    </div>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>最近在做一个产品filter的功能，遇到一个问题需要对中文的label进行排序，开始以为在数据库层就应该可以轻松解决。但是发现在英文的时候排序是ok的，但是中文的时候结果就不再让人满意了。<br>例如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> <span class="keyword">distinct</span> m.meta_value <span class="keyword">as</span> <span class="keyword">value</span>, m.meta_key <span class="keyword">as</span> prefix <span class="keyword">from</span> wp_postmeta m <span class="keyword">where</span> m.meta_key <span class="keyword">like</span> <span class="string">'UDF::5'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">CONVERT</span>(<span class="keyword">value</span> <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci;</span></span><br></pre></td></tr></table></figure></p>
-<p>结果如下：</p>
-<table id="table_results" class="ajax pma_table"><thead><tr><th colspan="2"><span></span></th></tr><tr><th class="draggable column_heading pointer marker" data-column="value"><span><a >value<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="prefix"><span><a >prefix<input type="hidden" value=""></a></span></th><td><span></span></td></tr></thead><tbody><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>二年级</span></td><td data-decimals="0" data-type="string" class="right data      nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>三年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>四年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>五年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>学前</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>一年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>婴幼儿</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>幼儿园</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr></tbody></table>
-
-<p>上面就是按照中文排序的结果，排序的标准就是按照中文的拼音排序，但是排序的结果还是符合正常的逻辑。<br>进一步可以看下排序的标准是什么：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> <span class="keyword">distinct</span> m.meta_value <span class="keyword">as</span> <span class="keyword">value</span>, m.meta_key <span class="keyword">as</span> prefix, <span class="keyword">CONVERT</span>(meta_value <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci <span class="keyword">as</span> base <span class="keyword">from</span> wp_postmeta m <span class="keyword">where</span> m.meta_key <span class="keyword">like</span> <span class="string">'UDF::5'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">CONVERT</span>(<span class="keyword">value</span> <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci;</span></span><br></pre></td></tr></table></figure></p>
-<p>结果如下：</p>
-<table id="table_results" class="ajax pma_table"><thead><tr><th colspan="3"><span></span></th></tr><tr><th class="draggable column_heading pointer marker" data-column="value" style="cursor: inherit;"><span><a>value<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="prefix" style="cursor: inherit;"><span><a >prefix<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="base" style="cursor: inherit;"><span><a>base<input type="hidden" value=""></a></span></th><td><span></span></td></tr></thead><tbody><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>二年级</span></td><td data-decimals="0" data-type="string" class="right datanowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>二年级</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>三年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>三年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>四年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>四年级</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>五年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>五年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>学前</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>学前</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>一年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>一年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>婴幼儿</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>婴幼儿</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>幼儿园</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>幼儿园</span></td></tr></tbody></table><br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/05/12/MYSQL的中文排序问题/#more">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/MYSQL/"> #MYSQL </a>
-          
-        </div>
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </div>
-  </div>
-
-
-    
   </div>
 
   
@@ -712,13 +692,20 @@
 
 
         </div>
-      </div>      
-    </div>
-</div>
-<div class="col-xs-2">
-  
-  
 
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
 
   <div id="sidebar" class="sidebar">
     <div class="sidebar-inner">
@@ -727,15 +714,14 @@
 
       <div class="site-overview">
         <div class="site-author motion-element">
-
-          <canvas id="cube" width="102" height="90"></canvas>
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="Jet He" />
           <p class="site-author-name">Jet He</p>
         </div>
         <p class="site-description motion-element">杂乱 并蓄</p>
         <div class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -749,7 +735,7 @@
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -779,14 +765,9 @@
   </div>
 
 
+    </div>
 
-</div>
-</div>
-
-<div class="row">
     <div id="footer" class="footer">
-    <div class="row">
-    <div class="col-xs-11">
       <div class="footer-inner">
         <div class="copyright">
   
@@ -804,8 +785,8 @@
 
 <div class="theme-info">
   主题 -
-  <a class="theme-link" href="https://github.com/Compasses/blogFiles">
-    CHANGEFORFUTURE
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
   </a>
 </div>
 
@@ -813,21 +794,11 @@
 
       </div>
     </div>
-    <div class="col-xs-1">
-      <div class="back-to-top"></div>
-    </div>
+
+    <div class="back-to-top"></div>
   </div>
-    </div>
-    </div>
-</div>
 
   <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
-  <script type="text/javascript" src="/vendors/bootstrap/bootstrap.min.js"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
-  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
-
-  <script type="text/javascript" src="/vendors/siteJS/cube.js"></script>
-  <script type="text/javascript" src="/vendors/siteJS/site.js"></script>
 
   
   
@@ -882,6 +853,138 @@
   }
 </script>
 
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
 
   
 
@@ -896,6 +999,7 @@
 
 
 
+  
   
 </body>
 </html>
