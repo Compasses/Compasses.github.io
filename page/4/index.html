@@ -1,0 +1,633 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.2"/>
+
+
+    <meta name="description" content="杂乱 并蓄" />
+
+
+
+  <meta name="keywords" content="Hexo,next" />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.2" />
+
+
+
+
+  <title> 三十重围 </title>
+</head>
+
+<body>
+<!--[if lte IE 8]> <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'> <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode"><img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari." style='margin-left:auto;margin-right:auto;display: block;'/></a></div> <![endif]-->
+  <div class="container one-column 
+   page-home 
+">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">三十重围</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+
+  <ul id="menu" class="menu">
+     
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-tags">
+        <a href="/tags">
+          <i class="menu-item-icon icon-tags"></i> <br />
+          标签
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+  <div id="posts" class="posts-expand">
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              <a class="post-title-link" href="/2015/05/12/MYSQL的中文排序问题/">
+                MYSQL的中文排序问题
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-05-12
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>最近在做一个产品filter的功能，遇到一个问题需要对中文的label进行排序，开始以为在数据库层就应该可以轻松解决。但是发现在英文的时候排序是ok的，但是中文的时候结果就不再让人满意了。<br>例如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> <span class="keyword">distinct</span> m.meta_value <span class="keyword">as</span> <span class="keyword">value</span>, m.meta_key <span class="keyword">as</span> prefix <span class="keyword">from</span> wp_postmeta m <span class="keyword">where</span> m.meta_key <span class="keyword">like</span> <span class="string">'UDF::5'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">CONVERT</span>(<span class="keyword">value</span> <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci;</span></span><br></pre></td></tr></table></figure></p>
+<p>结果如下：</p>
+<table id="table_results" class="ajax pma_table"><thead><tr><th colspan="2"><span></span></th></tr><tr><th class="draggable column_heading pointer marker" data-column="value"><span><a >value<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="prefix"><span><a >prefix<input type="hidden" value=""></a></span></th><td><span></span></td></tr></thead><tbody><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>二年级</span></td><td data-decimals="0" data-type="string" class="right data      nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>三年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>四年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>五年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>学前</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>一年级</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>婴幼儿</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right data      nowrap "><span>幼儿园</span></td><td data-decimals="0" data-type="string" class="right data      condition nowrap "><span>UDF::5</span></td></tr></tbody></table>
+
+<p>上面就是按照中文排序的结果，排序的标准就是按照中文的拼音排序，但是排序的结果还是符合正常的逻辑。<br>进一步可以看下排序的标准是什么：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> <span class="keyword">distinct</span> m.meta_value <span class="keyword">as</span> <span class="keyword">value</span>, m.meta_key <span class="keyword">as</span> prefix, <span class="keyword">CONVERT</span>(meta_value <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci <span class="keyword">as</span> base <span class="keyword">from</span> wp_postmeta m <span class="keyword">where</span> m.meta_key <span class="keyword">like</span> <span class="string">'UDF::5'</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">CONVERT</span>(<span class="keyword">value</span> <span class="keyword">USING</span> gb2312) <span class="keyword">COLLATE</span> gb2312_chinese_ci;</span></span><br></pre></td></tr></table></figure></p>
+<p>结果如下：</p>
+<table id="table_results" class="ajax pma_table"><thead><tr><th colspan="3"><span></span></th></tr><tr><th class="draggable column_heading pointer marker" data-column="value" style="cursor: inherit;"><span><a>value<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="prefix" style="cursor: inherit;"><span><a >prefix<input type="hidden" value=""></a></span></th><th class="draggable column_heading pointer marker" data-column="base" style="cursor: inherit;"><span><a>base<input type="hidden" value=""></a></span></th><td><span></span></td></tr></thead><tbody><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>二年级</span></td><td data-decimals="0" data-type="string" class="right datanowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>二年级</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>三年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>三年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>四年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>四年级</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>五年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>五年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>学前</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>学前</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>一年级</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>一年级</span></td></tr><tr class="odd"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>婴幼儿</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>婴幼儿</span></td></tr><tr class="even"><td data-decimals="0" data-type="blob" class="right datanowrap"><span>幼儿园</span></td><td data-decimals="0" data-type="string" class="right datacondition nowrap"><span>UDF::5</span></td><td data-decimals="0" data-type="blob" class="right datanowrap"><span>幼儿园</span></td></tr></tbody></table><br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/05/12/MYSQL的中文排序问题/#more">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MYSQL/"> #MYSQL </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              <a class="post-title-link" href="/2015/05/09/Let-s-start/">
+                Let's start
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-05-09
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>博客有了，就要开始写。<br>为什么要写博客呢？看了很多人都推荐写一下博客，这也完全不只是博客那么简单。平时工作谁会有时间写博客呢，当然没有Evernote来的方便，记忆下重要的技术点，以供后续研究学习。</p>
+<p>因换工作有将近9个月，做的东西也类似于全栈工程师，不管是前端还是后端，都要学习使用。这样可以接触很多东西，但是相当于拉长了战线，如果想要做的深、学的好，还是非常有挑战的。也就是因为这个新的工作让我接触了Web开发，使用了PHP、Javascript、Mysql，这让我这个之前做了多年C++通信方向开发的人打开眼界。很多东西很有趣但也很有挑战。Web开发虽然入门容易，但是做到专家也是离不开10000小时的规律的。所以像我这个刚刚进入这个领域的人，更要持续努力了。这个Blog不例外也是用hexo生成出来的，theme使用的是<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">NexT</a>，自己在此基础上进行了修改，引入了Bootsrap，调整了些UI，符合我的审美观点吧，虽然非常业余。目前Blog基本功能还是有些bug，后续会慢慢修复和优化，也当成自己的一个训练场吧。</p>
+<p>就像这个Blog，GitHub提供了便利，可以随时随地的写，只要能上网就能更新到网站上，很方便。由于之前都没怎么写过博客，写博客还是非常有必要的，锻炼文字的组织能力、总结能力，更能促进学习进步。希望现在开始还一切来得及。</p>
+<p>名叫“三十重围”，因为自己已经年近30岁，感觉自己需要突出重围，获得自己理想的追求，把平时自己杂乱的东西要学会统一整理，系统规范。</p>
+<p>Blog的开始，重新开始。</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/thoughts/"> #thoughts </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+      
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              <a class="post-title-link" href="/2015/05/07/songs-What-if-the-storm-ends/">
+                What if the storm ends?
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于 2015-05-07
+        </span>
+
+        
+
+        
+          
+        
+      </div>
+    </div>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>没错这是一首歌:</p>
+<p>What if the storm ends and I don’t see you<br>As you are now ever again?<br>The perfect halo of gold hair and lightning<br>Sets you off against the planet’s last dance</p>
+<p>Just for a minute the silver-forked sky<br>Lifts you up like a star that I will follow<br>But now it’s found us like I have a found you<br>I don’t wanna run, just overwhelm me</p>
+<p>What if the storm ends? At least that’s nothing<br>Except the memory, a distant echo I won’t pin down<br>I’ve walked unsettled rattle cage after cage<br>Until my blood boils</p>
+<p>I wanna see you as you are now<br>Every single day that I am living<br>Painted in flames, a peeling thunder<br>Be the lightning in me that strikes relentless</p>
+<p>What if the storm ends and I don’t see you<br>As you are now ever again?<br>The perfect halo of gold hair and lightning<br>Sets you off against the planet’s last dance</p>
+<p>Just for a minute the silver-forked sky<br>Lifts you up like a star that I will follow<br>But now it’s found us like I have a found you<br>I don’t wanna run, just overwhelm me</p>
+
+        
+      
+    </div>
+
+    <div class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/thoughts/"> #thoughts </a>
+          
+        </div>
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </div>
+  </div>
+
+
+    
+  </div>
+
+  
+  <div class="pagination">
+    <a class="extend prev" rel="prev" href="/page/3/">&laquo;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+  </div>
+
+
+        </div>
+
+        
+      </div>
+
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      <div class="site-overview">
+        <div class="site-author motion-element">
+          <img class="site-author-image" src="/images/default_avatar.jpg" alt="Jet He" />
+          <p class="site-author-name">Jet He</p>
+        </div>
+        <p class="site-description motion-element">杂乱 并蓄</p>
+        <div class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </div>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+              <a href="https://github.com/Compasses" target="_blank">GitHub</a>
+            </span>
+            
+          
+        </div>
+
+        
+        
+
+      </div>
+
+      
+
+    </div>
+  </div>
+
+
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp; 
+  2015
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">Jet He</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.content img').each(function () {
+        var $image = $(this);
+        var $imageWrapLink = $image.parent('a');
+
+        if ($imageWrapLink.size() < 1) {
+          $imageWrapLink = $image.wrap('<a href="' + this.getAttribute('src') + '"></a>').parent('a');
+        }
+        $imageWrapLink.addClass('fancybox');
+      });
+    });
+    $('.fancybox').fancybox({
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '320px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    LogoAndMenuMotion();
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+    function LogoAndMenuMotion() {
+      $.Velocity.RunSequence([
+        { e: $('.brand'), p: { opacity: 1 }, o: { duration: 100 } },
+        { e: $('.logo'), p: { opacity: 1, top: 0 }, o: { duration: 50} },
+        
+        { e: $('.site-title'), p: { opacity: 1, top: 0 }, o: { duration: 200 } }
+      ]);
+      $('.menu-item').velocity('transition.slideDownIn', {display: null});
+    }
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = window.postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+  
+
+  
+
+
+
+
+  
+  
+</body>
+</html>
