@@ -18,12 +18,15 @@
       <pubDate>Fri, 23 Oct 2015 22:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/10/23/golang-interface-analysis-by-gdb/</guid>
-      <description>&lt;p&gt;interface 在go语言中，是非常重要的一环，总有点让人感到很玄乎不定的感觉。官方的lib中有大量使用，似乎面向对象和动态绑定也能跟interface扯上关系。总之，如果能更好的理解interface的机理，就能更好的理解和使用Go了。&lt;/p&gt;
+      <description>
+
+&lt;p&gt;interface 在go语言中，是非常重要的一环，总有点让人感到很玄乎不定的感觉。官方的lib中有大量使用，似乎面向对象和动态绑定也能跟interface扯上关系。总之，如果能更好的理解interface的机理，就能更好的理解和使用Go了。&lt;/p&gt;
 
 &lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
 
-&lt;p&gt;##interface 内部存储
-interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
+&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
+
+&lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;// layout of Itab known to compilers
 // allocated in non-garbage-collected memory
@@ -133,8 +136,9 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 &lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;##interface使用
-关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
+&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
+
+&lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
 interface可以接纳任意类型，因interface内部的type信息是完备的：用type switch 可以获取interface内部value的类型信息，如下所示。&lt;/p&gt;
 

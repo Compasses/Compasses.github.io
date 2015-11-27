@@ -9,8 +9,132 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Fri, 23 Oct 2015 22:45:07 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2015 17:45:24 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>HTTP Cache</title>
+      <link>http://compasses.github.io/2015/11/27/http-cache/</link>
+      <pubDate>Fri, 27 Nov 2015 17:45:24 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/11/27/http-cache/</guid>
+      <description>
+
+&lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;
+
+&lt;h2 id=&#34;相关http-header字段&#34;&gt;相关HTTP header字段&lt;/h2&gt;
+
+&lt;h3 id=&#34;last-modified和etag&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
+
+&lt;p&gt;两者的功能类似，一个是文件的最近一次的修改时间，一个是针对这个资源文件生成的tag。都是server端的返回。刷新页面时，请求头里面会带上If-Modified-Since或者 If-None-Match。
+ 但是Etag并&lt;a href=&#34;https://developer.yahoo.com/performance/rules.html#etags=&#34;&gt;不推荐使用&lt;/a&gt;，原因就是不同的server对Etag的生成算法可能不统一，特别在集群server的情况下。&lt;/p&gt;
+
+&lt;h3 id=&#34;pragma&#34;&gt;Pragma&lt;/h3&gt;
+
+&lt;p&gt;纯协议上的指令，对请求响应链路上的所有代理使用。例如如果pragma：no-chache，则请求在请求响应链上的任意节点都不会被缓存，因其于cache-control：no-chache意义一致。&lt;/p&gt;
+
+&lt;h3 id=&#34;expires&#34;&gt;Expires&lt;/h3&gt;
+
+&lt;p&gt;set response headers，对某个响应设置个超时时间，一般优先级不高，如果存在max-age的话，这个字段几乎不起作用。&lt;/p&gt;
+
+&lt;h3 id=&#34;cache-control&#34;&gt;Cache-Control&lt;/h3&gt;
+
+&lt;p&gt;public：标识验证后的respons可被缓存的。
+no-store：任何情况下不缓存，并尽量不要保存到磁盘中。不缓存的资源并不能保证不被保存到磁盘中。例如浏览器的后退键，可能会导致看到过期的页面。
+no-cache: 强制提交校验请求，严格模式，也即不缓存该响应。
+must-revalidate: 缓存必须遵守任何的刷新规则，如果缓存超时必须重新发起请求，或者是条件请求。
+proxy-revalidate： 和must 一样，只对proxy cache有效，对中间有cache server的情况，该字段指导cache server的验证方式和条件。
+max-age: 指定刷新超时时间，即cache的超时时间。
+s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache servers使用这个s-maxage，针对public的cache有效，其会覆盖max-age。&lt;/p&gt;
+
+&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;通过vary告诉http cache，寻找缓存对象时需要考虑的头域字段。比如：浏览器发了两个request，一个带有accept-encoding， 一个没有。http 缓存的时候会带上这个vary标记，表示只有带有accept-encoding的缓存对象才能是使用。达到的效果就是request里面带有accept-encoding的请求，响应缓存只能被这样的请求获取。&lt;/p&gt;
+
+&lt;p&gt;vary的不同会控制请求的发送数量。例如vary:*，表明每个request都是不同的。
+简单的理解vary用来区分请求的差别，识别出不同的request。
+vary的其他取值：user-agent, 让响应区分不同的agent；Referer, 区分这个request是从哪个页面而来。cookie, 不同认证信息不同的 request。vary指定的那些值就会影响浏览器的cache策略。&lt;/p&gt;
+
+&lt;h2 id=&#34;需要注意的几个问题&#34;&gt;需要注意的几个问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;https-证书问题&#34;&gt;https 证书问题&lt;/h3&gt;
+
+&lt;p&gt;如果是无效的证书，会导致缓存无法完全起用。本地测试是doc无法被cache，静态资源还是可以的。当然这跟浏览器的行为也有关系，Firefox里面添加例外证书变成合法的就可以正常缓存了。chrome的证书比较严格不好把红叉叉去掉。&lt;/p&gt;
+
+&lt;h3 id=&#34;expires和max-age-优先级问题&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
+
+&lt;p&gt;当response头域里面两者都包含时，浏览器会优先选用max-age，当然这是我本地的测试结果。所有的情况可能难以覆盖，比如移动端的浏览器，其他的浏览器，除了Firefox、chrome、IE等等以外的。
+另外就是expires是http1.0里面的，max-age在http1.1被引入，但是&lt;a href=&#34;https://www.mnot.net/blog/2007/05/15/expires_max-age&#34;&gt;这篇文章&lt;/a&gt;建议最好两者都带上正确的值，或者只带上max-age。&lt;/p&gt;
+
+&lt;h3 id=&#34;conditional-requests&#34;&gt;Conditional Requests&lt;/h3&gt;
+
+&lt;p&gt;条件请求是当浏览器发现资源超时时，如过了max-age或者expires date，会发起条件请求，如果server发现资源变化了会回复200 ok，否则回复304的status code。正确情况下资源cache后，浏览器是不会发条件请求的，直到资源超时后。当然也不排除某些浏览器会不停的发conditional request，更为详细的介绍，&lt;a href=&#34;https://greenbytes.de/tech/webdav/draft-ietf-httpbis-p4-conditional-20.html&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;静态资源缓存&#34;&gt;静态资源缓存&lt;/h2&gt;
+
+&lt;p&gt;针对静态资源，更新时更加推荐使用变更文件名的方式，例如让文件名包含一个版本号的方式。这种比文件末尾增加query string更加有效，例如有些中间proxy就不会缓存带有查询字符的url。&lt;/p&gt;
+
+&lt;h2 id=&#34;php配合apache-实现静态资源版本控制&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
+
+&lt;p&gt;针对静态资源的cache设置，这个&lt;a href=&#34;https://github.com/Compasses/server-configs-apache/tree/master/src/web_performance&#34;&gt;github&lt;/a&gt;有较好的配置模板做参考。基本上enmod headers即可。
+针对静态文件php代码里面插入版本号，一般为时间戳或者数据库里面的更新时间：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    /*
+     * change &amp;quot;assert/style.css&amp;quot; to &amp;quot;assert/style.xxxx.css&amp;quot;
+     * if change failed just return the $src
+     */
+    public function assert_url_version_insert($src, $version) {
+        $replacement = &#39;.&#39;.$version.&#39;.$1&#39;;
+        $newpath = preg_replace(
+            &#39;/\.(js|css)$/&#39;,
+            $replacement,
+            $src
+        );
+       
+        return $newpath === NULL ? $src : $newpath;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;还例如有的情况需要读取文件的修改时间作为时间戳：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ftime = filectime( $filePath);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是通过读取文件的修改时间，也可以通过读取数据库的方式。
+插入版本号：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if ($ftime) {
+     $path = $this-&amp;gt;assert_url_version_insert($path, $ftime);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样页面加载的静态资源URL会变成：&lt;a href=&#34;http://xxxx.xx/js/xxx.版本号.css&#34;&gt;http://xxxx.xx/js/xxx.版本号.css&lt;/a&gt; 或者js。
+Apache使能rewrite rule：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RewriteRule ^(.+)\.(.+)\.(js|css)$ $1.$3 [L]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最好再使能headers模块，针对这类静态资源设置最大缓存时间：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  &amp;lt;filesMatch &amp;quot;\.(css)$&amp;quot;&amp;gt;
+        Header merge Cache-Control &amp;quot;public, max-age=31104000&amp;quot;
+    &amp;lt;/filesMatch&amp;gt;
+    &amp;lt;filesMatch &amp;quot;\.(js)$&amp;quot;&amp;gt;
+        Header merge Cache-Control &amp;quot;public, max-age=31104000&amp;quot;
+    &amp;lt;/filesMatch&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述就完成了，只要后台修改了静态资源文件，则文件的名字会随着版本号的更新而更新，从而实现前端自动刷新缓存。否则这些资源文件会永远cache在客户端。超时时间为31104000s。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;http cache 很复杂，牵扯较多的组件，上述只是针对Apache+PHP的方案实施。&lt;/li&gt;
+&lt;li&gt;没有引入更加复杂的缓存中间件，其实目前有较多的组件可直接使用的。比如&lt;a href=&#34;https://www.varnish-cache.org/&#34;&gt;Varnish&lt;/a&gt;如果有机会使用的话，再进行研究。&lt;/li&gt;
+&lt;li&gt;web 优化cache是比较重要的一环，当然还有其他的更多的零零碎碎的优化，还是需要建立在经验的基础上，多多思考这块就能不断提高了。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
     
     <item>
       <title>golang interface analysis by gdb</title>
@@ -18,12 +142,15 @@
       <pubDate>Fri, 23 Oct 2015 22:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/10/23/golang-interface-analysis-by-gdb/</guid>
-      <description>&lt;p&gt;interface 在go语言中，是非常重要的一环，总有点让人感到很玄乎不定的感觉。官方的lib中有大量使用，似乎面向对象和动态绑定也能跟interface扯上关系。总之，如果能更好的理解interface的机理，就能更好的理解和使用Go了。&lt;/p&gt;
+      <description>
+
+&lt;p&gt;interface 在go语言中，是非常重要的一环，总有点让人感到很玄乎不定的感觉。官方的lib中有大量使用，似乎面向对象和动态绑定也能跟interface扯上关系。总之，如果能更好的理解interface的机理，就能更好的理解和使用Go了。&lt;/p&gt;
 
 &lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
 
-&lt;p&gt;##interface 内部存储
-interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
+&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
+
+&lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;// layout of Itab known to compilers
 // allocated in non-garbage-collected memory
@@ -133,8 +260,9 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 &lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;##interface使用
-关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
+&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
+
+&lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
 interface可以接纳任意类型，因interface内部的type信息是完备的：用type switch 可以获取interface内部value的类型信息，如下所示。&lt;/p&gt;
 
@@ -250,10 +378,13 @@ func main() {
       <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</guid>
-      <description>&lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
+      <description>
 
-&lt;p&gt;#CSS相关
-因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
+&lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
+
+&lt;h1 id=&#34;css相关&#34;&gt;CSS相关&lt;/h1&gt;
+
+&lt;p&gt;因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
 ##mixin
 可以看作是面向对象的CSS，直白的讲就是混合引入，也有翻译是混入或混合，这样感觉都是很模糊的。其实功能上就是定义一组属性、style在一个mixin中，可以让其他的class直接引用，作为公共的基础class。例如：&lt;/p&gt;
 
@@ -273,8 +404,9 @@ func main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;##media
-由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
+&lt;h2 id=&#34;media&#34;&gt;media&lt;/h2&gt;
+
+&lt;p&gt;由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
 其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。&lt;/p&gt;
 
 &lt;p&gt;使用&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/CSS/@media&#34;&gt;media query&lt;/a&gt; 来索引屏幕尺寸并进行特定class的apply。可以让网页支持较好的自适应性。例如针对小屏幕某个class需要有些自适应的属性，下面这个css class在小屏幕上，屏幕宽度小于767px时，左侧增加20px的margin。&lt;/p&gt;
@@ -307,15 +439,18 @@ func main() {
 | min-height | 当任意浏览器高度大于查询中定义的值时适用的规则。    |
 | max-height | 当任意浏览器高度小于查询中定义的值时适用的规则。|
 | orientation=portrait| 高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。|
-| orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|
-##语义化标签
-写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
+| orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|&lt;/p&gt;
+
+&lt;h2 id=&#34;语义化标签&#34;&gt;语义化标签&lt;/h2&gt;
+
+&lt;p&gt;写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
 这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。&lt;/p&gt;
 
 &lt;p&gt;上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。&lt;/p&gt;
 
-&lt;p&gt;#JS相关
-JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
+&lt;h1 id=&#34;js相关&#34;&gt;JS相关&lt;/h1&gt;
+
+&lt;p&gt;JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
 封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。&lt;/p&gt;
 </description>
     </item>
@@ -326,10 +461,13 @@ JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看�
       <pubDate>Sat, 18 Jul 2015 18:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
-      <description>&lt;p&gt;#说明
-最近产品考虑更换前端框架，重点考察了CodeIgniter 和 Laravel两个框架，现对其进行下对比分析。&lt;/p&gt;
+      <description>
 
-&lt;p&gt;#总体对比&lt;/p&gt;
+&lt;h1 id=&#34;说明&#34;&gt;说明&lt;/h1&gt;
+
+&lt;p&gt;最近产品考虑更换前端框架，重点考察了CodeIgniter 和 Laravel两个框架，现对其进行下对比分析。&lt;/p&gt;
+
+&lt;h1 id=&#34;总体对比&#34;&gt;总体对比&lt;/h1&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -388,25 +526,29 @@ JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看�
 &lt;p&gt;CodeIgniter 基本上是个MVC的空架子，代码量极小，开发的花基本上 100%的掌控在自己手里。 Laravel还是加载了不少的三方 component，比CodeIgniter 庞大些。
 对MVC的支持都很清晰，URL的路由也很简单易扩展。&lt;/p&gt;
 
-&lt;p&gt;#测试环境：
-主要是使用了Laravel 的HomeStead环境，通过virtual box + vagrant标准用法，加载Laravel的框架代码；要使其加载CodeIgniter框架，需要修改Nginx的配置，增加新的server，只要端口号换成新的，root指定到CodeIgniter的跟目录即可。
+&lt;h1 id=&#34;测试环境&#34;&gt;测试环境：&lt;/h1&gt;
+
+&lt;p&gt;主要是使用了Laravel 的HomeStead环境，通过virtual box + vagrant标准用法，加载Laravel的框架代码；要使其加载CodeIgniter框架，需要修改Nginx的配置，增加新的server，只要端口号换成新的，root指定到CodeIgniter的跟目录即可。
 总体上是Nginx+php5-fpm+mysql+ Ubuntu + CodeIgniter 源码包 + Laravel 源码包。源码包共享在本机上。&lt;/p&gt;
 
-&lt;p&gt;#测试页面：
-Modal：使用product数据，获取某个product上的所有信息。
+&lt;h1 id=&#34;测试页面&#34;&gt;测试页面：&lt;/h1&gt;
+
+&lt;p&gt;Modal：使用product数据，获取某个product上的所有信息。
 View：引入Twig模板引擎，创建几个twig模板，在controller层render。
 Controller：调用modal获取数据，使用 twig render 页面。&lt;/p&gt;
 
 &lt;p&gt;这两个框架都用非常清晰的 MVC结构，上述页面的代码几乎可以在两者之间无缝迁移。&lt;/p&gt;
 
-&lt;p&gt;#性能对比测试：&lt;/p&gt;
+&lt;h1 id=&#34;性能对比测试&#34;&gt;性能对比测试：&lt;/h1&gt;
 
 &lt;p&gt;针对这个页面进行性能测试：页面大小为 8KB， 加载一个已有的CSS文件大小为 87.7KB。
 使用Apache的ab test进行测试：
 AB test:
-ab -n 1000 -c 80 &lt;a href=&#34;http://192.168.10.10:8080/productdetail/&#34;&gt;http://192.168.10.10:8080/productdetail/&lt;/a&gt;
-##Laravel 结果:
-Server Software:        nginx/1.8.0
+ab -n 1000 -c 80 &lt;a href=&#34;http://192.168.10.10:8080/productdetail/&#34;&gt;http://192.168.10.10:8080/productdetail/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;laravel-结果&#34;&gt;Laravel 结果:&lt;/h2&gt;
+
+&lt;p&gt;Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
 Server Port:            80&lt;/p&gt;
 
@@ -455,7 +597,7 @@ WARNING: The median and mean for the initial connection time are not within a no
 
 &lt;p&gt;100%  17271 (longest request)&lt;/p&gt;
 
-&lt;p&gt;##CodeIgniter 结果:&lt;/p&gt;
+&lt;h2 id=&#34;codeigniter-结果&#34;&gt;CodeIgniter 结果:&lt;/h2&gt;
 
 &lt;p&gt;Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
@@ -503,8 +645,9 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 
 &lt;p&gt;100%   3649 (longest request)&lt;/p&gt;
 
-&lt;p&gt;#总结
-CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。
+&lt;h1 id=&#34;总结&#34;&gt;总结&lt;/h1&gt;
+
+&lt;p&gt;CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。
 如果选择从头开始的话，感觉CodeIgniter更好些。&lt;/p&gt;
 </description>
     </item>
@@ -540,12 +683,15 @@ CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter�
       <pubDate>Tue, 07 Jul 2015 20:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</guid>
-      <description>&lt;p&gt;WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。&lt;/p&gt;
+      <description>
+
+&lt;p&gt;WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。&lt;/p&gt;
 
 &lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
 
-&lt;p&gt;#POSITION
-解释说明：&lt;/p&gt;
+&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
+
+&lt;p&gt;解释说明：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;position
     
@@ -587,17 +733,25 @@ User agents may treat position as &#39;static&#39; on the root element.
 
 &lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
 
-&lt;p&gt;##relative position
-相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。
-##absolute position
-类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。
-##fixed position
-是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。
-##floating
-floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
+&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
 
-&lt;p&gt;#overflow
-解释：&lt;/p&gt;
+&lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
+
+&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
+
+&lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
+
+&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
+
+&lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
+
+&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
+
+&lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
+
+&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
+
+&lt;p&gt;解释：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;overflow
     
@@ -795,13 +949,16 @@ Note that ‘text-overflow’ (see [CSS3TEXT] ) can be used to give a visual ind
       <pubDate>Mon, 06 Jul 2015 17:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/07/06/nginx--docker-cluster--session-sticky/</guid>
-      <description>&lt;p&gt;##基本配置
-本地开发环境和生产环境还是有很大的区分，最近性能测试发现结果很不好，于是想自己去搭建一个类似生产环境的性能测试环境。&lt;/p&gt;
+      <description>
+
+&lt;h2 id=&#34;基本配置&#34;&gt;基本配置&lt;/h2&gt;
+
+&lt;p&gt;本地开发环境和生产环境还是有很大的区分，最近性能测试发现结果很不好，于是想自己去搭建一个类似生产环境的性能测试环境。&lt;/p&gt;
 
 &lt;p&gt;由于前期已经有了docker的开发环境，这里只需要增加Nginx 作为反向代理。
 在/etc/nginx/conf.d目录下新建文件例如proxyServer.conf，添加如下内容&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;## Basic reverse proxy server ##
+&lt;pre&gt;&lt;code&gt;## Basic reverse proxy server
 upstream dockerServer  {
     ip_hash;
     server 10.128.163.121:7080;
@@ -883,8 +1040,9 @@ server {
 3. https的crt和key需要&lt;a href=&#34;http://www.lovelucy.info/nginx-ssl-certificate-https-website.html&#34;&gt;自己生成&lt;/a&gt;。
 另外这个Nginx 是跑在宿主机上的，修改配置有要执行reload命令使其生效。&lt;/p&gt;
 
-&lt;p&gt;##session persistence
-生产环境需要将一个用户的请求要路由到同一个server上面，因为server很多的业务处理还是需要server里面的session配合。上面用ip_hash方式做load balance，但是考虑到用户使用proxy或者流量不均衡等因素。还是要使用session sticky的方式。
+&lt;h2 id=&#34;session-persistence&#34;&gt;session persistence&lt;/h2&gt;
+
+&lt;p&gt;生产环境需要将一个用户的请求要路由到同一个server上面，因为server很多的业务处理还是需要server里面的session配合。上面用ip_hash方式做load balance，但是考虑到用户使用proxy或者流量不均衡等因素。还是要使用session sticky的方式。
 Nginx默认不支持session sticky，需要重新编译安装这个插件；因为直接使用公司的Nginx版本，所以懒得重新编译了。使用很简单，直接拷贝个bin文件，然后修改成这个样子：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;upstream dockerServer  {
@@ -990,12 +1148,17 @@ ff1ad6f22e91        eshop_612:latest    &amp;quot;/var/eshop/install/   31 hours
       <pubDate>Wed, 03 Jun 2015 19:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/06/03/libuv-%E5%88%9D%E8%AE%A4%E8%AF%86/</guid>
-      <description>&lt;p&gt;说明： 本篇文章主要从&lt;a href=&#34;http://nikhilm.github.io/uvbook/&#34;&gt;An Introduction to libuv&lt;/a&gt;这本书翻译学习而来。
-##开始
-libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。&lt;/p&gt;
+      <description>
 
-&lt;p&gt;###事件循环
-libuv的编译就不用多说，参考libuv的&lt;a href=&#34;https://github.com/libuv/libuv&#34;&gt;github网址&lt;/a&gt;。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。&lt;/p&gt;
+&lt;p&gt;说明： 本篇文章主要从&lt;a href=&#34;http://nikhilm.github.io/uvbook/&#34;&gt;An Introduction to libuv&lt;/a&gt;这本书翻译学习而来。&lt;/p&gt;
+
+&lt;h2 id=&#34;开始&#34;&gt;开始&lt;/h2&gt;
+
+&lt;p&gt;libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。&lt;/p&gt;
+
+&lt;h3 id=&#34;事件循环&#34;&gt;事件循环&lt;/h3&gt;
+
+&lt;p&gt;libuv的编译就不用多说，参考libuv的&lt;a href=&#34;https://github.com/libuv/libuv&#34;&gt;github网址&lt;/a&gt;。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。&lt;/p&gt;
 
 &lt;p&gt;先从运行一个程序开始：&lt;/p&gt;
 
@@ -1062,8 +1225,11 @@ gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平
       <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</guid>
-      <description>&lt;p&gt;###问题过程
-最近优化了一个查询语句，使用到了straight_join这个查询提示，现对其做下总结。
+      <description>
+
+&lt;h3 id=&#34;问题过程&#34;&gt;问题过程&lt;/h3&gt;
+
+&lt;p&gt;最近优化了一个查询语句，使用到了straight_join这个查询提示，现对其做下总结。
 先看下这个查询语句：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;SELECT wp_posts.ID
@@ -1408,11 +1574,14 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
 可以通过explain extended 的方法获取最终的执行计划。虽然执行计划已经是最优的了，但是中间的过程代价太高了。
 这里就使用straight_join的优化提示来优化这个查询。由一开始的600多ms降低为十几ms了。&lt;/p&gt;
 
-&lt;p&gt;###总结
-1.  大的SQL语句，这里主要说的是join次数过多的sql，需要进行查询优化。
-2.  尽量不要有大的SQL，大SQL对MySQL来说还是有些力不从心。
-3.  straight_join 禁止了MySQL的查询优化，但是可能随着数据集的变化会有新的性能问题。因此straight_join 不能说是最终的优化方案。
-4.  根据《高性能MySQL》书上的说法，分解大的查询语句能更好的利用MySQL的缓存机制，对优化大的SQL查询是首先。&lt;/p&gt;
+&lt;h3 id=&#34;总结&#34;&gt;总结&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;大的SQL语句，这里主要说的是join次数过多的sql，需要进行查询优化。&lt;/li&gt;
+&lt;li&gt;尽量不要有大的SQL，大SQL对MySQL来说还是有些力不从心。&lt;/li&gt;
+&lt;li&gt;straight_join 禁止了MySQL的查询优化，但是可能随着数据集的变化会有新的性能问题。因此straight_join 不能说是最终的优化方案。&lt;/li&gt;
+&lt;li&gt;根据《高性能MySQL》书上的说法，分解大的查询语句能更好的利用MySQL的缓存机制，对优化大的SQL查询是首先。&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;p&gt;所以后续查询分解是不可避免的。&lt;/p&gt;
 </description>
@@ -1424,20 +1593,29 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
       <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</guid>
-      <description>&lt;p&gt;##前言
-因工作需要，要不断的使用MySQL，前段时间还参与了MySQL的性能测试，及profiling。发现MySQL还是非常有意思的，自己也非常感兴趣，于是买了本牛逼的书：《高性能MySQL 第三版》。书是很好，但是第一遍基本没什么感觉，基本上是粗略了解，很多细节还是掌握不好。现在重新学习希望能够有更好的提高。
-读书摘要，既然是读书摘要就不会照搬原书，我会侧重点的做笔记，有意思的地方会多写，自己觉得不是很重要的东西会少写或者不写。但是内容的范围不会超出这本书。OK, Let&amp;rsquo;s Start。
-###MySQL逻辑结构
-逻辑架构图如下：
+      <description>
+
+&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;因工作需要，要不断的使用MySQL，前段时间还参与了MySQL的性能测试，及profiling。发现MySQL还是非常有意思的，自己也非常感兴趣，于是买了本牛逼的书：《高性能MySQL 第三版》。书是很好，但是第一遍基本没什么感觉，基本上是粗略了解，很多细节还是掌握不好。现在重新学习希望能够有更好的提高。
+读书摘要，既然是读书摘要就不会照搬原书，我会侧重点的做笔记，有意思的地方会多写，自己觉得不是很重要的东西会少写或者不写。但是内容的范围不会超出这本书。OK, Let&amp;rsquo;s Start。&lt;/p&gt;
+
+&lt;h3 id=&#34;mysql逻辑结构&#34;&gt;MySQL逻辑结构&lt;/h3&gt;
+
+&lt;p&gt;逻辑架构图如下：
 &lt;img src=&#34;http://compasses.github.io/img/MySqlCapture.PNG&#34; alt=&#34;Mysql&#34; /&gt;
-分为三层结构，需要重点研究的是存储引擎层和查询优化层。存储引擎也主要研究InnoDB。
-##并发控制
-1. 读写锁： 在并发读写数据库表时使用，也叫共享锁和排他锁，读锁是共享的，是互不阻塞的，写锁是排他的，一个写锁会阻塞其他的读锁和写锁。
-2. 锁粒度： 锁的数据越少，并发程度就越高，但锁的数量就会大增，锁的开销也会增加。这就需要一种平衡，即锁策略的选择。
-3. 锁策略，包含&lt;strong&gt;表锁&lt;/strong&gt;和&lt;strong&gt;行级锁&lt;/strong&gt;。
-4. 死锁： 多个事务以不同的顺序锁定资源时，就会可能产生死锁。InnoDB能检测到死锁的循环依赖（&lt;strong&gt;how?&lt;/strong&gt;），对死锁的处理方法是回滚最少行级排它锁的事务。
-5. MVCC： 多版本并发控制，是行级锁的变种，在很多情况下避免的加锁操作。工作在REPEATABLE READ 和 REPEATABLE COMMITTED两个隔离级别下。
-6. 事务日志： 提高事务效率的一种方法，也叫预写式日志。日志操作是磁盘上小块区域内的顺序I/O，不是随机I/O，会快很多。关于顺序和随机I/O，需要后面讨论下。&lt;/p&gt;
+分为三层结构，需要重点研究的是存储引擎层和查询优化层。存储引擎也主要研究InnoDB。&lt;/p&gt;
+
+&lt;h2 id=&#34;并发控制&#34;&gt;并发控制&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;读写锁： 在并发读写数据库表时使用，也叫共享锁和排他锁，读锁是共享的，是互不阻塞的，写锁是排他的，一个写锁会阻塞其他的读锁和写锁。&lt;/li&gt;
+&lt;li&gt;锁粒度： 锁的数据越少，并发程度就越高，但锁的数量就会大增，锁的开销也会增加。这就需要一种平衡，即锁策略的选择。&lt;/li&gt;
+&lt;li&gt;锁策略，包含&lt;strong&gt;表锁&lt;/strong&gt;和&lt;strong&gt;行级锁&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;死锁： 多个事务以不同的顺序锁定资源时，就会可能产生死锁。InnoDB能检测到死锁的循环依赖（&lt;strong&gt;how?&lt;/strong&gt;），对死锁的处理方法是回滚最少行级排它锁的事务。&lt;/li&gt;
+&lt;li&gt;MVCC： 多版本并发控制，是行级锁的变种，在很多情况下避免的加锁操作。工作在REPEATABLE READ 和 REPEATABLE COMMITTED两个隔离级别下。&lt;/li&gt;
+&lt;li&gt;事务日志： 提高事务效率的一种方法，也叫预写式日志。日志操作是磁盘上小块区域内的顺序I/O，不是随机I/O，会快很多。关于顺序和随机I/O，需要后面讨论下。&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;p&gt;如何检测死锁，在复杂系统里面是要重点考虑的，目前没有研究InnoDB的源码，不知道他是怎么判定死锁产生的。但是基于一般理论大致可以想一下它是怎么产生的，即多个线程加锁的顺序不一致，产生了循环依赖，基于此，可以设计一种数据结构，每个线程在试图加锁的时候就将该线程作为该锁的所有者，如果出现加锁失败，就要进行一次检测。每个锁的所有者里面是否有环，有环就说明有循环依赖，即可判定死锁，然后进行死锁解除。解除的策略估计会比较暴力，通过销毁某个死锁线程或者强制锁释放等等。&lt;a href=&#34;http://web.mit.edu/6.033/1997/reports/r03-ben.html&#34;&gt;这篇文章&lt;/a&gt;也有类似的讨论。&lt;/p&gt;
 
@@ -1449,13 +1627,15 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
 
 &lt;p&gt;MVCC工作在REAPTABLE READ 和 READ COMMIT两个隔离级别下。REAPTABLE READ 为可重复读，即同一个事务中多次读取同样的记录的结果是一致的。显然MVCC满足这点。READ COMMIT 提交读，一个事务开始时，只能更新到所有已提交事务的更改。即事务开始到提交前，所做的修改对其他事务都是不可见的。MVCC也天生支持。&lt;/p&gt;
 
-&lt;p&gt;##MySQL基准测试
-本章主要是说的针对MySQL的基准测试，这里重点看下&lt;strong&gt;sql-bench&lt;/strong&gt;和&lt;strong&gt;sysbench&lt;/strong&gt;。 其中&lt;strong&gt;sql-bench&lt;/strong&gt;只有在源码安装的时候才会有，二进制安装没有,&lt;strong&gt;sysbench&lt;/strong&gt;需要单独安装。&lt;/p&gt;
+&lt;h2 id=&#34;mysql基准测试&#34;&gt;MySQL基准测试&lt;/h2&gt;
+
+&lt;p&gt;本章主要是说的针对MySQL的基准测试，这里重点看下&lt;strong&gt;sql-bench&lt;/strong&gt;和&lt;strong&gt;sysbench&lt;/strong&gt;。 其中&lt;strong&gt;sql-bench&lt;/strong&gt;只有在源码安装的时候才会有，二进制安装没有,&lt;strong&gt;sysbench&lt;/strong&gt;需要单独安装。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;sql-bench&lt;/strong&gt; 是由perl脚本组成的测试工具。&lt;strong&gt;sysbench&lt;/strong&gt;也可以不只是用来进行数据库的基准测试，比如CPU、I/O等。这些工具的使用咱不赘述，后续如有使用再更新到这里。&lt;/p&gt;
 
-&lt;p&gt;##服务器性能剖析
-服务器性能剖析包含两个方面，一是应用程序，而是数据库；对应用程序剖析需要有相应的统计方法。例如PHP则需要统计每个方法的执行时间，执行数据库查询的时间，都可以在应用层获取；数据库上的性能剖析，就是分析并发查询时的性能问题。
+&lt;h2 id=&#34;服务器性能剖析&#34;&gt;服务器性能剖析&lt;/h2&gt;
+
+&lt;p&gt;服务器性能剖析包含两个方面，一是应用程序，而是数据库；对应用程序剖析需要有相应的统计方法。例如PHP则需要统计每个方法的执行时间，执行数据库查询的时间，都可以在应用层获取；数据库上的性能剖析，就是分析并发查询时的性能问题。
 针对PHP方面，目前正在开发性能剖析的脚本，保证能在生产环境上work。做完后会更新到这里。
 数据库方面目前就使用了MySql的慢查询日志。慢查询日志的产生需要简单的配置：&lt;/p&gt;
 
@@ -1500,12 +1680,17 @@ I have tested these steps on my Ubuntu machine.
 
 &lt;p&gt;然后可以针对每一个查询进行分析，并剖析其性能问题。&lt;/p&gt;
 
-&lt;p&gt;##Schema与数据类型优化
-待续
-##创建高性能的索引
-待续
-##查询性能优化
-一个复杂查询还是多个简单查询：
+&lt;h2 id=&#34;schema与数据类型优化&#34;&gt;Schema与数据类型优化&lt;/h2&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;创建高性能的索引&#34;&gt;创建高性能的索引&lt;/h2&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;查询性能优化&#34;&gt;查询性能优化&lt;/h2&gt;
+
+&lt;p&gt;一个复杂查询还是多个简单查询：
 切分查询：将大查询切分成小查询。每个查询功能完全一样。
 分解关联查询：分解关联查询的方式重构查询有如下的优势：1，让缓存效率更高。2，查询分解后，执行单个查询可以减少锁的竞争。3.在应用层做关联，可以更容易对数据库进行拆分。更容易做到高性能和可扩展。4，减少冗余记录的查询。5.这样做相当于在应用中实现了哈希关联，而不是使用MYSQL的嵌套循环关联。某些场景哈希关联的效率高很多。
 mysql客户端和服务器之间的通信协议是半双工的。show full processlist; 显示当前链接线程的状态。
@@ -1569,8 +1754,11 @@ end
 
 &lt;p&gt;待续&lt;/p&gt;
 
-&lt;p&gt;##参考文献
-1. 《高性能MySQL 第三版》&lt;/p&gt;
+&lt;h2 id=&#34;参考文献&#34;&gt;参考文献&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;《高性能MySQL 第三版》&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
@@ -1591,453 +1779,6 @@ end
 自己感觉是年轻的一类，而且也想更多的实现自身价值和获取更多的成就感。发现自己还是适合奋斗型的。&lt;/p&gt;
 
 &lt;p&gt;热烈的想工作，渴望面对更多的技术问题，解决更多的问题。目前阶段算是给自己的一个放松的机会，希望下一次机会来临，自己能够擦亮眼睛获取自己想要的环境，不然你不会&lt;strong&gt;幸福的&lt;/strong&gt;。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>WooCommerce variant product 表设计</title>
-      <link>http://compasses.github.io/2015/05/13/woocommerce-variant-product-%E8%A1%A8%E8%AE%BE%E8%AE%A1/</link>
-      <pubDate>Wed, 13 May 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/05/13/woocommerce-variant-product-%E8%A1%A8%E8%AE%BE%E8%AE%A1/</guid>
-      <description>&lt;p&gt;随着功能越来越多，越来越复杂，如果数据库表设计的不好，就会遇到各种各样的问题。
-目前已经发现数据表设计的非常不合理，导致出现了大量tricky的PHP代码。由于是在Wordpress平台上搭建的电商平台，免不了要借鉴下&lt;a href=&#34;http://docs.woothemes.com/documentation/plugins/woocommerce/&#34;&gt;WooCommerce&lt;/a&gt;的表设计了。
-WooCommerce是基于Wordpress的一个插件，也能实现快速开店。下面就来分析下WooCommerce中是如何存储和组织产品数据的。在产品数据中，variant product有事最为复杂的一种。比方一件衬衫，它的variant就包含Color和Size，现就以这个例子来分析下WooCommerce中的实现。对于WooCommerce中怎么添加variant product请参照&lt;a href=&#34;http://docs.woothemes.com/document/variable-product/&#34;&gt;这个链接&lt;/a&gt;。但有个主意点就是添加variant product前在Product下面的Attributes tab页里面添加系统级的variants。
-首先添加两个attributes分别为Color和Size，添加完后会在wp_woocommerce_attribute_taxonomies出现以下数据：&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;attribute_id&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;attribute_name&lt;/th&gt;
-&lt;th align=&#34;center&#34;&gt;attribute_label&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;attribute_type&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;attribute_orderby&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;attribute_public&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;4&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;color&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;Color&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;text&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;id&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;size&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;Size&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;text&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;id&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br\&gt;
-接下来去添加variant product，Color下面添加两个值：Red和Green，Size下面也增加两个值：Small和Large。添加完后会有几个表发生变化。首先，wp_terms会增加相应的variant value：&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;term_id&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;name&lt;/th&gt;
-&lt;th align=&#34;center&#34;&gt;slug&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;term_group&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;15&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Red&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;red&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;16&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Green&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;green&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;17&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Small&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;small&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;18&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Large&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;large&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;19&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;variable&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;variable&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br\&gt;
-wp_term_taxonomy中新增：&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;term_taxonomy_id&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;term_id&lt;/th&gt;
-&lt;th align=&#34;center&#34;&gt;taxonomy&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;description&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;parent&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;count&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;15&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;15&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;pa_color&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;16&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;16&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;pa_color&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;17&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;17&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;pa_size&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;18&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;18&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;pa_size&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;19&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;19&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;product_type&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br\&gt;
-  其对应的term meta储存在wp_woocommerce_termmeta表中：&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;meta_id&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;woocommerce_term_id&lt;/th&gt;
-&lt;th align=&#34;center&#34;&gt;meta_key&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;meta_value&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;10&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;15&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;order_pa_color&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;11&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;16&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;order_pa_color&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;12&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;17&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;order_pa_size&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;13&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;18&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;order_pa_size&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br\&gt;
-现在看主表，因为创建产品的时候选择&amp;rsquo;Link all variations&amp;rsquo;，因此会产生4个SKU，post表会5条数据，但他们是自关联的，使用查询:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; select id, post_title, post_name, post_type, post_parent from wp_posts;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;得到结果如下：&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;id&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;post_title&lt;/th&gt;
-&lt;th align=&#34;center&#34;&gt;post_name&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;post_type&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;post_parent&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;20&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;variant product&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;variant-product&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;product&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;21&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Variation #21 of variant product&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;product-20-variation&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;product_variation&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;20&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;22&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Variation #22 of variant product&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;product-20-variation-2&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;product_variation&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;20&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;23&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Variation #23 of variant product&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;product-20-variation-3&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;product_variation&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;20&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;24&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;Variation #24 of variant product&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;product-20-variation-4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;product_variation&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;20&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br\&gt;
-该主表对应的纵表即是这些属性的描述，产品在meta表里面存储了所有的属性序列化数组，例如id为20的是个产品，其在post_meta表中key为‘ _product_attributes’的值为所有属性描述的列表：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;array (size=2)
-  &#39;pa_color&#39; =&amp;gt; 
-    array (size=6)
-      &#39;name&#39; =&amp;gt; string &#39;pa_color&#39; (length=8)
-      &#39;value&#39; =&amp;gt; string &#39;&#39; (length=0)
-      &#39;position&#39; =&amp;gt; string &#39;0&#39; (length=1)
-      &#39;is_visible&#39; =&amp;gt; int 1
-      &#39;is_variation&#39; =&amp;gt; int 1
-      &#39;is_taxonomy&#39; =&amp;gt; int 1
-  &#39;pa_size&#39; =&amp;gt; 
-    array (size=6)
-      &#39;name&#39; =&amp;gt; string &#39;pa_size&#39; (length=7)
-      &#39;value&#39; =&amp;gt; string &#39;&#39; (length=0)
-      &#39;position&#39; =&amp;gt; string &#39;1&#39; (length=1)
-      &#39;is_visible&#39; =&amp;gt; int 1
-      &#39;is_variation&#39; =&amp;gt; int 1
-      &#39;is_taxonomy&#39; =&amp;gt; int 1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;即可以从产品表里面获取所有的variant值，当然需要关联上述的几个表。再如SKU的id为21的post_meta数据如下：例如SKU的id为21的post_meta数据如下：&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;meta_id&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;post_id&lt;/th&gt;
-&lt;th align=&#34;center&#34;&gt;meta_key&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;meta_value&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;295&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;attribute_pa_color&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;red&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;296&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;attribute_pa_size&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;small&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;326&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_sku&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;327&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_thumbnail_id&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;328&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_virtual&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;no&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;329&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_downloadable&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;no&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;330&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_weight&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;331&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_length&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;332&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_width&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;333&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_height&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;334&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_manage_stock&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;no&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;335&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_stock_status&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;instock&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;336&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_regular_price&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;56&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;337&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_sale_price&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;338&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_sale_price_dates_from&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;339&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_sale_price_dates_to&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;340&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_price&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;56&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;341&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_download_limit&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;342&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_download_expiry&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;343&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;21&lt;/td&gt;
-&lt;td align=&#34;center&#34;&gt;_downloadable_files&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;通过这些表的相互关联即可完整描述所有的产品。&lt;/p&gt;
-
-&lt;p&gt;上面分析完了WooCommerce对variant product表处理，但是实际的应用也不能完全照搬。其中产品数据表里面的default_attributs就不能满足我们的需求，需要重新加一张表做映射查询。具体就不再细说了。&lt;/p&gt;
 </description>
     </item>
     

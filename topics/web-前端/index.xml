@@ -18,10 +18,13 @@
       <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</guid>
-      <description>&lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
+      <description>
 
-&lt;p&gt;#CSS相关
-因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
+&lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
+
+&lt;h1 id=&#34;css相关&#34;&gt;CSS相关&lt;/h1&gt;
+
+&lt;p&gt;因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
 ##mixin
 可以看作是面向对象的CSS，直白的讲就是混合引入，也有翻译是混入或混合，这样感觉都是很模糊的。其实功能上就是定义一组属性、style在一个mixin中，可以让其他的class直接引用，作为公共的基础class。例如：&lt;/p&gt;
 
@@ -41,8 +44,9 @@
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;##media
-由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
+&lt;h2 id=&#34;media&#34;&gt;media&lt;/h2&gt;
+
+&lt;p&gt;由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
 其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。&lt;/p&gt;
 
 &lt;p&gt;使用&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/CSS/@media&#34;&gt;media query&lt;/a&gt; 来索引屏幕尺寸并进行特定class的apply。可以让网页支持较好的自适应性。例如针对小屏幕某个class需要有些自适应的属性，下面这个css class在小屏幕上，屏幕宽度小于767px时，左侧增加20px的margin。&lt;/p&gt;
@@ -75,15 +79,18 @@
 | min-height | 当任意浏览器高度大于查询中定义的值时适用的规则。    |
 | max-height | 当任意浏览器高度小于查询中定义的值时适用的规则。|
 | orientation=portrait| 高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。|
-| orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|
-##语义化标签
-写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
+| orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|&lt;/p&gt;
+
+&lt;h2 id=&#34;语义化标签&#34;&gt;语义化标签&lt;/h2&gt;
+
+&lt;p&gt;写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
 这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。&lt;/p&gt;
 
 &lt;p&gt;上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。&lt;/p&gt;
 
-&lt;p&gt;#JS相关
-JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
+&lt;h1 id=&#34;js相关&#34;&gt;JS相关&lt;/h1&gt;
+
+&lt;p&gt;JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
 封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。&lt;/p&gt;
 </description>
     </item>
@@ -94,12 +101,15 @@ JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看�
       <pubDate>Tue, 07 Jul 2015 20:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
       <guid>http://compasses.github.io/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</guid>
-      <description>&lt;p&gt;WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。&lt;/p&gt;
+      <description>
+
+&lt;p&gt;WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。&lt;/p&gt;
 
 &lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
 
-&lt;p&gt;#POSITION
-解释说明：&lt;/p&gt;
+&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
+
+&lt;p&gt;解释说明：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;position
     
@@ -141,17 +151,25 @@ User agents may treat position as &#39;static&#39; on the root element.
 
 &lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
 
-&lt;p&gt;##relative position
-相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。
-##absolute position
-类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。
-##fixed position
-是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。
-##floating
-floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
+&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
 
-&lt;p&gt;#overflow
-解释：&lt;/p&gt;
+&lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
+
+&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
+
+&lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
+
+&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
+
+&lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
+
+&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
+
+&lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
+
+&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
+
+&lt;p&gt;解释：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;overflow
     
