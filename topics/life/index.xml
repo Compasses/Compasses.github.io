@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Life on 三十重围</title>
+    <link>http://compasses.github.io/topics/life/</link>
+    <description>Recent content in Life on 三十重围</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-EN</language>
+    <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
+    <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
+    <copyright>(c) 2015 Jet He.</copyright>
+    <lastBuildDate>Wed, 05 Aug 2015 20:45:07 +0800</lastBuildDate>
+    <atom:link href="http://compasses.github.io/topics/life/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>So Busy</title>
+      <link>http://compasses.github.io/2015/08/05/so-busy/</link>
+      <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/08/05/so-busy/</guid>
+      <description>&lt;p&gt;最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。
+整理下最近都是忙了点啥。
+由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。
+这其中有个恶心的地方就是本来平台开发是基于wordpress的，而wordpress本身是个开箱即用的东西，完全不是MVC的框架。但需要提供的接口要满足REST Ful 的。所以很多url 的route 规则需要自己去实现。这样下来发现如果最早使用一个PHP的MVC框架会省不小心啊。
+好在这个过程需要研究下PHP的MVC框架，为后续的演进做好了铺垫。
+另外一个项目就是需要开发自己的CMS系统，这个系统以OPEN API为基础。框架采用后端Java Spring， 前端使用angularJS。
+由于对java确是使用的较少，什么java框架也没玩过，所以就聚焦在了angularJS上了。angularJS是前端的MVC框架，能力出众。值得深入研究使用。最起码javaScripts方面的知识派上用场了。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>杂记 </title>
+      <link>http://compasses.github.io/2015/05/18/%E6%9D%82%E8%AE%B0/</link>
+      <pubDate>Mon, 18 May 2015 20:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/18/%E6%9D%82%E8%AE%B0/</guid>
+      <description>&lt;p&gt;最近一直有所恍惚，不知道自己的定位是什么，未来要做什么。
+极力的从一个公司挣脱到另一个公司，发现其实这种跳槽其实意义不大，发生这种事情还是自己考虑不周，不清楚自己的定位导致。
+说到定位，想想自己想做什么样的人，未来要做什么样的事情。。。&lt;/p&gt;
+
+&lt;p&gt;自己总是一意孤行的想多做点技术方面的工作，不计损失，可要想到任何地方其实都是跟业务相关的，不做业务怎么赚钱呢？纯粹的技术工作会有吗？应该寥寥无几，自己哪有什么本事能去做那样的工作呢。
+事情有因必有果，目前的境遇是我的造成的，是我应该面对的。工作和家庭，要轻松的工作可以更多的兼顾家庭，可是赚钱就不会太多；想要赚多点钱就要找奋斗型的公司，工作时间长，家庭生活要少很多。自己已经从后者的生活状态转变为前者，发现前者的生活更加让人迷茫。&lt;/p&gt;
+
+&lt;p&gt;每天都很清闲，生活在外企的工作氛围中，你会觉得自己很是个另类，如此的轻松愉快，不好吗？为啥还要有那么多的想法和迷茫呢。
+自己感觉是年轻的一类，而且也想更多的实现自身价值和获取更多的成就感。发现自己还是适合奋斗型的。&lt;/p&gt;
+
+&lt;p&gt;热烈的想工作，渴望面对更多的技术问题，解决更多的问题。目前阶段算是给自己的一个放松的机会，希望下一次机会来临，自己能够擦亮眼睛获取自己想要的环境，不然你不会&lt;strong&gt;幸福的&lt;/strong&gt;。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>blog 路程开启。。。</title>
+      <link>http://compasses.github.io/2015/05/09/blog-%E8%B7%AF%E7%A8%8B%E5%BC%80%E5%90%AF/</link>
+      <pubDate>Sat, 09 May 2015 20:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/09/blog-%E8%B7%AF%E7%A8%8B%E5%BC%80%E5%90%AF/</guid>
+      <description>&lt;p&gt;博客有了，就要开始写。
+为什么要写博客呢？看了很多人都推荐写一下博客，这也完全不只是博客那么简单。平时工作谁会有时间写博客呢，当然没有Evernote来的方便，记忆下重要的技术点，以供后续研究学习。&lt;/p&gt;
+
+&lt;p&gt;因换工作有将近9个月，做的东西也类似于全栈工程师，不管是前端还是后端，都要学习使用。这样可以接触很多东西，但是相当于拉长了战线，如果想要做的深、学的好，还是非常有挑战的。也就是因为这个新的工作让我接触了Web开发，使用了PHP、Javascript、Mysql，这让我这个之前做了多年C++通信方向开发的人打开眼界。很多东西很有趣但也很有挑战。Web开发虽然入门容易，但是做到专家也是离不开10000小时的规律的。所以像我这个刚刚进入这个领域的人，更要持续努力了。这个Blog不例外也是用hexo生成出来的，theme使用的是&lt;a href=&#34;https://github.com/iissnan/hexo-theme-next&#34;&gt;NexT&lt;/a&gt;，自己在此基础上进行了修改，引入了Bootsrap，调整了些UI，符合我的审美观点吧，虽然非常业余。目前Blog基本功能还是有些bug，后续会慢慢修复和优化，也当成自己的一个训练场吧。&lt;/p&gt;
+
+&lt;p&gt;就像这个Blog，GitHub提供了便利，可以随时随地的写，只要能上网就能更新到网站上，很方便。由于之前都没怎么写过博客，写博客还是非常有必要的，锻炼文字的组织能力、总结能力，更能促进学习进步。希望现在开始还一切来得及。&lt;/p&gt;
+
+&lt;p&gt;名叫“三十重围”，因为自己已经年近30岁，感觉自己需要突出重围，获得自己理想的追求，把平时自己杂乱的东西要学会统一整理，系统规范。&lt;/p&gt;
+
+&lt;p&gt;Blog的开始，重新开始。&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
