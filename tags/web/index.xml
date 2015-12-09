@@ -136,6 +136,12 @@ Vary                   Accept-Encoding
 &lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
 如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。&lt;/p&gt;
 
+&lt;p&gt;Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcacheclean。
+下面命令表示每个60分钟，清理缓存一次，只清理过时的或最少使用的缓存，达到100M时也会清理缓存。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;htcacheclean –d60 -n -t -p/var/cache/apache2/mod_cache_disk -l100M –i
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;p&gt;但是针对于那种需要及时更新的资源，需要另外的手段保证浏览器能够拿到最新的资源。&lt;a href=&#34;http://compasses.github.io/2015/11/27/http-cache/&#34;&gt;上一篇笔记里面的方法能较好&lt;/a&gt;的解决这个问题，&lt;/p&gt;
 </description>
     </item>
