@@ -9,8 +9,136 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Fri, 27 Nov 2015 17:45:24 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 09 Dec 2015 18:59:55 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Apache Cache探究</title>
+      <link>http://compasses.github.io/2015/12/09/apache-cache%E6%8E%A2%E7%A9%B6/</link>
+      <pubDate>Wed, 09 Dec 2015 18:59:55 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/12/09/apache-cache%E6%8E%A2%E7%A9%B6/</guid>
+      <description>
+
+&lt;p&gt;Apache 作为一个hosting server，在2.2版本以上的也有较为强大的缓存功能。使其不管是作为web server还是代理server都能实现访问加速。
+Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_cache较为简单粗暴，cache那种不轻易改变的或者对实效性要求不高的文件较为适合，因为后台更新了缓存不能及时更新，需要一个周期或者重启Apache。
+mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
+具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
+
+&lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
+这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
+一般的请求头，类似点击页面链接：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept                 text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding        gzip, deflate
+Accept-Language        zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Connection             keep-alive
+Cookie                 timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                   10.128.163.72
+User-Agent             Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;F5 刷新的请求头：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding       gzip, deflate
+Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control         max-age=0
+Connection            keep-alive
+Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                  10.128.163.72
+User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意两者的变化，F5刷新时，请求头里面多了 Cache-Control 的域，max-age 赋值为0，这就告诉所有的后续服务器如果缓存了这个资源请尝试更新。不出意外后续的服务器会针对这个请求发 Conditional Requests，后台服务器验证资源的有效性，如果过期则返回200 ok，否则返回304 not modified。&lt;/p&gt;
+
+&lt;p&gt;Ctrl + F5 刷新页面的请求头：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding       gzip, deflate
+Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control         no-cache
+Connection            keep-alive
+Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                  10.128.163.72
+Pragma                no-cache
+User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意这个请求头的新变化，又增加了一个新头域Pragma 值为 no-cache，Pragma 是HTTP1.0 里面定义的，Cache-Control 是HTTP1.1里面定义的，两个头域就足以保证了这个请求无法从cache中获取，直接强制性的去后台服务器发起获取。&lt;/p&gt;
+
+&lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
+
+&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
+
+&lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo a2enmod cache
+$ sudo a2enmod cache_disk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cache_disk的配置项：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;IfModule mod_cache.c&amp;gt;
+&amp;lt;IfModule mod_cache_disk.c&amp;gt;
+    CacheRoot /var/cache/apache2/mod_cache_disk
+    # This will also cache local documents. It usually makes more sense to
+    # put this into the configuration for just one virtual host.
+    CacheEnable disk /wp-content/
+
+    CacheDirLevels 2
+    CacheDirLength 1
+
+    CacheLock on
+    CacheLockPath /tmp/mod_cache-lock
+    CacheLockMaxAge 5
+
+&amp;lt;/IfModule&amp;gt;
+&amp;lt;/IfModule&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CacheRoot 是cache文件的保存位置，需要注意的是CacheEnable后面的url，指定了要cache 的url路径，既是从域名的开始路径位置，上面的配置会缓存&lt;a href=&#34;http://xxxx/wp-content/&#34;&gt;http://xxxx/wp-content/&lt;/a&gt; 开始的请求。
+CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#thunderingherd&#34;&gt;资源“群涌”现象&lt;/a&gt;，避免对后台server造成严重的冲击。&lt;/p&gt;
+
+&lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
+
+&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
+
+&lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
+例如能看到如下内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[Wed Dec 09 11:14:50.817537 2015] [cache:debug] [pid 10424] mod_cache.c(636): [client 10.128.161.107:56600] AH00763: cache: running CACHE_OUT filter
+[Wed Dec 09 11:14:50.817543 2015] [cache:debug] [pid 10424] mod_cache.c(665): [client 10.128.161.107:56600] AH00764: cache: serving /wp-content/templates/halloween/assets/css/style.css
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cache serving 表明该请求是从Apache缓存中返回的。浏览器中是否可以看到该请求是从Apache cache返回的呢，当然是可以的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept-Ranges          bytes
+Age                    2379
+Cache-Control          public, max-age=31104000
+Connection             Keep-Alive
+Content-Encoding       gzip
+Content-Length         5901
+Content-Type           text/css
+Date                   Wed, 09 Dec 2015 09:22:39 GMT
+Etag                   &amp;quot;7071-52671bdf81d18-gzip&amp;quot;
+Keep-Alive             timeout=5, max=100
+Last-Modified          Wed, 09 Dec 2015 07:07:23 GMTServerApache/2.4.7 (Ubuntu)
+Vary                   Accept-Encoding
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间，单位为秒，每次请求这个字段值都是会变化的。&lt;/p&gt;
+
+&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
+
+&lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
+如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;但是针对于那种需要及时更新的资源，需要另外的手段保证浏览器能够拿到最新的资源。&lt;a href=&#34;http://compasses.github.io/2015/11/27/http-cache/&#34;&gt;上一篇笔记里面的方法能较好&lt;/a&gt;的解决这个问题，&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>HTTP Cache</title>
@@ -1759,26 +1887,6 @@ end
 &lt;ol&gt;
 &lt;li&gt;《高性能MySQL 第三版》&lt;/li&gt;
 &lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>杂记 </title>
-      <link>http://compasses.github.io/2015/05/18/%E6%9D%82%E8%AE%B0/</link>
-      <pubDate>Mon, 18 May 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/05/18/%E6%9D%82%E8%AE%B0/</guid>
-      <description>&lt;p&gt;最近一直有所恍惚，不知道自己的定位是什么，未来要做什么。
-极力的从一个公司挣脱到另一个公司，发现其实这种跳槽其实意义不大，发生这种事情还是自己考虑不周，不清楚自己的定位导致。
-说到定位，想想自己想做什么样的人，未来要做什么样的事情。。。&lt;/p&gt;
-
-&lt;p&gt;自己总是一意孤行的想多做点技术方面的工作，不计损失，可要想到任何地方其实都是跟业务相关的，不做业务怎么赚钱呢？纯粹的技术工作会有吗？应该寥寥无几，自己哪有什么本事能去做那样的工作呢。
-事情有因必有果，目前的境遇是我的造成的，是我应该面对的。工作和家庭，要轻松的工作可以更多的兼顾家庭，可是赚钱就不会太多；想要赚多点钱就要找奋斗型的公司，工作时间长，家庭生活要少很多。自己已经从后者的生活状态转变为前者，发现前者的生活更加让人迷茫。&lt;/p&gt;
-
-&lt;p&gt;每天都很清闲，生活在外企的工作氛围中，你会觉得自己很是个另类，如此的轻松愉快，不好吗？为啥还要有那么多的想法和迷茫呢。
-自己感觉是年轻的一类，而且也想更多的实现自身价值和获取更多的成就感。发现自己还是适合奋斗型的。&lt;/p&gt;
-
-&lt;p&gt;热烈的想工作，渴望面对更多的技术问题，解决更多的问题。目前阶段算是给自己的一个放松的机会，希望下一次机会来临，自己能够擦亮眼睛获取自己想要的环境，不然你不会&lt;strong&gt;幸福的&lt;/strong&gt;。&lt;/p&gt;
 </description>
     </item>
     

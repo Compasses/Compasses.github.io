@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="en-EN">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    Apache Cache探究 | 三十重围
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="http://compasses.github.io/2015/12/09/apache-cache%E6%8E%A2%E7%A9%B6/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="http://compasses.github.io/index.xml" rel="alternate" type="application/rss+xml" title="三十重围" />
+  <link href="http://compasses.github.io/index.xml" rel="feed" type="application/rss+xml" title="三十重围" />
+
+  
+  <script type="text/javascript">var switchTo5x=true;</script>
+  <script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+  <script type="text/javascript">stLight.options({publisher: "2b9fffc6-b3fe-4988-a0ef-4f9dcce98eaa", doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="http://compasses.github.io/">三十重围</a></h1>
+        <h2>并蓄 | 共享</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          <li><a href="https://github.com/Compasses" target="_blank">GitHub</a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>Apache Cache探究</h1>
+      <div class="meta">
+        Dec 9, 2015 &nbsp;
+        
+          #<a href="/tags/web">web</a>&nbsp;
+        
+          #<a href="/tags/cache">cache</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>Apache 作为一个hosting server，在2.2版本以上的也有较为强大的缓存功能。使其不管是作为web server还是代理server都能实现访问加速。
+Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_cache较为简单粗暴，cache那种不轻易改变的或者对实效性要求不高的文件较为适合，因为后台更新了缓存不能及时更新，需要一个周期或者重启Apache。
+mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
+具体详细的信息可以参考Apache的官方文档<a href="http://httpd.apache.org/docs/2.2/caching.html#inmemory">Caching Guide</a></p>
+
+<h2 id="浏览器刷新原则">浏览器刷新原则</h2>
+
+<p>不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
+这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
+一般的请求头，类似点击页面链接：</p>
+
+<pre><code>Accept                 text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding        gzip, deflate
+Accept-Language        zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Connection             keep-alive
+Cookie                 timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                   10.128.163.72
+User-Agent             Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+</code></pre>
+
+<p>F5 刷新的请求头：</p>
+
+<pre><code>Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding       gzip, deflate
+Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control         max-age=0
+Connection            keep-alive
+Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                  10.128.163.72
+User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+</code></pre>
+
+<p>注意两者的变化，F5刷新时，请求头里面多了 Cache-Control 的域，max-age 赋值为0，这就告诉所有的后续服务器如果缓存了这个资源请尝试更新。不出意外后续的服务器会针对这个请求发 Conditional Requests，后台服务器验证资源的有效性，如果过期则返回200 ok，否则返回304 not modified。</p>
+
+<p>Ctrl + F5 刷新页面的请求头：</p>
+
+<pre><code>Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding       gzip, deflate
+Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control         no-cache
+Connection            keep-alive
+Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                  10.128.163.72
+Pragma                no-cache
+User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+</code></pre>
+
+<p>注意这个请求头的新变化，又增加了一个新头域Pragma 值为 no-cache，Pragma 是HTTP1.0 里面定义的，Cache-Control 是HTTP1.1里面定义的，两个头域就足以保证了这个请求无法从cache中获取，直接强制性的去后台服务器发起获取。</p>
+
+<p>以上三种不同的请求头会使得cache服务器的有着完全不同的行为。</p>
+
+<h2 id="实施apache缓存">实施Apache缓存</h2>
+
+<p>因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：</p>
+
+<pre><code>$ sudo a2enmod cache
+$ sudo a2enmod cache_disk
+</code></pre>
+
+<p>cache_disk的配置项：</p>
+
+<pre><code>&lt;IfModule mod_cache.c&gt;
+&lt;IfModule mod_cache_disk.c&gt;
+    CacheRoot /var/cache/apache2/mod_cache_disk
+    # This will also cache local documents. It usually makes more sense to
+    # put this into the configuration for just one virtual host.
+    CacheEnable disk /wp-content/
+
+    CacheDirLevels 2
+    CacheDirLength 1
+
+    CacheLock on
+    CacheLockPath /tmp/mod_cache-lock
+    CacheLockMaxAge 5
+
+&lt;/IfModule&gt;
+&lt;/IfModule&gt;
+</code></pre>
+
+<p>CacheRoot 是cache文件的保存位置，需要注意的是CacheEnable后面的url，指定了要cache 的url路径，既是从域名的开始路径位置，上面的配置会缓存<a href="http://xxxx/wp-content/">http://xxxx/wp-content/</a> 开始的请求。
+CacheLock 配置是为了防止大量的资源刷新请求造成的<a href="http://httpd.apache.org/docs/2.2/mod/mod_cache.html#thunderingherd">资源“群涌”现象</a>，避免对后台server造成严重的冲击。</p>
+
+<p>配置Apache的log level为debug，可以 对的cache 执行结果检查。</p>
+
+<h2 id="cache效果检查">cache效果检查</h2>
+
+<p>按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
+例如能看到如下内容：</p>
+
+<pre><code>[Wed Dec 09 11:14:50.817537 2015] [cache:debug] [pid 10424] mod_cache.c(636): [client 10.128.161.107:56600] AH00763: cache: running CACHE_OUT filter
+[Wed Dec 09 11:14:50.817543 2015] [cache:debug] [pid 10424] mod_cache.c(665): [client 10.128.161.107:56600] AH00764: cache: serving /wp-content/templates/halloween/assets/css/style.css
+</code></pre>
+
+<p>cache serving 表明该请求是从Apache缓存中返回的。浏览器中是否可以看到该请求是从Apache cache返回的呢，当然是可以的：</p>
+
+<pre><code>Accept-Ranges          bytes
+Age                    2379
+Cache-Control          public, max-age=31104000
+Connection             Keep-Alive
+Content-Encoding       gzip
+Content-Length         5901
+Content-Type           text/css
+Date                   Wed, 09 Dec 2015 09:22:39 GMT
+Etag                   &quot;7071-52671bdf81d18-gzip&quot;
+Keep-Alive             timeout=5, max=100
+Last-Modified          Wed, 09 Dec 2015 07:07:23 GMTServerApache/2.4.7 (Ubuntu)
+Vary                   Accept-Encoding
+</code></pre>
+
+<p>看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间，单位为秒，每次请求这个字段值都是会变化的。</p>
+
+<h2 id="缓存资源的更新周期">缓存资源的更新周期</h2>
+
+<p>使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
+如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考<a href="http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor">官方文档</a>。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以<a href="http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire">自己配置任意时间</a>。</p>
+
+<p>但是针对于那种需要及时更新的资源，需要另外的手段保证浏览器能够拿到最新的资源。<a href="http://compasses.github.io/2015/11/27/http-cache/">上一篇笔记里面的方法能较好</a>的解决这个问题，</p>
+
+      
+      
+      <div id="share-this" class="col span_10">
+        <span class='st_twitter_large' displayText='Tweet'></span>
+        <span class='st_facebook_large' displayText='Facebook'></span>
+        <span class='st_googleplus_large' displayText='Google +'></span>
+        <span class='st_pocket_large' displayText='Pocket'></span>
+        <span class='st_sharethis_large' displayText='ShareThis'></span>
+        <span class='st_email_large' displayText='Email'></span>  
+      </div>
+    </article>
+    
+
+
+<script type="text/javascript">
+     
+    var disqus_shortname = '';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+  
+  <nav class="pagination">
+    
+      <span class="previous">&larr; <a href="http://compasses.github.io/2015/11/27/http-cache/" rel="prev">HTTP Cache</a></span>
+    
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      <img src="/images/profile.png" width="64" height="64"><br>
+      Written by Jet He
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-70749774-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
