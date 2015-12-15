@@ -1,0 +1,1909 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>三十重围</title>
+    <link>http://compasses.github.io/</link>
+    <description>Recent content on 三十重围</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-EN</language>
+    <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
+    <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
+    <copyright>(c) 2015 Jet He.</copyright>
+    <lastBuildDate>Wed, 09 Dec 2015 18:59:55 +0800</lastBuildDate>
+    <atom:link href="http://compasses.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Apache Cache探究</title>
+      <link>http://compasses.github.io/2015/12/09/apache-cache%E6%8E%A2%E7%A9%B6/</link>
+      <pubDate>Wed, 09 Dec 2015 18:59:55 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/12/09/apache-cache%E6%8E%A2%E7%A9%B6/</guid>
+      <description>
+
+&lt;p&gt;Apache 作为一个hosting server，在2.2版本以上的也有较为强大的缓存功能。使其不管是作为web server还是代理server都能实现访问加速。
+Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_cache较为简单粗暴，cache那种不轻易改变的或者对实效性要求不高的文件较为适合，因为后台更新了缓存不能及时更新，需要一个周期或者重启Apache。
+mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
+具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
+
+&lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
+这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
+一般的请求头，类似点击页面链接：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept                 text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding        gzip, deflate
+Accept-Language        zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Connection             keep-alive
+Cookie                 timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                   10.128.163.72
+User-Agent             Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;F5 刷新的请求头：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding       gzip, deflate
+Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control         max-age=0
+Connection            keep-alive
+Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                  10.128.163.72
+User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意两者的变化，F5刷新时，请求头里面多了 Cache-Control 的域，max-age 赋值为0，这就告诉所有的后续服务器如果缓存了这个资源请尝试更新。不出意外后续的服务器会针对这个请求发 Conditional Requests，后台服务器验证资源的有效性，如果过期则返回200 ok，否则返回304 not modified。&lt;/p&gt;
+
+&lt;p&gt;Ctrl + F5 刷新页面的请求头：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding       gzip, deflate
+Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control         no-cache
+Connection            keep-alive
+Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host                  10.128.163.72
+Pragma                no-cache
+User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意这个请求头的新变化，又增加了一个新头域Pragma 值为 no-cache，Pragma 是HTTP1.0 里面定义的，Cache-Control 是HTTP1.1里面定义的，两个头域就足以保证了这个请求无法从cache中获取，直接强制性的去后台服务器发起获取。&lt;/p&gt;
+
+&lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
+
+&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
+
+&lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo a2enmod cache
+$ sudo a2enmod cache_disk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cache_disk的配置项：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;IfModule mod_cache.c&amp;gt;
+&amp;lt;IfModule mod_cache_disk.c&amp;gt;
+    CacheRoot /var/cache/apache2/mod_cache_disk
+    # This will also cache local documents. It usually makes more sense to
+    # put this into the configuration for just one virtual host.
+    CacheEnable disk /wp-content/
+
+    CacheDirLevels 2
+    CacheDirLength 1
+
+    CacheLock on
+    CacheLockPath /tmp/mod_cache-lock
+    CacheLockMaxAge 5
+
+&amp;lt;/IfModule&amp;gt;
+&amp;lt;/IfModule&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CacheRoot 是cache文件的保存位置，需要注意的是CacheEnable后面的url，指定了要cache 的url路径，既是从域名的开始路径位置，上面的配置会缓存&lt;a href=&#34;http://xxxx/wp-content/&#34;&gt;http://xxxx/wp-content/&lt;/a&gt; 开始的请求。
+CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#thunderingherd&#34;&gt;资源“群涌”现象&lt;/a&gt;，避免对后台server造成严重的冲击。&lt;/p&gt;
+
+&lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
+
+&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
+
+&lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
+例如能看到如下内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[Wed Dec 09 11:14:50.817537 2015] [cache:debug] [pid 10424] mod_cache.c(636): [client 10.128.161.107:56600] AH00763: cache: running CACHE_OUT filter
+[Wed Dec 09 11:14:50.817543 2015] [cache:debug] [pid 10424] mod_cache.c(665): [client 10.128.161.107:56600] AH00764: cache: serving /wp-content/templates/halloween/assets/css/style.css
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cache serving 表明该请求是从Apache缓存中返回的。浏览器中是否可以看到该请求是从Apache cache返回的呢，当然是可以的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept-Ranges          bytes
+Age                    2379
+Cache-Control          public, max-age=31104000
+Connection             Keep-Alive
+Content-Encoding       gzip
+Content-Length         5901
+Content-Type           text/css
+Date                   Wed, 09 Dec 2015 09:22:39 GMT
+Etag                   &amp;quot;7071-52671bdf81d18-gzip&amp;quot;
+Keep-Alive             timeout=5, max=100
+Last-Modified          Wed, 09 Dec 2015 07:07:23 GMTServerApache/2.4.7 (Ubuntu)
+Vary                   Accept-Encoding
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间，单位为秒，每次请求这个字段值都是会变化的。&lt;/p&gt;
+
+&lt;h2 id=&#34;cache的资源副本&#34;&gt;cache的资源副本&lt;/h2&gt;
+
+&lt;p&gt;Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
+这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上&lt;code&gt;Accept-Encoding&lt;/code&gt;，响应头Vary域则是：&lt;code&gt;Vary: Accept-Encoding&lt;/code&gt;。
+如果两个客户端的请求头里面的Accept-Encoding是不一样的，则cache服务会根据不同的Vary头选择相应的缓存内容。也就是说明具有不同Accept-Encode的客户端浏览器缓存的内容是不一样的。
+也即相同的URL会有不同的缓存副本。&lt;/p&gt;
+
+&lt;p&gt;当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。&lt;/p&gt;
+
+&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
+
+&lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
+如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcacheclean。
+下面命令表示每个60分钟，清理缓存一次，只清理过时的或最少使用的缓存，达到100M时也会清理缓存。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;htcacheclean –d60 -n -t -p/var/cache/apache2/mod_cache_disk -l100M –i
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是针对于那种需要及时更新的资源，需要另外的手段保证浏览器能够拿到最新的资源。&lt;a href=&#34;http://compasses.github.io/2015/11/27/http-cache/&#34;&gt;上一篇笔记里面的方法能较好&lt;/a&gt;的解决这个问题，&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>HTTP Cache</title>
+      <link>http://compasses.github.io/2015/11/27/http-cache/</link>
+      <pubDate>Fri, 27 Nov 2015 17:45:24 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/11/27/http-cache/</guid>
+      <description>
+
+&lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;
+
+&lt;h2 id=&#34;相关http-header字段&#34;&gt;相关HTTP header字段&lt;/h2&gt;
+
+&lt;h3 id=&#34;last-modified和etag&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
+
+&lt;p&gt;两者的功能类似，一个是文件的最近一次的修改时间，一个是针对这个资源文件生成的tag。都是server端的返回。刷新页面时，请求头里面会带上If-Modified-Since或者 If-None-Match。
+ 但是Etag并&lt;a href=&#34;https://developer.yahoo.com/performance/rules.html#etags=&#34;&gt;不推荐使用&lt;/a&gt;，原因就是不同的server对Etag的生成算法可能不统一，特别在集群server的情况下。&lt;/p&gt;
+
+&lt;h3 id=&#34;pragma&#34;&gt;Pragma&lt;/h3&gt;
+
+&lt;p&gt;纯协议上的指令，对请求响应链路上的所有代理使用。例如如果pragma：no-chache，则请求在请求响应链上的任意节点都不会被缓存，因其于cache-control：no-chache意义一致。&lt;/p&gt;
+
+&lt;h3 id=&#34;expires&#34;&gt;Expires&lt;/h3&gt;
+
+&lt;p&gt;set response headers，对某个响应设置个超时时间，一般优先级不高，如果存在max-age的话，这个字段几乎不起作用。&lt;/p&gt;
+
+&lt;h3 id=&#34;cache-control&#34;&gt;Cache-Control&lt;/h3&gt;
+
+&lt;p&gt;public：标识验证后的respons可被缓存的。
+no-store：任何情况下不缓存，并尽量不要保存到磁盘中。不缓存的资源并不能保证不被保存到磁盘中。例如浏览器的后退键，可能会导致看到过期的页面。
+no-cache: 强制提交校验请求，严格模式，也即不缓存该响应。
+must-revalidate: 缓存必须遵守任何的刷新规则，如果缓存超时必须重新发起请求，或者是条件请求。
+proxy-revalidate： 和must 一样，只对proxy cache有效，对中间有cache server的情况，该字段指导cache server的验证方式和条件。
+max-age: 指定刷新超时时间，即cache的超时时间。
+s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache servers使用这个s-maxage，针对public的cache有效，其会覆盖max-age。&lt;/p&gt;
+
+&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;通过vary告诉http cache，寻找缓存对象时需要考虑的头域字段。比如：浏览器发了两个request，一个带有accept-encoding， 一个没有。http 缓存的时候会带上这个vary标记，表示只有带有accept-encoding的缓存对象才能是使用。达到的效果就是request里面带有accept-encoding的请求，响应缓存只能被这样的请求获取。&lt;/p&gt;
+
+&lt;p&gt;vary的不同会控制请求的发送数量。例如vary:*，表明每个request都是不同的。
+简单的理解vary用来区分请求的差别，识别出不同的request。
+vary的其他取值：user-agent, 让响应区分不同的agent；Referer, 区分这个request是从哪个页面而来。cookie, 不同认证信息不同的 request。vary指定的那些值就会影响浏览器的cache策略。&lt;/p&gt;
+
+&lt;h2 id=&#34;需要注意的几个问题&#34;&gt;需要注意的几个问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;https-证书问题&#34;&gt;https 证书问题&lt;/h3&gt;
+
+&lt;p&gt;如果是无效的证书，会导致缓存无法完全起用。本地测试是doc无法被cache，静态资源还是可以的。当然这跟浏览器的行为也有关系，Firefox里面添加例外证书变成合法的就可以正常缓存了。chrome的证书比较严格不好把红叉叉去掉。&lt;/p&gt;
+
+&lt;h3 id=&#34;expires和max-age-优先级问题&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
+
+&lt;p&gt;当response头域里面两者都包含时，浏览器会优先选用max-age，当然这是我本地的测试结果。所有的情况可能难以覆盖，比如移动端的浏览器，其他的浏览器，除了Firefox、chrome、IE等等以外的。
+另外就是expires是http1.0里面的，max-age在http1.1被引入，但是&lt;a href=&#34;https://www.mnot.net/blog/2007/05/15/expires_max-age&#34;&gt;这篇文章&lt;/a&gt;建议最好两者都带上正确的值，或者只带上max-age。&lt;/p&gt;
+
+&lt;h3 id=&#34;conditional-requests&#34;&gt;Conditional Requests&lt;/h3&gt;
+
+&lt;p&gt;条件请求是当浏览器发现资源超时时，如过了max-age或者expires date，会发起条件请求，如果server发现资源变化了会回复200 ok，否则回复304的status code。正确情况下资源cache后，浏览器是不会发条件请求的，直到资源超时后。当然也不排除某些浏览器会不停的发conditional request，更为详细的介绍，&lt;a href=&#34;https://greenbytes.de/tech/webdav/draft-ietf-httpbis-p4-conditional-20.html&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;静态资源缓存&#34;&gt;静态资源缓存&lt;/h2&gt;
+
+&lt;p&gt;针对静态资源，更新时更加推荐使用变更文件名的方式，例如让文件名包含一个版本号的方式。这种比文件末尾增加query string更加有效，例如有些中间proxy就不会缓存带有查询字符的url。&lt;/p&gt;
+
+&lt;h2 id=&#34;php配合apache-实现静态资源版本控制&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
+
+&lt;p&gt;针对静态资源的cache设置，这个&lt;a href=&#34;https://github.com/Compasses/server-configs-apache/tree/master/src/web_performance&#34;&gt;github&lt;/a&gt;有较好的配置模板做参考。基本上enmod headers即可。
+针对静态文件php代码里面插入版本号，一般为时间戳或者数据库里面的更新时间：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    /*
+     * change &amp;quot;assert/style.css&amp;quot; to &amp;quot;assert/style.xxxx.css&amp;quot;
+     * if change failed just return the $src
+     */
+    public function assert_url_version_insert($src, $version) {
+        $replacement = &#39;.&#39;.$version.&#39;.$1&#39;;
+        $newpath = preg_replace(
+            &#39;/\.(js|css)$/&#39;,
+            $replacement,
+            $src
+        );
+       
+        return $newpath === NULL ? $src : $newpath;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;还例如有的情况需要读取文件的修改时间作为时间戳：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ftime = filectime( $filePath);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是通过读取文件的修改时间，也可以通过读取数据库的方式。
+插入版本号：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if ($ftime) {
+     $path = $this-&amp;gt;assert_url_version_insert($path, $ftime);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样页面加载的静态资源URL会变成：&lt;a href=&#34;http://xxxx.xx/js/xxx.版本号.css&#34;&gt;http://xxxx.xx/js/xxx.版本号.css&lt;/a&gt; 或者js。
+Apache使能rewrite rule：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;RewriteRule ^(.+)\.(.+)\.(js|css)$ $1.$3 [L]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最好再使能headers模块，针对这类静态资源设置最大缓存时间：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;  &amp;lt;filesMatch &amp;quot;\.(css)$&amp;quot;&amp;gt;
+        Header merge Cache-Control &amp;quot;public, max-age=31104000&amp;quot;
+    &amp;lt;/filesMatch&amp;gt;
+    &amp;lt;filesMatch &amp;quot;\.(js)$&amp;quot;&amp;gt;
+        Header merge Cache-Control &amp;quot;public, max-age=31104000&amp;quot;
+    &amp;lt;/filesMatch&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述就完成了，只要后台修改了静态资源文件，则文件的名字会随着版本号的更新而更新，从而实现前端自动刷新缓存。否则这些资源文件会永远cache在客户端。超时时间为31104000s。&lt;/p&gt;
+
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;http cache 很复杂，牵扯较多的组件，上述只是针对Apache+PHP的方案实施。&lt;/li&gt;
+&lt;li&gt;没有引入更加复杂的缓存中间件，其实目前有较多的组件可直接使用的。比如&lt;a href=&#34;https://www.varnish-cache.org/&#34;&gt;Varnish&lt;/a&gt;如果有机会使用的话，再进行研究。&lt;/li&gt;
+&lt;li&gt;web 优化cache是比较重要的一环，当然还有其他的更多的零零碎碎的优化，还是需要建立在经验的基础上，多多思考这块就能不断提高了。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>golang interface analysis by gdb</title>
+      <link>http://compasses.github.io/2015/10/23/golang-interface-analysis-by-gdb/</link>
+      <pubDate>Fri, 23 Oct 2015 22:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/10/23/golang-interface-analysis-by-gdb/</guid>
+      <description>
+
+&lt;p&gt;interface 在go语言中，是非常重要的一环，总有点让人感到很玄乎不定的感觉。官方的lib中有大量使用，似乎面向对象和动态绑定也能跟interface扯上关系。总之，如果能更好的理解interface的机理，就能更好的理解和使用Go了。&lt;/p&gt;
+
+&lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
+
+&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
+
+&lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// layout of Itab known to compilers
+// allocated in non-garbage-collected memory
+type itab struct {
+    inter  *interfacetype
+
+    _type  *_type
+
+    link   *itab
+
+    bad    int32
+    unused int32
+    fun    [1]uintptr // variable sized
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在运行时该结构会被runtime库计算出来，保证interface的正常运转。
+使用&lt;strong&gt;go build -gcflags &amp;laquo;-N -l&amp;raquo;&lt;/strong&gt;编译便可以是用GDB来debug了。
+断点断在最后一行代码，代码在最后列出。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(gdb) info locals
+b = 200
+s = {tab = 0x7ffff7e0f1c0, data = 0xc82000a3b0}
+nothing = {_type = 0x4c1360, data = 0xc82000a430}
+face = {tab = 0x0, data = 0x0}
+any = {_type = 0x4e4a80, data = 0xc82000a3c0}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;首先看变量*s*，内部有个tab指针和data指针。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(gdb) p  *s.tab
+$24 = {inter = 0x4dffa0, _type = 0x4e4a80, link = 0x0, bad = 0, unused = 0, fun = {4200784}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结构就是上面的itab的数据结构，其中的interfacetype 和 _type的结构分别为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type interfacetype struct {
+    typ  _type
+
+    mhdr []imethod
+
+}
+// Needs to be in sync with ../cmd/internal/ld/decodesym.go:/^func.commonsize,
+// ../cmd/internal/gc/reflect.go:/^func.dcommontype and
+// ../reflect/type.go:/^type.rtype.
+type _type struct {
+    size       uintptr
+    ptrdata    uintptr // size of memory prefix holding all pointers
+    hash       uint32
+    _unused    uint8
+    align      uint8
+    fieldalign uint8
+    kind       uint8
+    alg        *typeAlg
+
+    // gcdata stores the GC type data for the garbage collector.
+    // If the KindGCProg bit is set in kind, gcdata is a GC program.
+    // Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
+    gcdata  *byte
+    _string *string
+    x       *uncommontype
+
+    ptrto   *_type
+
+    zero    *byte // ptr to the zero value for this type
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;分别看下里面的内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(gdb) p  *s.tab.inter
+$26 = {typ = {size = 16, ptrdata = 16, hash = 3958674519, _unused = 0 &#39;\000&#39;, align = 8 &#39;\b&#39;, fieldalign = 8 &#39;\b&#39;, kind = 20 &#39;\024&#39;, alg = 0x592770 &amp;lt;runtime.algarray+240&amp;gt;,
+    gcdata = 0x537142 &amp;quot;\003\004\005\006\a\b\t\n\r\016\017\020\021\022\025\026\031\032\033\037,568&amp;gt;?Ur\236\237\325\365\377&amp;quot;, _string = 0x5161d0, x = 0x4e0018, ptrto = 0x4b6e80,
+    zero = 0x539c40 &amp;lt;runtime.zerovalue&amp;gt; &amp;quot;&amp;quot;}, mhdr = {array = 0x4e0000, len = 1, cap = 1}}
+(gdb) p  *s.tab._type
+$27 = {size = 8, ptrdata = 0, hash = 1148337467, _unused = 0 &#39;\000&#39;, align = 8 &#39;\b&#39;, fieldalign = 8 &#39;\b&#39;, kind = 139 &#39;\213&#39;, alg = 0x5926d0 &amp;lt;runtime.algarray+80&amp;gt;,
+  gcdata = 0x537140 &amp;quot;\001\002\003\004\005\006\a\b\t\n\r\016\017\020\021\022\025\026\031\032\033\037,568&amp;gt;?Ur\236\237\325\365\377&amp;quot;, _string = 0x5161c0, x = 0x4e4ac8, ptrto = 0x4e4d20,
+  zero = 0x539c40 &amp;lt;runtime.zerovalue&amp;gt; &amp;quot;&amp;quot;}
+(gdb) p  *s.tab.inter.typ._string
+$28 = 0x50b930 &amp;quot;main.Stringer&amp;quot;
+(gdb) p  *s.tab._type._string
+$29 = 0x50b920 &amp;quot;main.Binary&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以清晰的看出，itab的type是interface所包含值的type信息：&lt;strong&gt;main.Binary&lt;/strong&gt;，而tab的interface type为该interface的类型信息: &lt;strong&gt;main.Stringer&lt;/strong&gt;。
+他们的size是不一样的。Binary的size为8个字节，而interface是16个字节。
+&lt;strong&gt;想想为啥interface是16个字节的大小？这里可以大胆猜测16个字节是系统内存管理的对齐对齐最小字节数，即libc之前的内存管理里面分配内存都是以16字节作为对齐的，这样也是为了方便内存管理吧。&lt;/strong&gt;
+要想搞清楚tab里面所有变量的意义，那是不可能的了，在GDB调试过程中，发现中间穿插大量的汇编代码，特别是runtime库实现interface计算过程中。
+继续，s的data也是个指针可以直接将其值打印出来：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(gdb) p *uint64(s.data)
+$22 = 200
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因为我们事先知道该值类型为64位的uint型。
+接着看下any和nothing这两个变量。该两个变量有着不同的类型。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(gdb) p nothing
+$51 = {_type = 0x4c1360, data = 0xc82000a430}
+(gdb) p any
+$52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;针对interface go的编译器有两种的内存优化策略，就像上面两个变量，他们就不再有itab了，只是type，原因是他们没有方法集。上面文章中说的第二种优化策略，在实际测试中并没有验证出来，即如果interface里面的data值是32位的，则该data字段会直接存该值，不会用指针多一层引用了，即代码中的s32。&lt;/p&gt;
+
+&lt;p&gt;通过上面可以看出interface是runtime的产物，是go运行时的对象。这个很像C++中的虚函数表的行为。
+从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
+&lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
+
+&lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
+从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
+interface可以接纳任意类型，因interface内部的type信息是完备的：用type switch 可以获取interface内部value的类型信息，如下所示。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;type Stringer interface {
+    String() string
+}
+
+var value interface{} // Value provided by caller.
+switch str := value.(type) {
+case string:
+    return str
+case Stringer:
+    return str.String()
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;interface 更为抽象化的接口，通过interface来定义你的行为方法，行为方法里面会对对象数据产生变化，这个也是需要进行隔离的。跟与C++编码那种面向对象的思想有点出入，看起来不是那么直观。面向对象即先定义对象，和对象的行为。Go里面也是可以定义自己的对象和方法，然后再把这些方法抽象成一个类型：interface，interface就可以使用在函数接口当中，其实此时传递的时候还是你所定义的对象。&lt;/p&gt;
+
+&lt;p&gt;总体上感觉interface比面向对象更抽象了一层，需要在更多的实际开发过程中慢慢体会。&lt;/p&gt;
+
+&lt;p&gt;附：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+     &amp;quot;fmt&amp;quot;
+     &amp;quot;strconv&amp;quot;
+)
+
+type Stringer interface {
+    String() string
+}
+
+func ToString(any interface{}) string {
+    if v, ok := any.(Stringer); ok {
+        return v.String()
+    }
+    switch v := any.(type) {
+    case int:
+        return strconv.Itoa(v)
+    case float32:
+        return strconv.FormatFloat(float64(v), &#39;g&#39;, -1, 32)
+    }
+    return &amp;quot;???&amp;quot;
+}
+
+type Binary uint64
+type Binary32 uint32
+
+func (i Binary) String() string {
+    return strconv.FormatUint(i.Get(), 2)
+}
+
+func (i Binary) Get() uint64 {
+    return uint64(i)
+}
+
+func (i Binary32) String() string {
+    return strconv.FormatUint(uint64(i.Get()), 2)
+}
+
+func (i Binary32) Get() uint64 {
+    return uint64(i)
+}
+
+func main() {
+    
+     b := Binary(200)
+     b32 := Binary32(200)
+    
+     s := Stringer(b)
+     s32 := Stringer(b32)
+    
+     any := (interface{})(b)
+    
+     fmt.Println(s.String())
+     fmt.Println(s32.String())
+    
+     fmt.Println(ToString(any))
+    
+     var nothing interface{}
+
+     nothing = uint64(200)
+     fmt.Println(nothing)
+
+     var face Stringer
+    
+     fmt.Println(face)
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>So Busy</title>
+      <link>http://compasses.github.io/2015/08/05/so-busy/</link>
+      <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/08/05/so-busy/</guid>
+      <description>&lt;p&gt;最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。
+整理下最近都是忙了点啥。
+由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。
+这其中有个恶心的地方就是本来平台开发是基于wordpress的，而wordpress本身是个开箱即用的东西，完全不是MVC的框架。但需要提供的接口要满足REST Ful 的。所以很多url 的route 规则需要自己去实现。这样下来发现如果最早使用一个PHP的MVC框架会省不小心啊。
+好在这个过程需要研究下PHP的MVC框架，为后续的演进做好了铺垫。
+另外一个项目就是需要开发自己的CMS系统，这个系统以OPEN API为基础。框架采用后端Java Spring， 前端使用angularJS。
+由于对java确是使用的较少，什么java框架也没玩过，所以就聚焦在了angularJS上了。angularJS是前端的MVC框架，能力出众。值得深入研究使用。最起码javaScripts方面的知识派上用场了。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>前端经验</title>
+      <link>http://compasses.github.io/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</link>
+      <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</guid>
+      <description>
+
+&lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
+
+&lt;h1 id=&#34;css相关&#34;&gt;CSS相关&lt;/h1&gt;
+
+&lt;p&gt;因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
+##mixin
+可以看作是面向对象的CSS，直白的讲就是混合引入，也有翻译是混入或混合，这样感觉都是很模糊的。其实功能上就是定义一组属性、style在一个mixin中，可以让其他的class直接引用，作为公共的基础class。例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.ellipsis (@width) {
+  width: @width;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个ellipsis class会将定宽文本进行截断，这样的class可能会在网站中多处使用，而且每次使用宽度可变，这样在使用时传入想要宽度的参数即可。例如产品名字的class：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;product-name {
+     .ellipsis(8em);
+     ...
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;media&#34;&gt;media&lt;/h2&gt;
+
+&lt;p&gt;由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
+其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。&lt;/p&gt;
+
+&lt;p&gt;使用&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/CSS/@media&#34;&gt;media query&lt;/a&gt; 来索引屏幕尺寸并进行特定class的apply。可以让网页支持较好的自适应性。例如针对小屏幕某个class需要有些自适应的属性，下面这个css class在小屏幕上，屏幕宽度小于767px时，左侧增加20px的margin。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.class-name {
+     @media(max-width: 767px) {
+          margin-left: 20px;
+          ...
+     }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上面是在class里面进行屏幕适应，更多的时候是定义整个class为自适应：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@media only screen and (max-width: 767px) {
+     .class-name {
+          ...
+     }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;根据不同的尺寸class里面的style进行相应的变化。bootstrap也是这么玩的。
+在移动设备上有横屏和竖屏的区分，也能做相应的自适应。
+关键的属性：&lt;/p&gt;
+
+&lt;p&gt;| media 属性     | 结果|
+| &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;- |:&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;-:|
+| min-width      |  当任意浏览器宽度大于查询中定义的值时适用的规则。 |
+| max-width      | 当任意浏览器宽度小于查询中定义的值时适用的规则。 |
+| min-height | 当任意浏览器高度大于查询中定义的值时适用的规则。    |
+| max-height | 当任意浏览器高度小于查询中定义的值时适用的规则。|
+| orientation=portrait| 高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。|
+| orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|&lt;/p&gt;
+
+&lt;h2 id=&#34;语义化标签&#34;&gt;语义化标签&lt;/h2&gt;
+
+&lt;p&gt;写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
+这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。&lt;/p&gt;
+
+&lt;p&gt;上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。&lt;/p&gt;
+
+&lt;h1 id=&#34;js相关&#34;&gt;JS相关&lt;/h1&gt;
+
+&lt;p&gt;JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
+封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>PHP 框架之CodeIgniter &amp; Laravel</title>
+      <link>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</link>
+      <pubDate>Sat, 18 Jul 2015 18:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
+      <description>
+
+&lt;h1 id=&#34;说明&#34;&gt;说明&lt;/h1&gt;
+
+&lt;p&gt;最近产品考虑更换前端框架，重点考察了CodeIgniter 和 Laravel两个框架，现对其进行下对比分析。&lt;/p&gt;
+
+&lt;h1 id=&#34;总体对比&#34;&gt;总体对比&lt;/h1&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;CodeIgniter&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;Laravel&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Document&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Good enough&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Good enough&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Performance&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;差不多 3倍于 Laravel&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;MVC&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Good enough&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Good enough&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;TWIG&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;自己添加 TWIG lib&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;使用三方插件&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;third-party&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;自己添加，放到指定目录&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;composer managment&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Route&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;default mapping ：&amp;raquo;example.com/class/function/id/&amp;raquo; can be remap, more code than Laravel&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Simple and clear&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;summary&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;简单 精巧&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;易用，更为丰满&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;CodeIgniter 基本上是个MVC的空架子，代码量极小，开发的花基本上 100%的掌控在自己手里。 Laravel还是加载了不少的三方 component，比CodeIgniter 庞大些。
+对MVC的支持都很清晰，URL的路由也很简单易扩展。&lt;/p&gt;
+
+&lt;h1 id=&#34;测试环境&#34;&gt;测试环境：&lt;/h1&gt;
+
+&lt;p&gt;主要是使用了Laravel 的HomeStead环境，通过virtual box + vagrant标准用法，加载Laravel的框架代码；要使其加载CodeIgniter框架，需要修改Nginx的配置，增加新的server，只要端口号换成新的，root指定到CodeIgniter的跟目录即可。
+总体上是Nginx+php5-fpm+mysql+ Ubuntu + CodeIgniter 源码包 + Laravel 源码包。源码包共享在本机上。&lt;/p&gt;
+
+&lt;h1 id=&#34;测试页面&#34;&gt;测试页面：&lt;/h1&gt;
+
+&lt;p&gt;Modal：使用product数据，获取某个product上的所有信息。
+View：引入Twig模板引擎，创建几个twig模板，在controller层render。
+Controller：调用modal获取数据，使用 twig render 页面。&lt;/p&gt;
+
+&lt;p&gt;这两个框架都用非常清晰的 MVC结构，上述页面的代码几乎可以在两者之间无缝迁移。&lt;/p&gt;
+
+&lt;h1 id=&#34;性能对比测试&#34;&gt;性能对比测试：&lt;/h1&gt;
+
+&lt;p&gt;针对这个页面进行性能测试：页面大小为 8KB， 加载一个已有的CSS文件大小为 87.7KB。
+使用Apache的ab test进行测试：
+AB test:
+ab -n 1000 -c 80 &lt;a href=&#34;http://192.168.10.10:8080/productdetail/&#34;&gt;http://192.168.10.10:8080/productdetail/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;laravel-结果&#34;&gt;Laravel 结果:&lt;/h2&gt;
+
+&lt;p&gt;Server Software:        nginx/1.8.0
+Server Hostname:        192.168.10.10
+Server Port:            80&lt;/p&gt;
+
+&lt;p&gt;Document Path:          /product/
+Document Length:        200205 bytes&lt;/p&gt;
+
+&lt;p&gt;Concurrency Level:      80
+Time taken for tests:   112.455 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      200793036 bytes
+HTML transferred:       200205000 bytes
+Requests per second:    8.89 &lt;a href=&#34;mean&#34;&gt;#/sec&lt;/a&gt;
+Time per request:       8996.416 &lt;a href=&#34;mean&#34;&gt;ms&lt;/a&gt;
+Time per request:       112.455 &lt;a href=&#34;mean, across all concurrent requests&#34;&gt;ms&lt;/a&gt;
+Transfer rate:          1743.69 [Kbytes/sec] received&lt;/p&gt;
+
+&lt;p&gt;Connection Times (ms)&lt;/p&gt;
+
+&lt;p&gt;min  mean[+/-sd] median   max
+Connect:        0    1   1.0      0      18
+Processing:  2001 8604 1574.3   8488   17271
+Waiting:     1999 8594 1572.4   8480   17269
+Total:       2005 8604 1574.0   8490   17271
+WARNING: The median and mean for the initial connection time are not within a normal deviation&lt;/p&gt;
+
+&lt;p&gt;These results are probably not that reliable.&lt;/p&gt;
+
+&lt;p&gt;Percentage of the requests served within a certain time (ms)&lt;/p&gt;
+
+&lt;p&gt;50%   8490&lt;/p&gt;
+
+&lt;p&gt;66%   8695&lt;/p&gt;
+
+&lt;p&gt;75%   8960&lt;/p&gt;
+
+&lt;p&gt;80%   9098&lt;/p&gt;
+
+&lt;p&gt;90%   9951&lt;/p&gt;
+
+&lt;p&gt;95%  12074&lt;/p&gt;
+
+&lt;p&gt;98%  12548&lt;/p&gt;
+
+&lt;p&gt;99%  12944&lt;/p&gt;
+
+&lt;p&gt;100%  17271 (longest request)&lt;/p&gt;
+
+&lt;h2 id=&#34;codeigniter-结果&#34;&gt;CodeIgniter 结果:&lt;/h2&gt;
+
+&lt;p&gt;Server Software:        nginx/1.8.0
+Server Hostname:        192.168.10.10
+Server Port:            8080&lt;/p&gt;
+
+&lt;p&gt;Document Path:          /productdetail/
+Document Length:        200205 bytes&lt;/p&gt;
+
+&lt;p&gt;Concurrency Level:      80
+Time taken for tests:   40.332 seconds
+Complete requests:      1000
+Failed requests:        0
+Total transferred:      200341000 bytes
+HTML transferred:       200205000 bytes
+Requests per second:    24.79 &lt;a href=&#34;mean&#34;&gt;#/sec&lt;/a&gt;
+Time per request:       3226.569 &lt;a href=&#34;mean&#34;&gt;ms&lt;/a&gt;
+Time per request:       40.332 &lt;a href=&#34;mean, across all concurrent requests&#34;&gt;ms&lt;/a&gt;
+Transfer rate:          4850.86 [Kbytes/sec] received&lt;/p&gt;
+
+&lt;p&gt;Connection Times (ms)&lt;/p&gt;
+
+&lt;p&gt;min  mean[+/-sd] median   max
+Connect:        0    1   1.3      0      23
+Processing:   346 3097 456.3   3169    3649
+Waiting:      343 3089 455.7   3161    3645
+Total:        351 3098 455.5   3170    3649&lt;/p&gt;
+
+&lt;p&gt;Percentage of the requests served within a certain time (ms)&lt;/p&gt;
+
+&lt;p&gt;50%   3170&lt;/p&gt;
+
+&lt;p&gt;66%   3216&lt;/p&gt;
+
+&lt;p&gt;75%   3250&lt;/p&gt;
+
+&lt;p&gt;80%   3270&lt;/p&gt;
+
+&lt;p&gt;90%   3326&lt;/p&gt;
+
+&lt;p&gt;95%   3467&lt;/p&gt;
+
+&lt;p&gt;98%   3551&lt;/p&gt;
+
+&lt;p&gt;99%   3582&lt;/p&gt;
+
+&lt;p&gt;100%   3649 (longest request)&lt;/p&gt;
+
+&lt;h1 id=&#34;总结&#34;&gt;总结&lt;/h1&gt;
+
+&lt;p&gt;CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。
+如果选择从头开始的话，感觉CodeIgniter更好些。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Go Go</title>
+      <link>http://compasses.github.io/2015/07/09/go-go/</link>
+      <pubDate>Thu, 09 Jul 2015 17:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/07/09/go-go/</guid>
+      <description>&lt;p&gt;最近在学习Go语言。认识Go语言是个偶然，首选是Docker容器的使用，Docker的兴起目前可谓风生水起，应用部署和各种云平台都在推行。其使用Go语言开发，之前没有听说过的。断断续续的找相关的博客、资料进行了解。发现Go 是有很多吸引人的地方，自己非常感兴趣，最近买的一本《Go Web编程》今天到手了。&lt;/p&gt;
+
+&lt;p&gt;也说下自己的缘由，很多人都说Go 很容易上手，这应该对C系的开发人员而说的，Go语言的发明者也是C语言的作者，Go语言本身很多的语法、类型、结构等用法类似于C语言，如果编译运行的话二进制文件都能用GDB进行调试。Go语言是个集大成者，在里面你能看到或者重新认识一些语言特性，它有诸多动态语言特有的特性。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;首选想说的就是函数闭包，闭包函数在JavaScript里面应用的最广泛，用于各种回调处理、变量的scope控制等，在Go语言里面也有，使用起来几乎没有什么差别，也能当成变量传递等等。&lt;/li&gt;
+&lt;li&gt;内置强大的数据结构，例如slice、map，开发的快捷易用性可以和Python媲美。slice 类似于Python、PHP里面的array，map也和Python里面的字典。&lt;/li&gt;
+&lt;li&gt;interface的类型使用，interface让Go有了面向对象的能力，interface是非常有魔力的东西，应该会是非常广泛的，把面向对象的能力放大了。Go里面的反射功能也是依赖于interface，这篇文章&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;Go Data Structures: Interfaces&lt;/a&gt;有较深入的讲解。&lt;/li&gt;
+&lt;li&gt;并发编程的支持，可以写并发执行的代码，通过go关键字来完成。goroutine确是是个好东西，用户层上的并发协程，能有效的利用多核计算能力。Go能原生的支持并发编程并能很好的利用多核能力是个极大的优势。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;有人说不能把Go作为偏向Web的语言，这应该是比较片面的。就像Python一样，一直都是当成工具使用，能快速的开发一些小工具，而现在呢，Python的Web框架为Python的流行应该是起了主要作用。Go的使用应该要偏向云平台开发、Web开发，高性能、高并发的场景。试想下Docker的流行，国内七牛公司对Go语言的推崇。&lt;/p&gt;
+
+&lt;p&gt;Go相对于PHP、JAVA年轻很多，但自己相信它会成为后起之秀，也做好了这个准备。&lt;/p&gt;
+
+&lt;p&gt;很高兴开启Go语言之旅。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>WEB 开发点滴</title>
+      <link>http://compasses.github.io/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</link>
+      <pubDate>Tue, 07 Jul 2015 20:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</guid>
+      <description>
+
+&lt;p&gt;WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。&lt;/p&gt;
+
+&lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
+
+&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
+
+&lt;p&gt;解释说明：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;position
+    
+&#39;position&#39;
+Value:  
+static | relative | absolute | fixed | inherit
+Initial:  
+static
+Applies to:  
+all elements
+Inherited:  
+no
+Percentages:  
+N/A
+Media:  
+visual
+Computed value:  
+as specified
+The values of this property have the following meanings:
+static
+The box is a normal box, laid out according to the normal flow. The &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;, and &#39;left&#39; properties do not apply.
+relative
+The box&#39;s position is calculated according to the normal flow (this is called the position in normal flow). Then the box is offset relative to its normal position. When a box B is relatively positioned, the position of the following box is calculated as though B were not offset. The effect of &#39;position:relative&#39; on table-row-group, table-header-group, table-footer-group, table-row, table-column-group, table-column, table-cell, and table-caption elements is undefined.
+absolute
+The box&#39;s position (and possibly size) is specified with the &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;, and &#39;left&#39; properties. These properties specify offsets with respect to the box&#39;s containing block. Absolutely positioned boxes are taken out of the normal flow. This means they have no impact on the layout of later siblings. Also, though absolutely positioned boxes have margins, they do not collapse with any other margins.
+fixed
+The box&#39;s position is calculated according to the &#39;absolute&#39; model, but in addition, the box is fixed with respect to some reference. As with the &#39;absolute&#39; model, the box&#39;s margins do not collapse with any other margins. In the case of handheld, projection, screen, tty, and tv media types, the box is fixed with respect to the viewport and doesn&#39;t move when scrolled. In the case of the print media type, the box is rendered on every page, and is fixed with respect to the page box, even if the page is seen through a viewport (in the case of a print-preview, for example). For other media types, the presentation is undefined. Authors may wish to specify &#39;fixed&#39; in a media-dependent way. For instance, an author may want a box to remain at the top of the viewport on the screen, but not at the top of each printed page. The two specifications may be separated by using an @media rule, as in:
+Example(s):
+  
+@media screen {
+  h1#first { position: fixed }
+}
+@media print {
+  h1#first { position: static }
+}
+UAs must not paginate the content of fixed boxes. Note that UAs may print invisible content in other ways. See &amp;quot;Content outside the page box&amp;quot; in chapter 13.
+User agents may treat position as &#39;static&#39; on the root element.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
+
+&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
+
+&lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
+
+&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
+
+&lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
+
+&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
+
+&lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
+
+&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
+
+&lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
+
+&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
+
+&lt;p&gt;解释：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;overflow
+    
+&#39;overflow&#39;
+Value:  
+visible | hidden | scroll | auto | inherit
+Initial:  
+visible
+Applies to:  
+non-replaced block-level elements, table cells, and inline-block elements
+Inherited:  
+no
+Percentages:  
+N/A
+Media:  
+visual
+Computed value:  
+as specified
+This property specifies whether content of a block-level element is clipped when it overflows the element&#39;s box. It affects the clipping of all of the element&#39;s content except any descendant elements (and their respective content and descendants) whose containing block is the viewport or an ancestor of the element. Values have the following meanings:
+visible
+This value indicates that content is not clipped, i.e., it may be rendered outside the block box.
+hidden
+This value indicates that the content is clipped and that no scrolling user interface should be provided to view the content outside the clipping region.
+scroll
+This value indicates that the content is clipped and that if the user agent uses a scrolling mechanism that is visible on the screen (such as a scroll bar or a panner), that mechanism should be displayed for a box whether or not any of its content is clipped. This avoids any problem with scrollbars appearing and disappearing in a dynamic environment. When this value is specified and the target medium is &#39;print&#39;, overflowing content may be printed.
+auto
+The behavior of the &#39;auto&#39; value is user agent-dependent, but should cause a scrolling mechanism to be provided for overflowing boxes.
+Even if &#39;overflow&#39; is set to &#39;visible&#39;, content may be clipped to a UA&#39;s document window by the native operating environment.
+UAs must apply the &#39;overflow&#39; property set on the root element to the viewport. HTML UAs must instead apply the &#39;overflow&#39; property from the BODY element to the viewport, if the value on the HTML element is &#39;visible&#39;. The &#39;visible&#39; value when used for the viewport must be interpreted as &#39;auto&#39;. The element from which the value is propagated must have a used value for &#39;overflow&#39; of &#39;visible&#39;.
+In the case of a scrollbar being placed on an edge of the element&#39;s box, it should be inserted between the inner border edge and the outer padding edge. The space taken up by the scrollbars affects the computation of the dimensions in the rendering model.
+Example(s):
+Consider the following example of a block quotation (&amp;lt;blockquote&amp;gt;) that is too big for its containing block (established by a &amp;lt;div&amp;gt;). Here is the source:
+&amp;lt;div&amp;gt;
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;I didn&#39;t like the play, but then I saw
+it under adverse conditions - the curtain was up.&amp;lt;/p&amp;gt;
+&amp;lt;cite&amp;gt;- Groucho Marx&amp;lt;/cite&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;/div&amp;gt;
+Here is the style sheet controlling the sizes and style of the generated boxes:
+div { width : 100px; height: 100px;
+      border: thin solid red;
+      }
+
+blockquote   { width : 125px; height : 100px;
+      margin-top: 50px; margin-left: 50px;
+      border: thin dashed black
+      }
+
+cite { display: block;
+       text-align : right;
+       border: none
+       }
+The initial value of &#39;overflow&#39; is &#39;visible&#39;, so the &amp;lt;blockquote&amp;gt; would be formatted without clipping, something like this:
+   [D]
+Setting &#39;overflow&#39; to &#39;hidden&#39; for the &amp;lt;div&amp;gt;, on the other hand, causes the &amp;lt;blockquote&amp;gt; to be clipped by the containing block:
+   [D]
+A value of &#39;scroll&#39; would tell UAs that support a visible scrolling mechanism to display one so that users could access the clipped content.
+Finally, consider this case where an absolutely positioned element is mixed with an overflow parent.
+Style sheet:
+  container { position: relative; border: solid; }
+  scroller { overflow: scroll; height: 5em; margin: 5em; }
+  satellite { position: absolute; top: 0; }
+  body { height: 10em; }
+Document fragment:
+  &amp;lt;container&amp;gt;
+   &amp;lt;scroller&amp;gt;
+    &amp;lt;satellite/&amp;gt;
+    &amp;lt;body/&amp;gt;
+   &amp;lt;/scroller&amp;gt;
+  &amp;lt;/container&amp;gt;
+In this example, the &amp;quot;scroller&amp;quot; element will not scroll the &amp;quot;satellite&amp;quot; element, because the latter&#39;s containing block is outside the element whose overflow is being clipped and scrolled.
+11.1. The ‘overflow’, ‘overflow-x’ and ‘overflow-y’ properties
+In the preceding sections, several things (such as flow roots) depend on the value of ‘overflow’. We probably need to rewrite them in terms of “overflow-x and/or -y” or similar.
+Name:
+overflow-x, overflow-y,
+Value:
+visible | hidden | scroll | auto | no-display | no-content
+Initial:
+visible
+Applies to:
+non-replaced block-level elements and non-replaced ‘inline-block’ elements
+Inherited:
+no
+Percentages:
+N/A
+Media:
+visual
+Computed value:
+as specified, except ‘visible’, see text
+Name:
+overflow
+Value:
+[ visible | hidden | scroll | auto | no-display | no-content ]{1,2}
+Initial:
+see individual properties
+Applies to:
+non-replaced block-level elements and non-replaced ‘inline-block’ elements
+Inherited:
+no
+Percentages:
+N/A
+Media:
+visual
+Computed value:
+as specified, except ‘visible’, see text
+These properties specify whether content is clipped when it overflows the element&#39;s content area. It affects the clipping of all of the element&#39;s content except any descendant elements (and their respective content and descendants) whose containing block is the viewport or an ancestor of the element. ‘Overflow-x’ determines clipping at the left and right edges, ‘overflow-y’ at the top and bottom edges.
+‘Overflow’ is a shorthand. If it has one keyword, it sets both ‘overflow-x’ and ‘overflow-y’ to that keyword; if it has two, it sets ‘overflow-x’ to the first and ‘overflow-y’ to the second. Keywords have the following meanings:
+visible
+This value indicates that content is not clipped, i.e., it may be rendered outside the content box.
+hidden
+This value indicates that the content is clipped and that no scrolling mechanism should be provided to view the content outside the clipping region.
+scroll
+This value indicates that the content is clipped and that if the user agent uses a scrolling mechanism that is visible on the screen (such as a scroll bar or a panner), that mechanism should be displayed for a box whether or not any of its content is clipped. This avoids any problem with scrollbars appearing and disappearing in a dynamic environment. When this value is specified and the target medium is ‘print’, overflowing content may be printed.
+auto
+The behavior of the ‘auto’ value is UA-dependent, but should cause a scrolling mechanism to be provided for overflowing boxes.
+no-display
+When the content doesn&#39;t fit in the content box, the whole box is removed, as if ‘display: none’ were specified. [This idea is due to Till Halbach &amp;lt;tillh@opera.com&amp;gt;, July 21, 2005]
+no-content
+When the content doesn&#39;t fit in the content box, the whole content is hidden, as if ‘visibility: hidden’ were specified. [This idea is due to Till Halbach &amp;lt;tillh@opera.com&amp;gt;, July 21, 2005]
+Even if ‘overflow’ is set to ‘visible’, content may be clipped to a UA&#39;s document window by the native operating environment.
+UAs must apply the ‘overflow’ property set on the root element to the viewport. HTML UAs must instead apply the ‘overflow’ property from the BODY element to the viewport, if the value on the HTML element is ‘visible’. The ‘visible’ value when used for the viewport must be interpreted as ‘auto’. The element from which the value is propagated must have a used value for ‘overflow’ of ‘visible’.
+The para above is from CSS 2.1. Need to check if the introduction of overflow-x/y changes anything.
+In the case of a scrollbar being placed on an edge of the element&#39;s box, it should be inserted between the inner border edge and the outer padding edge. The space taken up by the scrollbars affects the computation of the dimensions in the rendering model.
+A UA may use multiple scrolling mechanisms at the same time. E.g., if content overflows both to the right and to the bottom, it may use a marquee effect for the overflow to the right and a scrollbar for the overflow to the bottom.
+Note that a box with ‘overflow’ other than ‘visible’ is a flow root.
+Consider the following example of a block quotation (&amp;lt;blockquote&amp;gt;) that is too big for its containing block (established by a &amp;lt;div&amp;gt;). Here is the source:
+&amp;lt;div&amp;gt;
+&amp;lt;blockquote&amp;gt;
+&amp;lt;p&amp;gt;I didn&#39;t like the play, but then I saw
+it under adverse conditions - the curtain was up.&amp;lt;/p&amp;gt;
+&amp;lt;cite&amp;gt;- Groucho Marx&amp;lt;/cite&amp;gt;
+&amp;lt;/blockquote&amp;gt;
+&amp;lt;/div&amp;gt;
+Here is the style sheet controlling the sizes and style of the generated boxes:
+div { width : 100px; height: 100px;
+      border: thin solid red;
+      }
+
+blockquote   { width : 125px; height : 100px;
+      margin-top: 50px; margin-left: 50px;
+      border: thin dashed black
+      }
+
+cite { display: block;
+       text-align : right;
+       border: none
+       }
+The initial value of ‘overflow’ is ‘visible’, so the &amp;lt;blockquote&amp;gt; would be formatted without clipping, something like this:
+
+Possible rendering with ‘overflow: visible’
+Setting ‘overflow’ to ‘hidden’ for the &amp;lt;div&amp;gt;, on the other hand, causes the &amp;lt;blockquote&amp;gt; to be clipped by the containing block:
+
+Possible rendering with ‘overflow: hidden’
+A value of ‘scroll’ would tell UAs that support a visible scrolling mechanism to display one so that users could access the clipped content.
+Consider this case where an absolutely positioned element is mixed with an overflow parent. Style sheet:
+container { position: relative; border: solid; }
+scroller { overflow: scroll; height: 5em; margin: 5em; }
+satellite { position: absolute; top: 0; }
+body { height: 10em; }
+Document fragment:
+&amp;lt;container&amp;gt;
+&amp;lt;scroller&amp;gt;
+  &amp;lt;satellite/&amp;gt;
+  &amp;lt;body/&amp;gt;
+&amp;lt;/scroller&amp;gt;
+&amp;lt;/container&amp;gt;
+In this example, the “scroller” element will not scroll the “satellite” element, because the latter&#39;s containing block is outside the element whose overflow is being clipped and scrolled.
+The combination of collapsing margins, ‘max-height’ and ‘overflow: auto’ can lead to subtle differences in implementations, unless special care is taken. A UA should assume that an element can be rendered without a scrolling mechanism first, perform all the collapsing of margins, and check that the content height is indeed less than the ‘max-height’. If it is not, the process is repeated under the assumption that a scrolling mechanism is needed.
+In the following document fragment, the outer DIV has ‘height: auto’, but ‘max-height: 5em’. The inner DIV has large margins and would normally just fit:
+...
+    #d1 { overflow: auto; max-height: 5em }
+    #d2 { margin: 2em; line-height: 1 }
+...
+&amp;lt;div id=d1&amp;gt;
+  &amp;lt;div id=d2&amp;gt;
+    This DIV has big margins.
+  &amp;lt;/DIV&amp;gt;
+&amp;lt;/DIV&amp;gt;
+If we assume that d1 needs scroll bars, then the height of d1, including the single line of text and twice 2em of margins, adds up to 5em plus a scrollbar. Since that is greater than 5em, the maximum allowed height, it seems we made the right assumption and d1 indeed needs scrollbars.
+However, we should have started by assuming that no scrollbars are needed. In that case the content height of d1 is exactly the maximum height of 5em, proving that the assumption was correct and d1 indeed should not have scrollbars.
+The computed values of ‘overflow-x’ and ‘overflow-y’ are the same as their specified values, except that some combinations with ‘visible’ are not possible: if one is specified as ‘visible’ and the other is ‘scroll’ or ‘auto’, then ‘visible’ is set to ‘auto’. The computed value of ‘overflow’ is equal to the computed value of ‘overflow-x’ if ‘overflow-y’ is the same; otherwise it is the pair of computed values of ‘overflow-x’ and ‘overflow-y’.
+The scrolling mechanism depends on the UA. The most common mechanism is a scrollbar, but panners, hand cursors, page flickers, etc. are also possible. A value of ‘scroll’ would tell UAs that support a visible scrolling mechanism to display one so that users can access the clipped content. The ‘overflow-style’ property lets an author specify one or more preferred scrolling mechanism.
+Note that ‘overflow-x’ and ‘overflow-y’ did not exist in CSS2.
+Note that ‘text-overflow’ (see [CSS3TEXT] ) can be used to give a visual indication where text has been clipped.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;overflow，常与定高的元素配合使用，如果元素定高，通过overflow-y: auto, 如果内容高度大于定高元素就会出现滚动条。如果定高元素内部需要出现overflow：visiable的元素，需要重新更改overflow的属性值。因为默认元素的overflow是继承父节点的。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Nginx &#43; Docker Cluster &amp; session sticky</title>
+      <link>http://compasses.github.io/2015/07/06/nginx--docker-cluster--session-sticky/</link>
+      <pubDate>Mon, 06 Jul 2015 17:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/07/06/nginx--docker-cluster--session-sticky/</guid>
+      <description>
+
+&lt;h2 id=&#34;基本配置&#34;&gt;基本配置&lt;/h2&gt;
+
+&lt;p&gt;本地开发环境和生产环境还是有很大的区分，最近性能测试发现结果很不好，于是想自己去搭建一个类似生产环境的性能测试环境。&lt;/p&gt;
+
+&lt;p&gt;由于前期已经有了docker的开发环境，这里只需要增加Nginx 作为反向代理。
+在/etc/nginx/conf.d目录下新建文件例如proxyServer.conf，添加如下内容&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;## Basic reverse proxy server
+upstream dockerServer  {
+    ip_hash;
+    server 10.128.163.121:7080;
+    server 10.128.163.121:17080;
+}
+
+upstream dockerServerSSL  {
+    ip_hash;
+    server 10.128.163.121:7443;
+    server 10.128.163.121:17443;
+}
+
+server {
+    listen 80;
+    server_name  10.128.163.121;
+
+    ##access_log  logs/60.access.log  main;
+    error_log  logs/60.error.log;
+    root   html;
+    index  index.html index.htm index.php;
+
+    ## send request back to apache ##
+    location / {
+        proxy_pass  http://dockerServer ;
+
+        #Proxy Settings
+        proxy_redirect     off;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_max_temp_file_size 0;
+        proxy_connect_timeout      90;
+        proxy_send_timeout         90;
+        proxy_read_timeout         90;
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+   }
+}
+server {
+    listen 443;
+    server_name  10.128.163.121;
+    ssl on;
+    ssl_certificate /etc/nginx/conf.d/server.crt;
+    ssl_certificate_key /etc/nginx/conf.d/server.key;
+
+    ##access_log  logs/60.access.log  main;
+    error_log  logs/60.error.log;
+    root   html;
+    index  index.html index.htm index.php;
+
+    ## send request back to apache ##
+    location / {
+        proxy_pass  https://dockerServerSSL ;
+
+        #Proxy Settings
+        proxy_redirect     off;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_max_temp_file_size 0;
+        proxy_connect_timeout      90;
+        proxy_send_timeout         90;
+        proxy_read_timeout         90;
+        proxy_buffer_size          4k;
+        proxy_buffers              4 32k;
+        proxy_busy_buffers_size    64k;
+        proxy_temp_file_write_size 64k;
+   }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意点：
+1. https需要单独配置，由于后端server在https下也要工作，因为某些页面安全性要求较高，需要转成https的。
+2. 这里使用的是ip_hash的方式做负载均衡，但是也有一定的缺陷，即在代理访问的情况下客户端ip有可能是会发生改变的，还有就是ip在负载均衡上均衡比较困难。
+3. https的crt和key需要&lt;a href=&#34;http://www.lovelucy.info/nginx-ssl-certificate-https-website.html&#34;&gt;自己生成&lt;/a&gt;。
+另外这个Nginx 是跑在宿主机上的，修改配置有要执行reload命令使其生效。&lt;/p&gt;
+
+&lt;h2 id=&#34;session-persistence&#34;&gt;session persistence&lt;/h2&gt;
+
+&lt;p&gt;生产环境需要将一个用户的请求要路由到同一个server上面，因为server很多的业务处理还是需要server里面的session配合。上面用ip_hash方式做load balance，但是考虑到用户使用proxy或者流量不均衡等因素。还是要使用session sticky的方式。
+Nginx默认不支持session sticky，需要重新编译安装这个插件；因为直接使用公司的Nginx版本，所以懒得重新编译了。使用很简单，直接拷贝个bin文件，然后修改成这个样子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;upstream dockerServer  {
+      sticky name=yourname httponly path=/ hash=md5;
+       server 10.128.163.121:17080;
+       server 10.128.163.121:7080;
+   }
+   
+  upstream dockerServerSSL  {
+     sticky name=yourname httponly path=/ hash=md5;
+     server 10.128.163.121:17443;
+     server 10.128.163.121:7443;
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这样直接访问 &lt;a href=&#34;http://10.128.163.121&#34;&gt;http://10.128.163.121&lt;/a&gt; 即可，Nginx会自动路由请求到某一个server上。因为sticky是会话级别的，关掉浏览器会话就结束了。如果重新访问用户可能会被路由到另一个server上，可以通过查询Apache的accesslog来确认。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>deadlock of mysql</title>
+      <link>http://compasses.github.io/2015/06/26/deadlock-of-mysql/</link>
+      <pubDate>Fri, 26 Jun 2015 15:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/06/26/deadlock-of-mysql/</guid>
+      <description>&lt;p&gt;没有想到在看似简单的场景里面也能遇到mysql的deadlock。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[Thu Jun 25 05:18:40.589897 2015] [:error] [pid 737] [client 172.17.42.1:41290] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query UPDATE `wp_usermeta` SET `meta_value` = &#39;a:2:{s:64:\\&amp;quot;1161a6271c528045db428cc8698bbc8e3e26ad4fb9d7436e32cbbe01a00079d0\\&amp;quot;;i:1436419120;s:64:\\&amp;quot;bf2e3582e17c7dfa1e6b02c700f537b8095f2b31ef58e4b448939eb9406e11f7\\&amp;quot;;i:1435382320;}&#39; WHERE `user_id` = 188 AND `meta_key` = &#39;session_tokens&#39; made by require(&#39;wp-blog-header.php&#39;), require_once(&#39;wp-includes/template-loader.php&#39;), do_action(&#39;template_redirect&#39;), call_user_func_array, anw_template_redirect, ANW_Base_Controller-&amp;gt;process, call_user_func, ANW_AccountOnePage_Controller-&amp;gt;authenticate, wp_signon, wp_set_auth_cookie, WP_Session_Tokens-&amp;gt;create, WP_Session_Tokens-&amp;gt;update, WP_User_Meta_Session_Tokens-&amp;gt;update_session, WP_User_Meta_Session_Tokens-&amp;gt;update_sessions, update_user_meta, update_metadata
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是wordpress本身的缺陷导致的，死锁的场景也是不复杂。即session_tokens的更新机制所致。
+Session_tokens的更新是随着用户的login和 logout 更新的。Login时会增加session_tokens, 在不同的 浏览器 login会增加新的 tokens，在 logout时会删除这个 tokens。
+这个死锁用户有两个 session，场景可能就是不同的浏览器同时做 login或者 logout，或者一个 login另一个 logout。看这个环境上有大量的用户存在，并且每个用户至多有两个 session，也只有跑性能脚本会有这个问题。现实情况比较难复现。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;                /**
+                * Update a user&#39;s sessions in the usermeta table.
+                *
+                * @since 4.0.0
+                * @access protected
+                *
+                * @param array $sessions Sessions.
+                */
+                protected function update_sessions( $sessions ) {
+                                if ( ! has_filter( &#39;attach_session_information&#39; ) ) {
+                                                $sessions = wp_list_pluck( $sessions, &#39;expiration&#39; );
+                                }
+
+                                if ( $sessions ) {
+                                                update_user_meta( $this-&amp;gt;user_id, &#39;session_tokens&#39;, $sessions );
+                                } else {
+                                                delete_user_meta( $this-&amp;gt;user_id, &#39;session_tokens&#39; );
+                                }
+                }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看到这里应该要在仔细深入了解下mysql的加锁机制，当然这个会比较复杂，也不能一蹴而就。整体上重新熟悉下。
+事务的隔离级别有四种，分别是READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ、SERIALIZEABLE。mysql默认的是可重复读。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;MariaDB [(none)]&amp;gt; show global variables like &#39;%isolation%&#39;;
++---------------+-----------------+
+| Variable_name | Value           |
++---------------+-----------------+
+| tx_isolation  | REPEATABLE-READ |
++---------------+-----------------+
+1 row in set (0.00 sec)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;INNODB支持所有的事务隔离级别，但是MVCC只在REPEATABLE READ 和READ COMMITTED两个隔离级别下工作。
+回到开始的问题。session_tokens 是真对用户在不同的终端上登录时进行更新的，value是个array，如上代码所示。如果同一个用户在两个终端上，可以是不同的浏览器即可，就会有不同的session_tokens，在登录登出的时候就会update改用户的数据，即同一行数据就可能产生死锁。这里必须是同时有两个事务。
+现实中同一个用户在两个终端同时操作的可能性不大，但是也很难说。这也说明了wordpress的代码不够健壮吧。当然这里的死锁也并不可怕，INNODB会将持有最少行级排它锁的事务进行回滚。锁机制的了解还是要多多实践，网上也有较好的&lt;a href=&#34;http://hedengcheng.com/?p=771&#34;&gt;文章参考&lt;/a&gt;。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Docker Docker</title>
+      <link>http://compasses.github.io/2015/06/19/docker-docker/</link>
+      <pubDate>Fri, 19 Jun 2015 17:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/06/19/docker-docker/</guid>
+      <description>&lt;p&gt;一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。&lt;/p&gt;
+
+&lt;p&gt;首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照&lt;a href=&#34;https://docs.docker.com/installation/ubuntulinux/&#34;&gt;官网&lt;/a&gt;即可&lt;/p&gt;
+
+&lt;p&gt;公司的镜像是基于Ubuntu+wordpress+Apache，MySQL在宿主机上。运行container的时候带上相应的参数，这里主要是端口映射，将docker里面的80端口映射到宿主机上的某一个端口例如7080，最后运行起来类似这个样子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                                               NAMES
+ff1ad6f22e91        eshop_612:latest    &amp;quot;/var/eshop/install/   31 hours ago        Up 31 hours         0.0.0.0:7022-&amp;gt;22/tcp, 0.0.0.0:7080-&amp;gt;80/tcp, 0.0.0.0:7443-&amp;gt;443/tcp   eshop_instance_7080  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;开始遇到一个问题就是这个端口的映射问题，起来后外部访问时还是用的宿主机的Apache，后续停掉宿主机的Apache，目的是干掉80监听端口，在docker里面增加proxy。后面就一路畅通了。&lt;/p&gt;
+
+&lt;p&gt;修改源码如何更新到docker里面是个麻烦的事情，如果有个外挂文件目录的功能就好了，现在只能是修改后的代码传到docker里面。其实传代码也很简单，相比以前编写C++代码，先把本地代码传到Linux服务器上进行编译，编译完再传到运行的服务器上，已经简单多了。现在做的只是把修改后的代码通过filezilla传到docker里面，然后浏览器访问就ok了。&lt;/p&gt;
+
+&lt;p&gt;dokcer的开发环境相对于本地的开发环境速度上有个质的飞跃，由于本地是XAMPP的，然后在windows上。很显然web的开发环境更适宜运行在docker里面了。&lt;/p&gt;
+
+&lt;p&gt;当然还有个非常大的优点，你可以运行任意多个container，每个container里面的code版本可以不一样啊，尤其在多版本并行开发的时候，带来的开发体验是本地不能有的。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>libuv 初认识</title>
+      <link>http://compasses.github.io/2015/06/03/libuv-%E5%88%9D%E8%AE%A4%E8%AF%86/</link>
+      <pubDate>Wed, 03 Jun 2015 19:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/06/03/libuv-%E5%88%9D%E8%AE%A4%E8%AF%86/</guid>
+      <description>
+
+&lt;p&gt;说明： 本篇文章主要从&lt;a href=&#34;http://nikhilm.github.io/uvbook/&#34;&gt;An Introduction to libuv&lt;/a&gt;这本书翻译学习而来。&lt;/p&gt;
+
+&lt;h2 id=&#34;开始&#34;&gt;开始&lt;/h2&gt;
+
+&lt;p&gt;libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。&lt;/p&gt;
+
+&lt;h3 id=&#34;事件循环&#34;&gt;事件循环&lt;/h3&gt;
+
+&lt;p&gt;libuv的编译就不用多说，参考libuv的&lt;a href=&#34;https://github.com/libuv/libuv&#34;&gt;github网址&lt;/a&gt;。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。&lt;/p&gt;
+
+&lt;p&gt;先从运行一个程序开始：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;quot;uv.h&amp;quot;
+#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;stdlib.h&amp;gt;
+
+int main() {
+    uv_loop_t *loop = malloc(sizeof(uv_loop_t));
+    uv_loop_init(loop);
+    printf(&amp;quot;Now quitting.\n&amp;quot;);
+    uv_run(loop, UV_RUN_DEFAULT);
+    uv_loop_close(loop);
+    free(loop);
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  &#39;targets&#39;: [
+    {
+      &#39;dependencies&#39;: [&#39;../../uv.gyp:libuv&#39;],
+      &#39;target_name&#39;: &#39;helloword&#39;,
+      &#39;type&#39;: &#39;executable&#39;,
+      &#39;sources&#39;: [
+        &#39;main.c&#39;,
+      ]
+    }
+  ],
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后执行** gyp &amp;ndash;format=make -Duv_library=static_library &amp;ndash;depth=$PWD build.gyp &lt;strong&gt;生产相应的makefile，最后直接执行&lt;/strong&gt;make**，就会生成自己想要的可执行文件。
+gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平台方面也表现很好，后续有时间也好好学习下。
+待续。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>同步、异步、阻塞、非阻塞I/O</title>
+      <link>http://compasses.github.io/2015/05/24/%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E%E9%9D%9E%E9%98%BB%E5%A1%9Ei/o/</link>
+      <pubDate>Sun, 24 May 2015 14:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/24/%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E%E9%9D%9E%E9%98%BB%E5%A1%9Ei/o/</guid>
+      <description>&lt;p&gt;NodeJS倡导异步编程，高并发，高性能。他自然是异步非阻塞I/O。非阻塞I/O是不是就是异步的，跟异步编程又有什么区别呢？写到这里突然想到了大学里的辅导员，刚入大学的第一次开会，就告诫我们，&lt;strong&gt;学数学最重要的就是概念，概念不清就什么都学不好&lt;/strong&gt;。我深深记住了这句话，受用至今。&lt;/p&gt;
+
+&lt;p&gt;先看看阻塞和非阻塞，阻塞，顾名思义，即在读取数据时，阻塞在等待数据，或者监听事件时阻塞，有新的数据或者事件，事件是泛化概念，数据到达也是个事件。可以用事件代替一切吧，统称event。非阻塞即调用接口触发某种event，没有任何event也不会阻塞，而是直接返回。&lt;/p&gt;
+
+&lt;p&gt;非阻塞返回后干什么，这就牵扯到同步和异步之分了。阻塞就不用多说了显而易见的同步行为。在非阻塞的基础上再进行区分同步和异步。非阻塞在Linux上一般都会使用性能较好的epoll实现，epoll会轮询这些阻塞上的事件，有事务返回便会调用相应的处理流程。那这个是不是异步的呢，还是要看在哪个角度上说，站在非阻塞的角度上，因同时处理多个事件，增加并发性，多个阻塞event进行了异步处理；在轮询线程上说，因还是在不断的轮询它所关心的事件，某一个事件返回时就要进行相应的处理，在这个角度上讲，这个线程可以同步处理多个异步事件，它是同步的。但是在一个框架上，如果实现了这种同步处理多个异步事件的行为，在基于这个框架上进行编码的时候，要进行事件回调，这也是NodeJS的行为。NodeJS需要异步编程思想，但是NodeJS是单线程的，NodeJS就是要不断回调那些需要异步处理的事件，但是异步编程会让代码变得难以维护和调试，&lt;a href=&#34;http://www.zhihu.com/question/19585576&#34;&gt;这个链接&lt;/a&gt;有较好的讨论。&lt;/p&gt;
+
+&lt;p&gt;AIO是纯正的异步I/O且非阻塞的，本来应该想epoll一样被广泛使用，获得大赞的，但目前看来被&lt;a href=&#34;http://www.wzxue.com/linux-kernel-aio%E8%BF%99%E4%B8%AA%E5%A5%87%E8%91%A9/&#34;&gt;诟病太多&lt;/a&gt;。例如内核实现的AIO只能是直接I/O的方式，不能有效的利用系统缓存。glibc的AIO利用线程池模拟出来的，但是存在一系列的bug和&lt;a href=&#34;http://www.lenky.info/archives/2013/01/2165&#34;&gt;缺陷&lt;/a&gt;。也因此NodeJS的作者重新封装了一个异步非阻塞的库： libuv。&lt;/p&gt;
+
+&lt;p&gt;由于NodeJS的异步编程思想，会让代码变得维护困难，调试也非常不直观，后面就出现了协程的思想。&lt;a href=&#34;https://bjouhier.wordpress.com/2012/03/11/fibers-and-threads-in-node-js-what-for/&#34;&gt;这篇文章&lt;/a&gt;对NodeJS的协程思想进行了介绍。&lt;a href=&#34;https://github.com/laverdet/node-fibers&#34;&gt;node-fibers&lt;/a&gt;尝试去协程花NodeJS的层层回调。这个module值得研究一下。后续会有个单独的文章对其进行详细的介绍。&lt;/p&gt;
+
+&lt;p&gt;NodeJS底层事件循环使用了libuv库，跨平台Linux下使用libev实现，windows下使用IOCP实现，后续也要仔细研究下这个库，应用广泛的东西，必定是好东西，值得学习的东西。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>straight_join when and why</title>
+      <link>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</link>
+      <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</guid>
+      <description>
+
+&lt;h3 id=&#34;问题过程&#34;&gt;问题过程&lt;/h3&gt;
+
+&lt;p&gt;最近优化了一个查询语句，使用到了straight_join这个查询提示，现对其做下总结。
+先看下这个查询语句：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SELECT wp_posts.ID
+FROM wp_posts
+INNER JOIN wp_postmeta ON (wp_posts.ID = wp_postmeta.post_id)
+INNER JOIN
+  (SELECT
+   STRAIGHT_JOIN DISTINCT wp_posts.ID
+   FROM wp_posts
+   INNER JOIN wp_postmeta meta0 ON meta0.post_id = wp_posts.id
+   AND meta0.meta_key = &#39;sysfield_code&#39;
+   AND CAST(meta0.meta_value AS CHAR) LIKE &#39;%s%&#39;
+   INNER JOIN wp_postmeta meta1 ON meta1.post_id = wp_posts.id
+   AND meta1.meta_key = &#39;price_sales_RMB&#39;
+   AND CAST(meta1.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;20&#39;
+   INNER JOIN wp_postmeta meta2 ON meta2.post_id = wp_posts.id
+   AND meta2.meta_key = &#39;price_standard_RMB&#39;
+   AND CAST(meta2.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;20&#39;
+   INNER JOIN wp_postmeta meta3 ON meta3.post_id = wp_posts.id
+   AND meta3.meta_key = &#39;price_sales_USD&#39;
+   AND CAST(meta3.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;10&#39;
+   INNER JOIN wp_postmeta meta4 ON meta4.post_id = wp_posts.id
+   AND meta4.meta_key = &#39;price_standard_USD&#39;
+   AND CAST(meta4.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;5&#39;
+   INNER JOIN wp_postmeta meta5 ON meta5.post_id = wp_posts.id
+   AND meta5.meta_key = &#39;sysfield_brand&#39;
+   AND CAST(meta5.meta_value AS CHAR) = &#39;Midori&#39;
+   INNER JOIN wp_postmeta meta6 ON meta6.post_id = wp_posts.id
+   AND meta6.meta_key = &#39;sysfield_manufacturer&#39;
+   AND CAST(meta6.meta_value AS CHAR) = &#39;aaaaaaaaa&#39;
+   INNER JOIN wp_postmeta meta7 ON meta7.post_id = wp_posts.id
+   AND meta7.meta_key = &#39;udf_100000001&#39;
+   AND CAST(meta7.meta_value AS CHAR) = &#39;肉身&#39;
+   INNER JOIN wp_postmeta meta8 ON meta8.post_id = wp_posts.id
+   AND meta8.meta_key = &#39;udf_100000004&#39;
+   AND CAST(meta8.meta_value AS CHAR) = &#39;30&#39;
+   WHERE 1=1
+     AND (wp_posts.post_type = &#39;product&#39;)
+     AND (wp_posts.post_status = &#39;publish&#39;
+          OR wp_posts.post_status = &#39;private&#39;)
+     AND wp_posts.post_title LIKE &#39;%s%&#39;
+     AND (wp_posts.ID IN
+            (SELECT object_id
+             FROM wp_term_relationships
+             WHERE term_taxonomy_id IN
+                 (SELECT term_taxonomy_id
+                  FROM wp_term_taxonomy
+                  WHERE term_id IN (100000001))))
+     AND wp_posts.post_date &amp;gt; &#39;2015-06-04 10:40:00&#39;) collection ON collection.ID = wp_posts.ID
+INNER JOIN
+  (SELECT DISTINCT wp_posts.ID
+   FROM wp_posts
+   INNER JOIN wp_postmeta meta0 ON meta0.post_id = wp_posts.id
+   AND (meta0.meta_key = &#39;price_standard_min_RMB&#39;
+        AND CAST(meta0.meta_value AS DECIMAL(10,4)) BETWEEN &#39;0&#39; AND &#39;0&#39;)
+   INNER JOIN wp_postmeta meta1 ON meta1.post_id = wp_posts.id
+   AND (meta1.meta_key = &#39;sysfield_manufacturer&#39;
+        AND CAST(meta1.meta_value AS CHAR) = &#39;aaaaaaaaa&#39;)
+   INNER JOIN wp_postmeta meta2 ON meta2.post_id = wp_posts.id
+   AND (meta2.meta_key = &#39;sysfield_brand&#39;
+        AND CAST(meta2.meta_value AS CHAR) = &#39;Midori&#39;)
+   INNER JOIN wp_postmeta meta3 ON meta3.post_id = wp_posts.id
+   AND (meta3.meta_key = &#39;sysfield_stamp&#39;
+        AND CAST(meta3.meta_value AS CHAR) = &#39;sddd&#39;)
+   INNER JOIN wp_postmeta meta4 ON meta4.post_id = wp_posts.id
+   AND (meta4.meta_key = &#39;udf_100000001&#39;
+        AND CAST(meta4.meta_value AS CHAR) IN (&#39;人肉&#39;,
+                                               &#39;肉身&#39;,
+                                               &#39;精神&#39;))
+   INNER JOIN wp_postmeta meta5 ON meta5.post_id = wp_posts.id
+   AND (meta5.meta_key = &#39;udf_100000002&#39;
+        AND CAST(meta5.meta_value AS CHAR) IN (&#39;20&#39;,
+                                               &#39;30&#39;,
+                                               &#39;40&#39;))
+   INNER JOIN wp_postmeta meta6 ON meta6.post_id = wp_posts.id
+   AND (meta6.meta_key = &#39;udf_100000003&#39;
+        AND CAST(meta6.meta_value AS CHAR) IN (&#39;10&#39;,
+                                               &#39;20&#39;,
+                                               &#39;30&#39;))
+   INNER JOIN wp_postmeta meta7 ON meta7.post_id = wp_posts.id
+   AND (meta7.meta_key = &#39;udf_100000004&#39;
+        AND CAST(meta7.meta_value AS CHAR) IN (&#39;30&#39;,
+                                               &#39;40&#39;,
+                                               &#39;50&#39;))
+   INNER JOIN wp_postmeta meta8 ON meta8.post_id = wp_posts.id
+   AND (meta8.meta_key = &#39;variant_200000001&#39;
+        AND CAST(meta8.meta_value AS CHAR) IN (&#39;200000001&#39;,
+                                               &#39;200000002&#39;,
+                                               &#39;200000003&#39;))
+   INNER JOIN wp_postmeta meta9 ON meta9.post_id = wp_posts.id
+   AND (meta9.meta_key = &#39;variant_200000002&#39;
+        AND CAST(meta9.meta_value AS CHAR) = &#39;200000006&#39;)
+   WHERE 1=1
+     AND (wp_posts.post_type = &#39;product&#39;)) filter ON filter.ID = wp_posts.ID
+WHERE 1=1
+  AND wp_posts.post_type = &#39;product&#39;
+  AND (wp_posts.post_status = &#39;publish&#39;
+       OR wp_posts.post_status = &#39;private&#39;)
+GROUP BY wp_posts.ID
+ORDER BY post_date DESC LIMIT 0,
+                              12
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;是不是庞大无比，的确这样的查询语句对MySQL来说过去庞大了，因为这个SQL关联次数过多了。
+过多的join导致MySQL的查询优化器变得很慢并且往往优化后的结果很不理想。对于MySQL来说N个表的关联就是N的阶层个优化顺序，即MySQL要检查N的阶层个不同的表的顺序，寻找最优化的查询顺序。&lt;/p&gt;
+
+&lt;p&gt;通过设置profiling，然后通过** show profile for query xx**得到结果可以说明这一点：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Status&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Duration&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;starting&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000441&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000009&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000010&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000008&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Opening tables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000732&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;init&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000073&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;System lock&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000030&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;optimizing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000007&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;optimizing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000188&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;font color=&#39;red&#39;&gt;&lt;strong&gt;statistics&lt;/strong&gt; &lt;/font&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.628449&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;preparing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000047&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Creating tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000075&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;statistics&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000060&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;preparing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000014&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Creating tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000050&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sorting result&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000005&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;executing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000008&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sending data&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000022&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;executing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sending data&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000238&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;removing tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sending data&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000073&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Creating sort index&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000010&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;end&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000001&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;removing tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;end&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;query end&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;closing tables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;removing tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000010&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;closing tables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000015&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;freeing items&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000046&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;cleaning up&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000088&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;可以看到statistics所占用的时间是非常巨大的这也是这个查询非常慢的根本原因。
+statistics就是说明MySQL的查询优化器在不断的向存储引擎索取统计信息以寻找最优化的查询顺序。
+可以通过explain extended 的方法获取最终的执行计划。虽然执行计划已经是最优的了，但是中间的过程代价太高了。
+这里就使用straight_join的优化提示来优化这个查询。由一开始的600多ms降低为十几ms了。&lt;/p&gt;
+
+&lt;h3 id=&#34;总结&#34;&gt;总结&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;大的SQL语句，这里主要说的是join次数过多的sql，需要进行查询优化。&lt;/li&gt;
+&lt;li&gt;尽量不要有大的SQL，大SQL对MySQL来说还是有些力不从心。&lt;/li&gt;
+&lt;li&gt;straight_join 禁止了MySQL的查询优化，但是可能随着数据集的变化会有新的性能问题。因此straight_join 不能说是最终的优化方案。&lt;/li&gt;
+&lt;li&gt;根据《高性能MySQL》书上的说法，分解大的查询语句能更好的利用MySQL的缓存机制，对优化大的SQL查询是首先。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;所以后续查询分解是不可避免的。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>高性能MySQL 读书摘要</title>
+      <link>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</link>
+      <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</guid>
+      <description>
+
+&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;因工作需要，要不断的使用MySQL，前段时间还参与了MySQL的性能测试，及profiling。发现MySQL还是非常有意思的，自己也非常感兴趣，于是买了本牛逼的书：《高性能MySQL 第三版》。书是很好，但是第一遍基本没什么感觉，基本上是粗略了解，很多细节还是掌握不好。现在重新学习希望能够有更好的提高。
+读书摘要，既然是读书摘要就不会照搬原书，我会侧重点的做笔记，有意思的地方会多写，自己觉得不是很重要的东西会少写或者不写。但是内容的范围不会超出这本书。OK, Let&amp;rsquo;s Start。&lt;/p&gt;
+
+&lt;h3 id=&#34;mysql逻辑结构&#34;&gt;MySQL逻辑结构&lt;/h3&gt;
+
+&lt;p&gt;逻辑架构图如下：
+&lt;img src=&#34;http://compasses.github.io/img/MySqlCapture.PNG&#34; alt=&#34;Mysql&#34; /&gt;
+分为三层结构，需要重点研究的是存储引擎层和查询优化层。存储引擎也主要研究InnoDB。&lt;/p&gt;
+
+&lt;h2 id=&#34;并发控制&#34;&gt;并发控制&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;读写锁： 在并发读写数据库表时使用，也叫共享锁和排他锁，读锁是共享的，是互不阻塞的，写锁是排他的，一个写锁会阻塞其他的读锁和写锁。&lt;/li&gt;
+&lt;li&gt;锁粒度： 锁的数据越少，并发程度就越高，但锁的数量就会大增，锁的开销也会增加。这就需要一种平衡，即锁策略的选择。&lt;/li&gt;
+&lt;li&gt;锁策略，包含&lt;strong&gt;表锁&lt;/strong&gt;和&lt;strong&gt;行级锁&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;死锁： 多个事务以不同的顺序锁定资源时，就会可能产生死锁。InnoDB能检测到死锁的循环依赖（&lt;strong&gt;how?&lt;/strong&gt;），对死锁的处理方法是回滚最少行级排它锁的事务。&lt;/li&gt;
+&lt;li&gt;MVCC： 多版本并发控制，是行级锁的变种，在很多情况下避免的加锁操作。工作在REPEATABLE READ 和 REPEATABLE COMMITTED两个隔离级别下。&lt;/li&gt;
+&lt;li&gt;事务日志： 提高事务效率的一种方法，也叫预写式日志。日志操作是磁盘上小块区域内的顺序I/O，不是随机I/O，会快很多。关于顺序和随机I/O，需要后面讨论下。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如何检测死锁，在复杂系统里面是要重点考虑的，目前没有研究InnoDB的源码，不知道他是怎么判定死锁产生的。但是基于一般理论大致可以想一下它是怎么产生的，即多个线程加锁的顺序不一致，产生了循环依赖，基于此，可以设计一种数据结构，每个线程在试图加锁的时候就将该线程作为该锁的所有者，如果出现加锁失败，就要进行一次检测。每个锁的所有者里面是否有环，有环就说明有循环依赖，即可判定死锁，然后进行死锁解除。解除的策略估计会比较暴力，通过销毁某个死锁线程或者强制锁释放等等。&lt;a href=&#34;http://web.mit.edu/6.033/1997/reports/r03-ben.html&#34;&gt;这篇文章&lt;/a&gt;也有类似的讨论。&lt;/p&gt;
+
+&lt;p&gt;InnoDB中的MVCC实现机制： 在每行记录保存两个隐藏的列，一个是行的创建时间，一个是行的过期时间或者是删除时间。时间使用系统版本号标示，每个事务都会有一个，且递增。在REAPTABLE READ隔离级别下MVCC操作如下：
++ SELECT 满足两个条件： InnoDB只查找版本号早于当前事务版本的数据行。行的删除版本要么没有定义要么大于当前事务的版本号。
++ INSERT InnoDB为没一行保存当前系统版本号作为行版本号。
++ DELETE InnoDB为删除的每一行保存当前的版本号为删除版本号。
++ UPDATE InnoDB为新插入的行，保存当前的版本号为行版本号，同时保存当前系统版本号到原来的行作为删除的行作为行删除标示。与单纯的悲观锁和乐观锁，MVCC读操作简单，性能好，能保证只会读到符合标准的行。&lt;/p&gt;
+
+&lt;p&gt;MVCC工作在REAPTABLE READ 和 READ COMMIT两个隔离级别下。REAPTABLE READ 为可重复读，即同一个事务中多次读取同样的记录的结果是一致的。显然MVCC满足这点。READ COMMIT 提交读，一个事务开始时，只能更新到所有已提交事务的更改。即事务开始到提交前，所做的修改对其他事务都是不可见的。MVCC也天生支持。&lt;/p&gt;
+
+&lt;h2 id=&#34;mysql基准测试&#34;&gt;MySQL基准测试&lt;/h2&gt;
+
+&lt;p&gt;本章主要是说的针对MySQL的基准测试，这里重点看下&lt;strong&gt;sql-bench&lt;/strong&gt;和&lt;strong&gt;sysbench&lt;/strong&gt;。 其中&lt;strong&gt;sql-bench&lt;/strong&gt;只有在源码安装的时候才会有，二进制安装没有,&lt;strong&gt;sysbench&lt;/strong&gt;需要单独安装。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;sql-bench&lt;/strong&gt; 是由perl脚本组成的测试工具。&lt;strong&gt;sysbench&lt;/strong&gt;也可以不只是用来进行数据库的基准测试，比如CPU、I/O等。这些工具的使用咱不赘述，后续如有使用再更新到这里。&lt;/p&gt;
+
+&lt;h2 id=&#34;服务器性能剖析&#34;&gt;服务器性能剖析&lt;/h2&gt;
+
+&lt;p&gt;服务器性能剖析包含两个方面，一是应用程序，而是数据库；对应用程序剖析需要有相应的统计方法。例如PHP则需要统计每个方法的执行时间，执行数据库查询的时间，都可以在应用层获取；数据库上的性能剖析，就是分析并发查询时的性能问题。
+针对PHP方面，目前正在开发性能剖析的脚本，保证能在生产环境上work。做完后会更新到这里。
+数据库方面目前就使用了MySql的慢查询日志。慢查询日志的产生需要简单的配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1.  find /etc -name my.cnf; it should be locate in: sudo vi /etc/mysql/my.cnf;
+2.  add lines: under [mysqld]
+slow-query-log = 1
+slow-query-log-file = /var/log/mysql/localhost-slow.log
+long_query_time = 1
+log-queries-not-using-indexes
+if the directory /var/log/mysql/ does not exist, you need use : mkdir –p /var/log/mysql/ to create it.
+3.  restart your daemon: sudo service mysql restart .
+I have tested these steps on my Ubuntu machine.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;令&lt;strong&gt;long_query_time = 0&lt;/strong&gt;可以获得所有的查询语句，上述配置对MariaDB也是适用的。&lt;/p&gt;
+
+&lt;p&gt;获得的结果类似如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;35 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 36 # Query_time: 0.000169  Lock_time: 0.000075 Rows_sent: 0  Rows_examined: 1
+ 37 SET timestamp=1430214485;
+ 38 select count(*) into @discard from `information_schema`.`PROCESSLIST`;
+ 39 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 40 # Query_time: 0.000359  Lock_time: 0.000111 Rows_sent: 0  Rows_examined: 2
+ 41 SET timestamp=1430214485;
+ 42 select count(*) into @discard from `information_schema`.`ROUTINES`;
+ 43 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 44 # Query_time: 0.001736  Lock_time: 0.000090 Rows_sent: 0  Rows_examined: 0
+ 45 SET timestamp=1430214485;
+ 46 select count(*) into @discard from `information_schema`.`TRIGGERS`;
+ 47 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 48 # Query_time: 0.001403  Lock_time: 0.000080 Rows_sent: 0  Rows_examined: 4
+ 49 SET timestamp=1430214485;
+ 50 select count(*) into @discard from `information_schema`.`VIEWS`;
+ 51 # Time: 150428 17:49:08
+ 52 # User@Host: root[root] @ localhost []
+ 53 # Query_time: 0.144277  Lock_time: 0.000052 Rows_sent: 10061  Rows_examined: 10061
+ 54 use occ_eshop;
+ 55 SET timestamp=1430214548;
+ 56 select * from wp_posts;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后可以针对每一个查询进行分析，并剖析其性能问题。&lt;/p&gt;
+
+&lt;h2 id=&#34;schema与数据类型优化&#34;&gt;Schema与数据类型优化&lt;/h2&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;创建高性能的索引&#34;&gt;创建高性能的索引&lt;/h2&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;查询性能优化&#34;&gt;查询性能优化&lt;/h2&gt;
+
+&lt;p&gt;一个复杂查询还是多个简单查询：
+切分查询：将大查询切分成小查询。每个查询功能完全一样。
+分解关联查询：分解关联查询的方式重构查询有如下的优势：1，让缓存效率更高。2，查询分解后，执行单个查询可以减少锁的竞争。3.在应用层做关联，可以更容易对数据库进行拆分。更容易做到高性能和可扩展。4，减少冗余记录的查询。5.这样做相当于在应用中实现了哈希关联，而不是使用MYSQL的嵌套循环关联。某些场景哈希关联的效率高很多。
+mysql客户端和服务器之间的通信协议是半双工的。show full processlist; 显示当前链接线程的状态。
+将一个SQL转成一个执行计划，包含多个子阶段：解析SQL、预处理、优化SQL执行计划。
+mysql通过关键字将SQL语句进行解析；生成一颗对应的解析树。预处理器根据一些mysql规则进一步检查解析树是否合法。
+查询优化器：一条查询有很多种执行方式，并能都返回相同的结果。有很多原因导致MYSQL优化器选择错误的执行计划。1.统计信息不准确；2.执行计划中的成本估算不等同于实际的执行成本。。。。。优化策略可以简单的分为两种，一种是静态优化，一种动态优化。
+MYSQL的优化类型：1.重新定义关联表的顺序。2.将外连接转化成内连接。3.使用等价变换规则，移除一些恒等成立和恒不成立的判断。4.优化COUNT MIN和MAX，得益于B-Tree结构。5.预估并转化为常数表达式6.覆盖索引扫描。7.子查询优化。8.提前终止查询。9.等值传播10.列表IN()的比较。使用IN的时候索引就用不了了。
+MYSQL的概念中，每个查询都是一次关联。所以读取结果临时表也是一次关联。MYSQL执行关联的策略：MYSQL对任何关联都执行嵌套循环关联操作。即先在一个表中循环取出单条数据，然后再嵌套循环到下一个表中寻找匹配的行，依次下去，直到找到所有表中匹配的行。如果最后一个关联表无法找到更多的行后，MYSQL返回上一层关联表，看是否能够找到更多的匹配记录。
+分别看一个内联和外联的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;select tb1.col1, tbl2.col2 from tb1 inner join tbl2 using(col3) where tb1.col1 in (5,6);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;伪代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;outer_iter = iterator over tb1 where col1 in (5, 6)
+outer_row = outer_iter.next
+while outer_row
+     inner_iter = iterator over tbl2 where col3 = outer_row.col3
+     inner_row = inner_iter.next
+     while inner_row
+          output [outer_row.col1 inner_row.col2]
+          inner_row = inner_iter.next
+     end
+     outer_row = outer_iter.next
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;select tb1.col1, tbl2.col2 from tb1 left outer join tbl2 using(col3) where tb1.col1 in (5,6);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;伪代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;outer_iter = iterator over tb1 where col1 in (5, 6)
+outer_row = outer_iter.next
+while outer_row
+     inner_iter = iterator over tbl2 where col3 = outer_row.col3
+     inner_row = inner_iter.next
+     if inner_row
+          while inner_row
+               output [outer_row.col1 inner_row.col2]
+               inner_row = inner_iter.next
+          end
+     else 
+          out [outer_row.col1, null]
+     end
+     outer_row = outer_iter.next
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果超过n个表的关联，那么需要检查n的阶乘中关联顺序；当需要关联的表超过optimizer_search&lt;em&gt;depth时，优化器就会使用贪婪搜索模式。show variables like &amp;lsquo;optimizer&lt;/em&gt;%&amp;lsquo;;
+排序优化：应尽可能避免排序或者尽可能避免对大量数据进行排序。
+查询执行引擎，mysql根据查询计划完成整个查询。在执行过程中，有大量的操作需要通过调用存储引擎实现的接口来完成，这些接口为 handler API，查询中的每一个表由一个handler实例表示。&lt;/p&gt;
+
+&lt;p&gt;MySQL 查询优化的局限性
+1. 关联子查询：where条件里面包含IN()的子查询。通常建议使用EXISTS()等效的改写查询获取更好的效率。对任何查询应该通过测试来验证猜想。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;UNION的限制，mysql无法将限制条件从外层下推到内层，使得原本能够限制部分返回结果的条件无法应用到内层查询的优化上。因此UNION的两个子查询分别加上一个LIMIT 来减少临时表中的数据。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;参考文献&#34;&gt;参考文献&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;《高性能MySQL 第三版》&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
