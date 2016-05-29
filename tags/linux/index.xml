@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Performance on 三十重围</title>
-    <link>http://compasses.github.io/tags/performance/</link>
-    <description>Recent content in Performance on 三十重围</description>
+    <title>Linux on 三十重围</title>
+    <link>http://compasses.github.io/tags/linux/</link>
+    <description>Recent content in Linux on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Sun, 17 Jan 2016 21:48:25 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/tags/performance/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://compasses.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>系统性能 一</title>

@@ -9,8 +9,177 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Fri, 27 Nov 2015 17:45:24 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 09 Dec 2015 21:48:04 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/tags/cache/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Apache Cache 研究</title>
+      <link>http://compasses.github.io/2015/12/09/apache-cache-%E7%A0%94%E7%A9%B6/</link>
+      <pubDate>Wed, 09 Dec 2015 21:48:04 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/12/09/apache-cache-%E7%A0%94%E7%A9%B6/</guid>
+      <description>
+
+&lt;p&gt;Apache 作为一个hosting server，在2.2版本以上的也有较为强大的缓存功能。使其不管是作为web server还是代理server都能实现访问加速。
+Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_cache较为简单粗暴，cache那种不轻易改变的或者对实效性要求不高的文件较为适合，因为后台更新了缓存不能及时更新，需要一个周期或者重启Apache。
+mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
+具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
+
+&lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
+这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
+一般的请求头，类似点击页面链接：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Accept text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding gzip, deflate
+Accept-Language zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Connection keep-alive
+Cookie  timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host 10.128.163.72
+User-Agent Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;F5 刷新的请求头：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+Accept text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding gzip, deflate
+Accept-Language zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control max-age=0
+Connection keep-alive
+Cookie timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host  10.128.163.72
+User-Agent  Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意两者的变化，F5刷新时，请求头里面多了 Cache-Control 的域，max-age 赋值为0，这就告诉所有的后续服务器如果缓存了这个资源请尝试更新。不出意外后续的服务器会针对这个请求发 Conditional Requests，后台服务器验证资源的有效性，如果过期则返回200 ok，否则返回304 not modified。&lt;/p&gt;
+
+&lt;p&gt;Ctrl + F5 刷新页面的请求头：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+Accept
+text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding
+gzip, deflate
+Accept-Language
+zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
+Cache-Control
+no-cache
+Connection
+keep-alive
+Cookie
+timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
+Host
+10.128.163.72
+Pragma
+no-cache
+User-Agent
+Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意这个请求头的新变化，又增加了一个新头域Pragma 值为 no-cache，Pragma 是HTTP1.0 里面定义的，Cache-Control 是HTTP1.1里面定义的，两个头域就足以保证了这个请求无法从cache中获取，直接强制性的去后台服务器发起获取。&lt;/p&gt;
+
+&lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
+
+&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
+
+&lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo a2enmod cache
+$ sudo a2enmod cache_disk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cache_disk的配置项：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;IfModule mod_cache.c&amp;gt;
+&amp;lt;IfModule mod_cache_disk.c&amp;gt;
+        CacheRoot /var/cache/apache2/mod_cache_disk
+        # This will also cache local documents. It usually makes more sense to
+        # put this into the configuration for just one virtual host.
+        CacheEnable disk /wp-content/
+
+    CacheDirLevels 2
+    CacheDirLength 1
+
+    CacheLock on
+    CacheLockPath /tmp/mod_cache-lock
+    CacheLockMaxAge 5
+
+&amp;lt;/IfModule&amp;gt;
+&amp;lt;/IfModule&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CacheRoot 是cache文件的保存位置，需要注意的是CacheEnable后面的url，指定了要cache 的url路径，既是从域名的开始路径位置，上面的配置会缓存&lt;a href=&#34;http://xxxx/wp-content/&#34;&gt;http://xxxx/wp-content/&lt;/a&gt; 开始的请求。
+CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#thunderingherd&#34;&gt;资源“群涌”现象&lt;/a&gt;，避免对后台server造成严重的冲击。&lt;/p&gt;
+
+&lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
+
+&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
+
+&lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
+例如能看到如下内容：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[Wed Dec 09 11:14:50.817537 2015] [cache:debug] [pid 10424] mod_cache.c(636): [client 10.128.161.107:56600] AH00763: cache: running CACHE_OUT filter
+[Wed Dec 09 11:14:50.817543 2015] [cache:debug] [pid 10424] mod_cache.c(665): [client 10.128.161.107:56600] AH00764: cache: serving /wp-content/templates/halloween/assets/css/style.css
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;cache serving 表明该请求是从Apache缓存中返回的。浏览器中是否可以看到该请求是从Apache cache返回的呢，当然是可以的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+Accept-Ranges
+bytes
+Age
+2379
+Cache-Control
+public, max-age=31104000
+Connection
+Keep-Alive
+Content-Encoding
+gzip
+Content-Length
+5901
+Content-Type
+text/css
+Date
+Wed, 09 Dec 2015 09:22:39 GMT
+Etag
+&amp;quot;7071-52671bdf81d18-gzip&amp;quot;
+Keep-Alive
+timeout=5, max=100
+Last-Modified
+Wed, 09 Dec 2015 07:07:23 GMT
+Server
+Apache/2.4.7 (Ubuntu)
+Vary
+Accept-Encoding
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间单位为秒，每次请求这个字段都是会增加的。&lt;/p&gt;
+
+&lt;h2 id=&#34;cache的资源副本&#34;&gt;cache的资源副本&lt;/h2&gt;
+
+&lt;p&gt;Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
+这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上&lt;code&gt;Accept-Encoding&lt;/code&gt;，响应头Vary域则是：&lt;code&gt;Vary: Accept-Encoding&lt;/code&gt;。
+如果两个客户端的请求头里面的Accept-Encoding是不一样的，则cache服务会根据不同的Vary头选择相应的缓存内容。也就是说明具有不同Accept-Encode的客户端浏览器缓存的内容是不一样的。
+也即相同的URL会有不同的缓存副本。&lt;/p&gt;
+
+&lt;p&gt;当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。&lt;/p&gt;
+
+&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
+
+&lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
+如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。
+Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcacheclean。
+下面命令表示每个60分钟，清理缓存一次，只清理过时的或最少使用的缓存，达到100M时也会清理缓存。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;htcacheclean –d60 -n -t -p/var/cache/apache2/mod_cache_disk -l100M –i
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;但是针对于那种需要及时更新的资源，需要另外的手段保证浏览器能够拿到最新的资源。&lt;a href=&#34;http://compasses.github.io/2015/11/27/http-cache/&#34;&gt;上一篇笔记里面的方法能较好&lt;/a&gt;的解决这个问题，&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>HTTP Cache</title>
@@ -22,22 +191,22 @@
 
 &lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;
 
-&lt;h2 id=&#34;相关http-header字段&#34;&gt;相关HTTP header字段&lt;/h2&gt;
+&lt;h2 id=&#34;相关http-header字段:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;相关HTTP header字段&lt;/h2&gt;
 
-&lt;h3 id=&#34;last-modified和etag&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
+&lt;h3 id=&#34;last-modified和etag:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
 
 &lt;p&gt;两者的功能类似，一个是文件的最近一次的修改时间，一个是针对这个资源文件生成的tag。都是server端的返回。刷新页面时，请求头里面会带上If-Modified-Since或者 If-None-Match。
  但是Etag并&lt;a href=&#34;https://developer.yahoo.com/performance/rules.html#etags=&#34;&gt;不推荐使用&lt;/a&gt;，原因就是不同的server对Etag的生成算法可能不统一，特别在集群server的情况下。&lt;/p&gt;
 
-&lt;h3 id=&#34;pragma&#34;&gt;Pragma&lt;/h3&gt;
+&lt;h3 id=&#34;pragma:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Pragma&lt;/h3&gt;
 
 &lt;p&gt;纯协议上的指令，对请求响应链路上的所有代理使用。例如如果pragma：no-chache，则请求在请求响应链上的任意节点都不会被缓存，因其于cache-control：no-chache意义一致。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires&#34;&gt;Expires&lt;/h3&gt;
+&lt;h3 id=&#34;expires:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Expires&lt;/h3&gt;
 
 &lt;p&gt;set response headers，对某个响应设置个超时时间，一般优先级不高，如果存在max-age的话，这个字段几乎不起作用。&lt;/p&gt;
 
-&lt;h3 id=&#34;cache-control&#34;&gt;Cache-Control&lt;/h3&gt;
+&lt;h3 id=&#34;cache-control:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Cache-Control&lt;/h3&gt;
 
 &lt;p&gt;public：标识验证后的respons可被缓存的。
 no-store：任何情况下不缓存，并尽量不要保存到磁盘中。不缓存的资源并不能保证不被保存到磁盘中。例如浏览器的后退键，可能会导致看到过期的页面。
@@ -47,7 +216,7 @@ proxy-revalidate： 和must 一样，只对proxy cache有效，对中间有cache
 max-age: 指定刷新超时时间，即cache的超时时间。
 s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache servers使用这个s-maxage，针对public的cache有效，其会覆盖max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
 
 &lt;p&gt;通过vary告诉http cache，寻找缓存对象时需要考虑的头域字段。比如：浏览器发了两个request，一个带有accept-encoding， 一个没有。http 缓存的时候会带上这个vary标记，表示只有带有accept-encoding的缓存对象才能是使用。达到的效果就是request里面带有accept-encoding的请求，响应缓存只能被这样的请求获取。&lt;/p&gt;
 
@@ -55,26 +224,26 @@ s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache se
 简单的理解vary用来区分请求的差别，识别出不同的request。
 vary的其他取值：user-agent, 让响应区分不同的agent；Referer, 区分这个request是从哪个页面而来。cookie, 不同认证信息不同的 request。vary指定的那些值就会影响浏览器的cache策略。&lt;/p&gt;
 
-&lt;h2 id=&#34;需要注意的几个问题&#34;&gt;需要注意的几个问题&lt;/h2&gt;
+&lt;h2 id=&#34;需要注意的几个问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;需要注意的几个问题&lt;/h2&gt;
 
-&lt;h3 id=&#34;https-证书问题&#34;&gt;https 证书问题&lt;/h3&gt;
+&lt;h3 id=&#34;https-证书问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;https 证书问题&lt;/h3&gt;
 
 &lt;p&gt;如果是无效的证书，会导致缓存无法完全起用。本地测试是doc无法被cache，静态资源还是可以的。当然这跟浏览器的行为也有关系，Firefox里面添加例外证书变成合法的就可以正常缓存了。chrome的证书比较严格不好把红叉叉去掉。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires和max-age-优先级问题&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
+&lt;h3 id=&#34;expires和max-age-优先级问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
 
 &lt;p&gt;当response头域里面两者都包含时，浏览器会优先选用max-age，当然这是我本地的测试结果。所有的情况可能难以覆盖，比如移动端的浏览器，其他的浏览器，除了Firefox、chrome、IE等等以外的。
 另外就是expires是http1.0里面的，max-age在http1.1被引入，但是&lt;a href=&#34;https://www.mnot.net/blog/2007/05/15/expires_max-age&#34;&gt;这篇文章&lt;/a&gt;建议最好两者都带上正确的值，或者只带上max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;conditional-requests&#34;&gt;Conditional Requests&lt;/h3&gt;
+&lt;h3 id=&#34;conditional-requests:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Conditional Requests&lt;/h3&gt;
 
 &lt;p&gt;条件请求是当浏览器发现资源超时时，如过了max-age或者expires date，会发起条件请求，如果server发现资源变化了会回复200 ok，否则回复304的status code。正确情况下资源cache后，浏览器是不会发条件请求的，直到资源超时后。当然也不排除某些浏览器会不停的发conditional request，更为详细的介绍，&lt;a href=&#34;https://greenbytes.de/tech/webdav/draft-ietf-httpbis-p4-conditional-20.html&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h2 id=&#34;静态资源缓存&#34;&gt;静态资源缓存&lt;/h2&gt;
+&lt;h2 id=&#34;静态资源缓存:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;静态资源缓存&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源，更新时更加推荐使用变更文件名的方式，例如让文件名包含一个版本号的方式。这种比文件末尾增加query string更加有效，例如有些中间proxy就不会缓存带有查询字符的url。&lt;/p&gt;
 
-&lt;h2 id=&#34;php配合apache-实现静态资源版本控制&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
+&lt;h2 id=&#34;php配合apache-实现静态资源版本控制:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源的cache设置，这个&lt;a href=&#34;https://github.com/Compasses/server-configs-apache/tree/master/src/web_performance&#34;&gt;github&lt;/a&gt;有较好的配置模板做参考。基本上enmod headers即可。
 针对静态文件php代码里面插入版本号，一般为时间戳或者数据库里面的更新时间：&lt;/p&gt;
@@ -126,7 +295,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;上述就完成了，只要后台修改了静态资源文件，则文件的名字会随着版本号的更新而更新，从而实现前端自动刷新缓存。否则这些资源文件会永远cache在客户端。超时时间为31104000s。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;总结&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;http cache 很复杂，牵扯较多的组件，上述只是针对Apache+PHP的方案实施。&lt;/li&gt;

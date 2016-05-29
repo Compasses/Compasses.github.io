@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="en-EN">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <title>
+    input 和 textarea的长度限制问题 | 三十重围
+  </title>
+
+
+  
+  <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
+
+  
+  <link rel="canonical" href="http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/"/>
+
+  
+  <link rel="stylesheet" href="/css/sanitize.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/highlight_monokai.css">
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  
+  <link href="http://compasses.github.io/index.xml" rel="alternate" type="application/rss+xml" title="三十重围" />
+  <link href="http://compasses.github.io/index.xml" rel="feed" type="application/rss+xml" title="三十重围" />
+
+  
+  <script type="text/javascript">var switchTo5x=true;</script>
+  <script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+  <script type="text/javascript">stLight.options({publisher: "2b9fffc6-b3fe-4988-a0ef-4f9dcce98eaa", doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
+
+
+</head>
+
+
+
+<body>
+<div class="container">
+
+  
+  <header role="banner">
+    <div class="row gutters">
+      <div id="site-title" class="col span_6">
+        <h1><a href="http://compasses.github.io/">三十重围</a></h1>
+        <h2>并蓄 | 共享</h2>
+      </div>
+      <div id="social" class="col span_6">
+        <ul>
+          
+          
+          <li><a href="https://github.com/Compasses" target="_blank">GitHub</a></li>
+          
+        </ul>
+      </div>
+    </div>
+  </header>
+
+
+  
+  <main id="single" role="main">
+    <div class="article-header">
+      <h1>input 和 textarea的长度限制问题</h1>
+      <div class="meta">
+        Jan 28, 2016 &nbsp;
+        
+          #<a href="/tags/javascript">javascript</a>&nbsp;
+        
+          #<a href="/tags/web">web</a>&nbsp;
+        
+      </div>
+    </div>
+    <article>
+      
+
+<p>一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是<a href="http://www.w3school.com.cn/tags/att_input_maxlength.asp">允许输入字段的最大字符数</a>。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。</p>
+
+<h2 id="编码问题:a4408d7234fd43d2930eca48e7402255">编码问题</h2>
+
+<p>互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：</p>
+
+<pre><code>&lt;meta charset=&quot;utf-8&quot;&gt;
+</code></pre>
+
+<p>UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看<a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">这篇文章</a>，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。</p>
+
+<h2 id="精确获取字符长度:a4408d7234fd43d2930eca48e7402255">精确获取字符长度</h2>
+
+<p>由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。<strong>encodeURIComponent</strong>方法是比较好用的：</p>
+
+<pre><code>The encodeURIComponent() function encodes a Uniform Resource Identifier (URI) component by replacing each instance of certain characters by one, two, three, or four escape sequences representing the UTF-8 encoding of the character (will only be four escape sequences for characters composed of two &quot;surrogate&quot; characters).
+</code></pre>
+
+<p>该方法能将UTF-8编码的输入文字转码成对应的多字节字符串。
+例如：</p>
+
+<pre><code>encodeURIComponent('我的问题')
+&quot;%E6%88%91%E7%9A%84%E9%97%AE%E9%A2%98&quot;
+</code></pre>
+
+<p>每个中文字转成三个字节冠以%开头。匹配出这样的pattern并计算长度，使用javascript的正则表达式:</p>
+
+<pre><code>/%[A-F\d]{2}/g
+</code></pre>
+
+<p>并临时替换成一个英文字符，那么长度就可以准确得到了：</p>
+
+<pre><code>encodeURIComponent('abc我的问题abc').replace(/%[A-F\d]{2}/g, 'i')
+&quot;abciiiiiiiiiiiiabc&quot;
+encodeURIComponent('abc我的问题abc').replace(/%[A-F\d]{2}/g, 'i').length
+18
+</code></pre>
+
+<h2 id="textarea-中的换行符:a4408d7234fd43d2930eca48e7402255">textarea 中的换行符</h2>
+
+<p>与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
+例如只有一个换行符的encode前端结果：</p>
+
+<pre><code>encodeURIComponent($('textarea').val())
+&quot;%0A&quot;
+</code></pre>
+
+<p>而到了后台该换行符变成：<strong>0D 0A</strong>。
+产生这个问题的原因是换行符在HTTP<a href="http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code">传输的过程中发生转换</a>，由‘\n’变成‘\r\n’。
+因此在计算textarea值时在遇到换行符时记得长度额外加1。</p>
+
+<h2 id="代码实现:a4408d7234fd43d2930eca48e7402255">代码实现</h2>
+
+<p>既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
+针对input：</p>
+
+<pre><code>    $(&quot;input&quot;).on('keydown keyup paste',function(){
+        var $that = $(this),
+        maxlength = $that.attr('maxlength');
+
+        if($.isNumeric(maxlength) &amp;&amp; maxlength &gt; 0){
+            var realLen = encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, 'U').length;
+            var currLen = $that.val().length;
+            if (realLen &gt; maxlength) {
+                do {
+                    $that.val($that.val().substr(0, currLen));
+                    currLen --;
+                } while (encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, 'U').length &gt; maxlength);
+            }
+        };
+    });
+</code></pre>
+
+<p>针对textarea：</p>
+
+<pre><code>    $(&quot;textarea&quot;).on('keydown keyup paste',function(){
+        var $that = $(this),
+        maxlength = $that.attr('maxlength');
+
+        if($.isNumeric(maxlength) &amp;&amp; maxlength &gt; 0){
+            var realLen = encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, 'U').length;
+            var newLines = $that.val().match(/(\r\n|\n|\r)/g);
+
+            if (newLines !== null) {
+                realLen += newLines.length;
+            }
+            var currLen = $that.val().length;
+            if (realLen &gt; maxlength) {
+                do {
+                    $that.val($that.val().substr(0, currLen));
+                    currLen --;
+                    realLen = encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, 'U').length;
+                    newLines = $that.val().match(/(\r\n|\n|\r)/g);
+                    if (newLines !== null) {
+                        realLen += newLines.length;
+                    }
+                } while (realLen &gt; maxlength);
+            }
+        };
+    });
+</code></pre>
+
+<p>上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。</p>
+
+<h2 id="总结:a4408d7234fd43d2930eca48e7402255">总结</h2>
+
+<p>见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。</p>
+
+      
+      
+      <div id="share-this" class="col span_10">
+        <span class='st_twitter_large' displayText='Tweet'></span>
+        <span class='st_facebook_large' displayText='Facebook'></span>
+        <span class='st_googleplus_large' displayText='Google +'></span>
+        <span class='st_pocket_large' displayText='Pocket'></span>
+        <span class='st_sharethis_large' displayText='ShareThis'></span>
+        <span class='st_email_large' displayText='Email'></span>  
+      </div>
+    </article>
+    
+
+
+<script type="text/javascript">
+     
+    var disqus_shortname = '';
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  </main>
+  
+  <nav class="pagination">
+    
+      <span class="previous">&larr; <a href="http://compasses.github.io/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/" rel="prev">系统性能 一</a></span>
+    
+    
+      <span class="next"><a href="http://compasses.github.io/2016/05/29/saas-database/" rel="next">SaaS DataBase</a> &rarr;</span>
+    
+  </nav>
+
+
+  
+  <footer role="contentinfo">
+    <div style="text-align:center;">
+      <img src="/images/profile.png" width="64" height="64"><br>
+      Written by Jet He
+    </div>
+  </footer>
+
+
+</div>
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-70749774-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
+
