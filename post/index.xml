@@ -9,483 +9,8 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Wed, 27 Jan 2016 15:51:02 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2015 17:45:24 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/post/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>input 和 textarea的长度限制问题</title>
-      <link>http://compasses.github.io/2016/01/27/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</link>
-      <pubDate>Wed, 27 Jan 2016 15:51:02 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/01/27/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</guid>
-      <description>
-
-&lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
-
-&lt;h2 id=&#34;编码问题&#34;&gt;编码问题&lt;/h2&gt;
-
-&lt;p&gt;互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;meta charset=&amp;quot;utf-8&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看&lt;a href=&#34;http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html&#34;&gt;这篇文章&lt;/a&gt;，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。&lt;/p&gt;
-
-&lt;h2 id=&#34;精确获取字符长度&#34;&gt;精确获取字符长度&lt;/h2&gt;
-
-&lt;p&gt;由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。&lt;strong&gt;encodeURIComponent&lt;/strong&gt;方法是比较好用的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;The encodeURIComponent() function encodes a Uniform Resource Identifier (URI) component by replacing each instance of certain characters by one, two, three, or four escape sequences representing the UTF-8 encoding of the character (will only be four escape sequences for characters composed of two &amp;quot;surrogate&amp;quot; characters).
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;该方法能将UTF-8编码的输入文字转码成对应的多字节字符串。
-例如：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;encodeURIComponent(&#39;我的问题&#39;)
-&amp;quot;%E6%88%91%E7%9A%84%E9%97%AE%E9%A2%98&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;每个中文字转成三个字节冠以%开头。匹配出这样的pattern并计算长度，使用javascript的正则表达式:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/%[A-F\d]{2}/g
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;并临时替换成一个英文字符，那么长度就可以准确得到了：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&#39;)
-&amp;quot;abciiiiiiiiiiiiabc&amp;quot;
-encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&#39;).length
-18
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;textarea-中的换行符&#34;&gt;textarea 中的换行符&lt;/h2&gt;
-
-&lt;p&gt;与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
-例如只有一个换行符的encode前端结果：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;encodeURIComponent($(&#39;textarea&#39;).val())
-&amp;quot;%0A&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;而到了后台该换行符变成：&lt;strong&gt;0D 0A&lt;/strong&gt;。
-产生这个问题的原因是换行符在HTTP&lt;a href=&#34;http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code&#34;&gt;传输的过程中发生转换&lt;/a&gt;，由‘\n’变成‘\r\n’。
-因此在计算textarea值时在遇到换行符时记得长度额外加1。&lt;/p&gt;
-
-&lt;h2 id=&#34;代码实现&#34;&gt;代码实现&lt;/h2&gt;
-
-&lt;p&gt;既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
-针对input：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    $(&amp;quot;input&amp;quot;).on(&#39;keydown keyup paste&#39;,function(){
-        var $that = $(this),
-        maxlength = $that.attr(&#39;maxlength&#39;);
-
-        if($.isNumeric(maxlength) &amp;amp;&amp;amp; maxlength &amp;gt; 0){
-            var realLen = encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, &#39;U&#39;).length;
-            var currLen = $that.val().length;
-            if (realLen &amp;gt; maxlength) {
-                do {
-                    $that.val($that.val().substr(0, currLen));
-                    currLen --;
-                } while (encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, &#39;U&#39;).length &amp;gt; maxlength);
-            }
-        };
-    });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;针对textarea：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    $(&amp;quot;textarea&amp;quot;).on(&#39;keydown keyup paste&#39;,function(){
-        var $that = $(this),
-        maxlength = $that.attr(&#39;maxlength&#39;);
-
-        if($.isNumeric(maxlength) &amp;amp;&amp;amp; maxlength &amp;gt; 0){
-            var realLen = encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, &#39;U&#39;).length;
-            var newLines = $that.val().match(/(\r\n|\n|\r)/g);
-
-            if (newLines !== null) {
-                realLen += newLines.length;
-            }
-            var currLen = $that.val().length;
-            if (realLen &amp;gt; maxlength) {
-                do {
-                    $that.val($that.val().substr(0, currLen));
-                    currLen --;
-                    realLen = encodeURIComponent($that.val()).replace(/%[A-F\d]{2}/g, &#39;U&#39;).length;
-                    newLines = $that.val().match(/(\r\n|\n|\r)/g);
-                    if (newLines !== null) {
-                        realLen += newLines.length;
-                    }
-                } while (realLen &amp;gt; maxlength);
-            }
-        };
-    });
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。&lt;/p&gt;
-
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>系统性能 一</title>
-      <link>http://compasses.github.io/2016/01/18/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</link>
-      <pubDate>Mon, 18 Jan 2016 19:15:00 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/01/18/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</guid>
-      <description>
-
-&lt;p&gt;最近一直在做系统性能优化，包括性能问题定位，系统整体性能提升等。在性能测试环境上一边测试一边优化，从最开始的表象开始，修改代码和各种系统参数，然后就会出现新的表象，然后再修改代码和系统参数。性能测试涉及的节点很多，很多方面都有联动性，最后辛辛苦苦的搞了大半个月，确实有所进展但是总感觉缺少系统的方法。今天有幸看到这样的一篇文章&lt;a href=&#34;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&#34;&gt;Linux Performance Analysis in 60,000 Milliseconds&lt;/a&gt;，明确了在一个server上面，最开始你应该关注到什么。虽然里面的东西大家都有注意，但是可能还是不够全面。现在就结合这篇文章和自己的实践做下总结吧。&lt;/p&gt;
-
-&lt;h2 id=&#34;uptime&#34;&gt;uptime&lt;/h2&gt;
-
-&lt;p&gt;首先出场的便是&lt;strong&gt;uptime&lt;/strong&gt;这个命令：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;root@ip-172-31-3-207:~# uptime
- 02:15:06 up 48 days, 18:01,  3 users,  load average: 65.43, 17.08, 5.81
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这个命令明确告诉我们当前系统的时间，启动运行了多长时间，用户的登录数，以及当前系统分别在 1，5，15分钟内的进程平均数量，这些进程数量表示运行中或者处于不可中断的状态。这个命令是非常high level的总结，说明总体的系统负载情况。&lt;/p&gt;
-
-&lt;h2 id=&#34;dmesg-tail&#34;&gt;dmesg|tail&lt;/h2&gt;
-
-&lt;p&gt;个人比较喜欢这个dmesg命令，一般是内核的日志，会有一些重要的信息抛出。例如进程异常退出，因为内存耗尽或者进程crash。还会记录些命令操作的异常。值得好好利用的命令。&lt;/p&gt;
-
-&lt;h2 id=&#34;vmstat-1&#34;&gt;vmstat 1&lt;/h2&gt;
-
-&lt;p&gt;系统虚拟内存的统计信息，1表示没1秒输出一次。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;root@cnpvgvb1od042:~/PCP# vmstat 2
-procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
- r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
- 1  0      0 9818904   1820 3563052    0    0     0     2    0    0  0  0 100  0  0
- 1  0      0 9842332   1820 3563104    0    0     0    98 4195 6788 41  4 55  0  0
- 0  0      0 9888940   1820 3563124    0    0     0     0 1886 3149 15  2 83  0  0
- 5  0      0 9917440   1820 3563104    0    0     0     0 3549 6524 31  4 66  0  0
-15  0      0 9961216   1820 3563156    0    0     0    34 6469 11150 70  8 22  0  0
- 5  0      0 9998920   1820 3563236    0    0     0     0 4350 7398 49  5 45  0  0
- 2  0      0 10038652   1820 3563260    0    0     0    58 2922 4788 28  3 69  0  0
- 4  0      0 10070480   1820 3563244    0    0     0  1252 2305 4215 14  2 84  0  0
- 1  0      0 10100696   1820 3563284    0    0     0     0 2683 4405 14  2 84  0  0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;几个重要的列：&lt;/p&gt;
-
-&lt;p&gt;r: 正在运行或者等待运行的进程数。该数量不包含I/O的进程。CPU是否饱和，就看这个数量是否多余CPU核的数量。&lt;/p&gt;
-
-&lt;p&gt;free:剩余内存以kb为单位。&lt;/p&gt;
-
-&lt;p&gt;si，so：换入换出，如果这些值非0，那么说明内存不足。&lt;/p&gt;
-
-&lt;p&gt;us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用户时间，系统时间，空闲时间，wait IO时间和stolen time。需要注意的是system time也有IO处理的时间。如果比较高的系统时间占用说明内核处理IO不够高效。&lt;/p&gt;
-
-&lt;h2 id=&#34;mpstat-p-all-1&#34;&gt;mpstat -P ALL 1&lt;/h2&gt;
-
-&lt;p&gt;这个命令每个CPU的使用率情况，如果有单核CPU过载的情况，说明线程的任务分配有问题。需要做相应的调整。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;02:28:54 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
-02:28:56 PM  all   85.62    0.00    6.00    0.00    1.81    0.00    0.00    0.00    0.00    6.57
-02:28:56 PM    0   85.00    0.00    7.50    0.50    0.50    0.00    0.00    0.00    0.00    6.50
-02:28:56 PM    1   87.94    0.00    5.53    0.00    0.50    0.00    0.00    0.00    0.00    6.03
-02:28:56 PM    2   77.50    0.00    8.00    0.00   10.50    0.00    0.00    0.00    0.00    4.00
-02:28:56 PM    3   89.39    0.00    5.05    0.00    0.51    0.00    0.00    0.00    0.00    5.05
-02:28:56 PM    4   87.00    0.00    5.50    0.00    0.50    0.00    0.00    0.00    0.00    7.00
-02:28:56 PM    5   87.00    0.00    6.00    0.00    0.50    0.00    0.00    0.00    0.00    6.50
-02:28:56 PM    6   84.16    0.00    5.45    0.00    0.99    0.00    0.00    0.00    0.00    9.41
-02:28:56 PM    7   86.93    0.00    5.03    0.00    0.50    0.00    0.00    0.00    0.00    7.54
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;pidstat-1&#34;&gt;pidstat 1&lt;/h2&gt;
-
-&lt;p&gt;用这个命令可以观察到单个进程的运行情况。并且每个CPU会单独列出。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;02:44:55 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command
-02:44:57 PM     0         3    0.00    0.50    0.00    0.50     0  ksoftirqd/0
-02:44:57 PM     0      6775    1.00    1.50    0.00    2.50     1  pidstat
-02:44:57 PM 65534      9303    0.50    0.50    0.00    1.00     3  nginx
-02:44:57 PM 65534      9304    1.00    0.50    0.00    1.50     5  nginx
-02:44:57 PM 65534      9305    0.50    0.50    0.00    1.00     0  nginx
-02:44:57 PM 65534      9306    0.00    0.50    0.00    0.50     0  nginx
-02:44:57 PM 65534      9307    1.00    0.00    0.00    1.00     5  nginx
-02:44:57 PM 65534      9308    0.50    0.00    0.00    0.50     7  nginx
-02:44:57 PM 65534      9309    0.50    0.50    0.00    1.00     0  nginx
-02:44:57 PM 65534      9310    0.50    0.50    0.00    1.00     7  nginx
-02:44:57 PM   101     11711   10.50    4.50    0.00   15.00     1  beam.smp
-02:44:57 PM   101     11743   29.50   26.00    0.00   55.50     6  child_setup
-02:44:57 PM   101     11744   27.50   24.50    0.00   52.00     2  child_setup
-02:44:57 PM     0     12083    0.00    0.50    0.00    0.50     3  kworker/3:1
-02:44:57 PM     0     13591    0.00    0.50    0.00    0.50     5  btrfs-endio-wri
-02:44:57 PM     0     14886    0.50    0.00    0.00    0.50     5  sshd
-02:44:57 PM     0     16455    0.00    0.50    0.00    0.50     7  python
-02:44:57 PM     0     18623    2.50    6.50    0.00    9.00     4  docker
-02:44:57 PM     0     18665    1.50    3.50    0.00    5.00     0  redis-server
-02:44:57 PM     0     19366    2.00    1.50    0.00    3.50     3  beam.smp
-02:44:57 PM     0     22995    4.00    3.50    0.00    7.50     1  java
-02:44:57 PM     0     23112    0.50    0.00    0.00    0.50     1  supervisord
-02:44:57 PM   101     23264    2.00    2.00    0.00    4.00     1  beam.smp
-02:44:57 PM   105     24078    1.00    1.00    0.00    2.00     1  mysqld
-02:44:57 PM     0     26109    0.00    0.50    0.00    0.50     0  java
-02:44:57 PM     0     27157    1.00    0.00    0.00    1.00     2  java
-02:44:57 PM     0     30423    1.50    0.00    0.00    1.50     0  java
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;iostat-xz-1&#34;&gt;iostat -xz 1&lt;/h2&gt;
-
-&lt;p&gt;iostat 较好的反映IO密集型应用的负载情况。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-          61.22    0.00    5.58    0.06    0.00   33.15
-
-Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
-sda               0.00     6.00    0.00   13.00     0.00  1364.00   209.85     0.03    2.00    0.00    2.00   0.77   1.00
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;r/s, w/s, rkB/s, wkB/s: 顾名思义，分别表示每秒钟读、写的次数和读写的kB数。&lt;/p&gt;
-
-&lt;p&gt;await: 是IO的平均时间，单位为ms。这个过大的话表明设备负载饱和了，或者设备有故障。&lt;/p&gt;
-
-&lt;p&gt;avgqu-sz: 是对设备的平均请求数，大于1的话表明有一定的饱和了。&lt;/p&gt;
-
-&lt;p&gt;%util：用时的百分比。表示没秒钟有多少时间花在了IO上。一般这个超过60%说明IO性能有问题了。&lt;/p&gt;
-
-&lt;p&gt;针对IO的优化需要做到IO的异步处理即可。使得应用不直接阻塞在慢响应上面。适用的技术：提前读、写缓存。&lt;/p&gt;
-
-&lt;h2 id=&#34;free-m&#34;&gt;free -m&lt;/h2&gt;
-
-&lt;p&gt;free命令用于展示系统内存的使用情况：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;root@c3e0fff4c337:/var/eshop/logs# free -m
-             total       used       free     shared    buffers     cached
-Mem:         16048       6919       9129         38          1       3522
--/+ buffers/cache:       3394      12654
-Swap:         1905          0       1905
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;需要注意的是cache 的memory也应该算到free里面。&lt;/p&gt;
-
-&lt;h2 id=&#34;sar-n-dev-1&#34;&gt;sar -n DEV 1&lt;/h2&gt;
-
-&lt;p&gt;用于监控网卡的传输性能，确定是否带宽已经达到极限。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;03:18:51 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
-03:18:53 PM vethc4d02c4   2353.50   1888.00    643.56   2374.00      0.00      0.00      0.00      1.38
-03:18:53 PM veth3cbedaf      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
-03:18:53 PM      eth0   4051.50   3223.50   3217.26    992.07      0.00      0.00      0.00      2.64
-03:18:53 PM        lo      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
-03:18:53 PM   docker0   2353.50   1888.00    611.39   2374.00      0.00      0.00      0.00      0.00
-
-03:18:53 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
-03:18:55 PM vethc4d02c4   1913.50   1504.00    598.69   1829.92      0.00      0.00      0.00      1.06
-03:18:55 PM veth3cbedaf      0.50      0.50      0.03      0.04      0.00      0.00      0.00      0.00
-03:18:55 PM      eth0   3386.00   2698.50   2738.93    946.30      0.00      0.00      0.00      2.24
-03:18:55 PM        lo     48.00     48.00      2.34      2.34      0.00      0.00      0.00      0.00
-03:18:55 PM   docker0   1914.00   1504.50    572.56   1829.95      0.00      0.00      0.00      0.00
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;通过rxkB/s和txkB/s可以得到网卡的负载情况。并可以确认是否已经超过带宽上限了。&lt;/p&gt;
-
-&lt;h2 id=&#34;sar-n-tcp-etcp-1&#34;&gt;sar -n TCP,ETCP 1&lt;/h2&gt;
-
-&lt;p&gt;sar是个比较复杂的命令，有多种使用方式，上面的信息也是基于这个命令。要获得TCP相关的统计信息这个命令就格外重要了。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;06:38:32 PM  active/s passive/s    iseg/s    oseg/s
-06:38:33 PM      0.00      0.00     11.64      9.59
-
-06:38:32 PM  atmptf/s  estres/s retrans/s isegerr/s   orsts/s
-06:38:33 PM      0.00      0.00      0.00      0.00      0.00
-
-Average:     active/s passive/s    iseg/s    oseg/s
-Average:         0.15      0.15     21.67     22.88
-
-Average:     atmptf/s  estres/s retrans/s isegerr/s   orsts/s
-Average:         0.00      0.05      0.00      0.00      0.25
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;active/s: 每秒钟发起的TCP链接数，例如通过connect()调用的方式；
-passive/s：每秒钟远程发起的TCP链接数，例如通过accept()调用建立的链接。
-retrans/s：每秒钟TCP重传的数量。这个如果过高的话说明网络状况较差。这个是比较粗略的统计。&lt;/p&gt;
-
-&lt;h2 id=&#34;top&#34;&gt;top&lt;/h2&gt;
-
-&lt;p&gt;top 命令是使用比较频繁的。内存、CPU、进程还有每个核的CPU使用情况都能一目了然。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;top - 18:58:23 up 256 days, 29 min,  4 users,  load average: 18.54, 42.49, 37.05
-Tasks: 247 total,   7 running, 239 sleeping,   0 stopped,   1 zombie
-%Cpu0  : 74.1 us,  4.7 sy,  0.0 ni, 20.9 id,  0.0 wa,  0.3 hi,  0.0 si,  0.0 st
-%Cpu1  : 74.5 us,  4.6 sy,  0.0 ni, 20.2 id,  0.0 wa,  0.7 hi,  0.0 si,  0.0 st
-%Cpu2  : 67.5 us,  7.0 sy,  0.0 ni, 16.6 id,  0.0 wa,  8.9 hi,  0.0 si,  0.0 st
-%Cpu3  : 69.9 us,  4.0 sy,  0.0 ni, 25.5 id,  0.0 wa,  0.7 hi,  0.0 si,  0.0 st
-%Cpu4  : 70.8 us,  4.7 sy,  0.0 ni, 23.9 id,  0.0 wa,  0.7 hi,  0.0 si,  0.0 st
-%Cpu5  : 67.9 us,  4.3 sy,  0.0 ni, 27.2 id,  0.0 wa,  0.7 hi,  0.0 si,  0.0 st
-%Cpu6  : 71.9 us,  5.0 sy,  0.0 ni, 22.5 id,  0.0 wa,  0.7 hi,  0.0 si,  0.0 st
-%Cpu7  : 64.9 us,  4.6 sy,  0.0 ni, 29.8 id,  0.3 wa,  0.3 hi,  0.0 si,  0.0 st
-KiB Mem:  16433764 total,  5466784 used, 10966980 free,     1820 buffers
-KiB Swap:  1951740 total,        0 used,  1951740 free.  3726664 cached Mem
-
-PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                                                                               
-31418 www-data  20   0  500672  55144  31024 R  25.9  0.3   0:05.90 apache2                                                                                               
-29182 www-data  20   0  500196  54780  31060 R  21.9  0.3   0:13.48 apache2                                                                                               
-31450 www-data  20   0  499616  54304  30924 S  20.9  0.3   0:02.93 apache2                                                                                               
-31384 www-data  20   0  498880  54072  31032 S  20.6  0.3   0:05.99 apache2                                                                                               
-29066 www-data  20   0  498652  53944  31116 S  20.2  0.3   0:17.17 apache2                                                                                               
-29267 www-data  20   0  493040  48260  31040 S  20.2  0.3   0:15.48 apache2                                                                                               
-28780 www-data  20   0  498372  53604  31060 S  19.9  0.3   0:28.09 apache2               
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Ctrl+S 能让其先停止更新，Ctrl+Q让其继续执行。&lt;/p&gt;
-
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;系统性能涉及很多的方面，遇到性能问题还是最好有个系统的方法，逐一解决每个问题。不然到了最后一团浆糊，还弄不清楚该优化那里。针对系统的性能优化需要一些经验的积累，慢慢就能轻车熟路，就像修车师父一样，老师父总能让人更放心些。
-所以呢，这种事情不能急，还是慢慢来吧。多总结、多实践、多解决些问题，就会水到渠成了。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Apache Cache探究</title>
-      <link>http://compasses.github.io/2015/12/09/apache-cache%E6%8E%A2%E7%A9%B6/</link>
-      <pubDate>Wed, 09 Dec 2015 18:59:55 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/12/09/apache-cache%E6%8E%A2%E7%A9%B6/</guid>
-      <description>
-
-&lt;p&gt;Apache 作为一个hosting server，在2.2版本以上的也有较为强大的缓存功能。使其不管是作为web server还是代理server都能实现访问加速。
-Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_cache较为简单粗暴，cache那种不轻易改变的或者对实效性要求不高的文件较为适合，因为后台更新了缓存不能及时更新，需要一个周期或者重启Apache。
-mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
-具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
-
-&lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
-这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
-一般的请求头，类似点击页面链接：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Accept                 text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Encoding        gzip, deflate
-Accept-Language        zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
-Connection             keep-alive
-Cookie                 timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
-Host                   10.128.163.72
-User-Agent             Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;F5 刷新的请求头：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Encoding       gzip, deflate
-Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
-Cache-Control         max-age=0
-Connection            keep-alive
-Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
-Host                  10.128.163.72
-User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;注意两者的变化，F5刷新时，请求头里面多了 Cache-Control 的域，max-age 赋值为0，这就告诉所有的后续服务器如果缓存了这个资源请尝试更新。不出意外后续的服务器会针对这个请求发 Conditional Requests，后台服务器验证资源的有效性，如果过期则返回200 ok，否则返回304 not modified。&lt;/p&gt;
-
-&lt;p&gt;Ctrl + F5 刷新页面的请求头：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Accept                text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-Accept-Encoding       gzip, deflate
-Accept-Language       zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3
-Cache-Control         no-cache
-Connection            keep-alive
-Cookie                timeOffset=-480; timeOffset=-480; wp-settings-time-1=1445853102; PHPSESSID=ohiq63apsjmvsrl443778j22g6; ANW_TRACE_ID=25a6e917-0a0b-4580-a989-14ef71368ea1; CART_ITEMS=%5B%5D
-Host                  10.128.163.72
-Pragma                no-cache
-User-Agent            Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;注意这个请求头的新变化，又增加了一个新头域Pragma 值为 no-cache，Pragma 是HTTP1.0 里面定义的，Cache-Control 是HTTP1.1里面定义的，两个头域就足以保证了这个请求无法从cache中获取，直接强制性的去后台服务器发起获取。&lt;/p&gt;
-
-&lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
-
-&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
-
-&lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo a2enmod cache
-$ sudo a2enmod cache_disk
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;cache_disk的配置项：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;IfModule mod_cache.c&amp;gt;
-&amp;lt;IfModule mod_cache_disk.c&amp;gt;
-    CacheRoot /var/cache/apache2/mod_cache_disk
-    # This will also cache local documents. It usually makes more sense to
-    # put this into the configuration for just one virtual host.
-    CacheEnable disk /wp-content/
-
-    CacheDirLevels 2
-    CacheDirLength 1
-
-    CacheLock on
-    CacheLockPath /tmp/mod_cache-lock
-    CacheLockMaxAge 5
-
-&amp;lt;/IfModule&amp;gt;
-&amp;lt;/IfModule&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;CacheRoot 是cache文件的保存位置，需要注意的是CacheEnable后面的url，指定了要cache 的url路径，既是从域名的开始路径位置，上面的配置会缓存&lt;a href=&#34;http://xxxx/wp-content/&#34;&gt;http://xxxx/wp-content/&lt;/a&gt; 开始的请求。
-CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#thunderingherd&#34;&gt;资源“群涌”现象&lt;/a&gt;，避免对后台server造成严重的冲击。&lt;/p&gt;
-
-&lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
-
-&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
-
-&lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
-例如能看到如下内容：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;[Wed Dec 09 11:14:50.817537 2015] [cache:debug] [pid 10424] mod_cache.c(636): [client 10.128.161.107:56600] AH00763: cache: running CACHE_OUT filter
-[Wed Dec 09 11:14:50.817543 2015] [cache:debug] [pid 10424] mod_cache.c(665): [client 10.128.161.107:56600] AH00764: cache: serving /wp-content/templates/halloween/assets/css/style.css
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;cache serving 表明该请求是从Apache缓存中返回的。浏览器中是否可以看到该请求是从Apache cache返回的呢，当然是可以的：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Accept-Ranges          bytes
-Age                    2379
-Cache-Control          public, max-age=31104000
-Connection             Keep-Alive
-Content-Encoding       gzip
-Content-Length         5901
-Content-Type           text/css
-Date                   Wed, 09 Dec 2015 09:22:39 GMT
-Etag                   &amp;quot;7071-52671bdf81d18-gzip&amp;quot;
-Keep-Alive             timeout=5, max=100
-Last-Modified          Wed, 09 Dec 2015 07:07:23 GMTServerApache/2.4.7 (Ubuntu)
-Vary                   Accept-Encoding
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间，单位为秒，每次请求这个字段值都是会变化的。&lt;/p&gt;
-
-&lt;h2 id=&#34;cache的资源副本&#34;&gt;cache的资源副本&lt;/h2&gt;
-
-&lt;p&gt;Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
-这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上&lt;code&gt;Accept-Encoding&lt;/code&gt;，响应头Vary域则是：&lt;code&gt;Vary: Accept-Encoding&lt;/code&gt;。
-如果两个客户端的请求头里面的Accept-Encoding是不一样的，则cache服务会根据不同的Vary头选择相应的缓存内容。也就是说明具有不同Accept-Encode的客户端浏览器缓存的内容是不一样的。
-也即相同的URL会有不同的缓存副本。&lt;/p&gt;
-
-&lt;p&gt;当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。&lt;/p&gt;
-
-&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
-
-&lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
-如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcacheclean。
-下面命令表示每个60分钟，清理缓存一次，只清理过时的或最少使用的缓存，达到100M时也会清理缓存。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;htcacheclean –d60 -n -t -p/var/cache/apache2/mod_cache_disk -l100M –i
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;但是针对于那种需要及时更新的资源，需要另外的手段保证浏览器能够拿到最新的资源。&lt;a href=&#34;http://compasses.github.io/2015/11/27/http-cache/&#34;&gt;上一篇笔记里面的方法能较好&lt;/a&gt;的解决这个问题，&lt;/p&gt;
-</description>
-    </item>
     
     <item>
       <title>HTTP Cache</title>
@@ -623,7 +148,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
 
-&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
+&lt;h2 id=&#34;interface-内部存储:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface 内部存储&lt;/h2&gt;
 
 &lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
 
@@ -735,7 +260,7 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 &lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
+&lt;h2 id=&#34;interface使用:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface使用&lt;/h2&gt;
 
 &lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
@@ -938,11 +463,11 @@ func main() {
       <guid>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
       <description>
 
-&lt;h1 id=&#34;说明&#34;&gt;说明&lt;/h1&gt;
+&lt;h1 id=&#34;说明:08afb798474a9037df6f2df800659b05&#34;&gt;说明&lt;/h1&gt;
 
 &lt;p&gt;最近产品考虑更换前端框架，重点考察了CodeIgniter 和 Laravel两个框架，现对其进行下对比分析。&lt;/p&gt;
 
-&lt;h1 id=&#34;总体对比&#34;&gt;总体对比&lt;/h1&gt;
+&lt;h1 id=&#34;总体对比:08afb798474a9037df6f2df800659b05&#34;&gt;总体对比&lt;/h1&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -1001,12 +526,12 @@ func main() {
 &lt;p&gt;CodeIgniter 基本上是个MVC的空架子，代码量极小，开发的花基本上 100%的掌控在自己手里。 Laravel还是加载了不少的三方 component，比CodeIgniter 庞大些。
 对MVC的支持都很清晰，URL的路由也很简单易扩展。&lt;/p&gt;
 
-&lt;h1 id=&#34;测试环境&#34;&gt;测试环境：&lt;/h1&gt;
+&lt;h1 id=&#34;测试环境:08afb798474a9037df6f2df800659b05&#34;&gt;测试环境：&lt;/h1&gt;
 
 &lt;p&gt;主要是使用了Laravel 的HomeStead环境，通过virtual box + vagrant标准用法，加载Laravel的框架代码；要使其加载CodeIgniter框架，需要修改Nginx的配置，增加新的server，只要端口号换成新的，root指定到CodeIgniter的跟目录即可。
 总体上是Nginx+php5-fpm+mysql+ Ubuntu + CodeIgniter 源码包 + Laravel 源码包。源码包共享在本机上。&lt;/p&gt;
 
-&lt;h1 id=&#34;测试页面&#34;&gt;测试页面：&lt;/h1&gt;
+&lt;h1 id=&#34;测试页面:08afb798474a9037df6f2df800659b05&#34;&gt;测试页面：&lt;/h1&gt;
 
 &lt;p&gt;Modal：使用product数据，获取某个product上的所有信息。
 View：引入Twig模板引擎，创建几个twig模板，在controller层render。
@@ -1014,14 +539,14 @@ Controller：调用modal获取数据，使用 twig render 页面。&lt;/p&gt;
 
 &lt;p&gt;这两个框架都用非常清晰的 MVC结构，上述页面的代码几乎可以在两者之间无缝迁移。&lt;/p&gt;
 
-&lt;h1 id=&#34;性能对比测试&#34;&gt;性能对比测试：&lt;/h1&gt;
+&lt;h1 id=&#34;性能对比测试:08afb798474a9037df6f2df800659b05&#34;&gt;性能对比测试：&lt;/h1&gt;
 
 &lt;p&gt;针对这个页面进行性能测试：页面大小为 8KB， 加载一个已有的CSS文件大小为 87.7KB。
 使用Apache的ab test进行测试：
 AB test:
 ab -n 1000 -c 80 &lt;a href=&#34;http://192.168.10.10:8080/productdetail/&#34;&gt;http://192.168.10.10:8080/productdetail/&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;laravel-结果&#34;&gt;Laravel 结果:&lt;/h2&gt;
+&lt;h2 id=&#34;laravel-结果:08afb798474a9037df6f2df800659b05&#34;&gt;Laravel 结果:&lt;/h2&gt;
 
 &lt;p&gt;Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
@@ -1072,7 +597,7 @@ WARNING: The median and mean for the initial connection time are not within a no
 
 &lt;p&gt;100%  17271 (longest request)&lt;/p&gt;
 
-&lt;h2 id=&#34;codeigniter-结果&#34;&gt;CodeIgniter 结果:&lt;/h2&gt;
+&lt;h2 id=&#34;codeigniter-结果:08afb798474a9037df6f2df800659b05&#34;&gt;CodeIgniter 结果:&lt;/h2&gt;
 
 &lt;p&gt;Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
@@ -1120,7 +645,7 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 
 &lt;p&gt;100%   3649 (longest request)&lt;/p&gt;
 
-&lt;h1 id=&#34;总结&#34;&gt;总结&lt;/h1&gt;
+&lt;h1 id=&#34;总结:08afb798474a9037df6f2df800659b05&#34;&gt;总结&lt;/h1&gt;
 
 &lt;p&gt;CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。
 如果选择从头开始的话，感觉CodeIgniter更好些。&lt;/p&gt;
@@ -1164,7 +689,7 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 
 &lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
 
-&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
+&lt;h1 id=&#34;position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;POSITION&lt;/h1&gt;
 
 &lt;p&gt;解释说明：&lt;/p&gt;
 
@@ -1208,23 +733,23 @@ User agents may treat position as &#39;static&#39; on the root element.
 
 &lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
 
-&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
+&lt;h2 id=&#34;relative-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;relative position&lt;/h2&gt;
 
 &lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
 
-&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
+&lt;h2 id=&#34;absolute-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;absolute position&lt;/h2&gt;
 
 &lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
 
-&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
+&lt;h2 id=&#34;fixed-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;fixed position&lt;/h2&gt;
 
 &lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
 
-&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
+&lt;h2 id=&#34;floating:22153868a43551ee8f9f1515ff4cd978&#34;&gt;floating&lt;/h2&gt;
 
 &lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
 
-&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
+&lt;h1 id=&#34;overflow:22153868a43551ee8f9f1515ff4cd978&#34;&gt;overflow&lt;/h1&gt;
 
 &lt;p&gt;解释：&lt;/p&gt;
 
@@ -1426,7 +951,7 @@ Note that ‘text-overflow’ (see [CSS3TEXT] ) can be used to give a visual ind
       <guid>http://compasses.github.io/2015/07/06/nginx--docker-cluster--session-sticky/</guid>
       <description>
 
-&lt;h2 id=&#34;基本配置&#34;&gt;基本配置&lt;/h2&gt;
+&lt;h2 id=&#34;基本配置:52606dea592d3c735e79f2d8234d11ea&#34;&gt;基本配置&lt;/h2&gt;
 
 &lt;p&gt;本地开发环境和生产环境还是有很大的区分，最近性能测试发现结果很不好，于是想自己去搭建一个类似生产环境的性能测试环境。&lt;/p&gt;
 
@@ -1515,7 +1040,7 @@ server {
 3. https的crt和key需要&lt;a href=&#34;http://www.lovelucy.info/nginx-ssl-certificate-https-website.html&#34;&gt;自己生成&lt;/a&gt;。
 另外这个Nginx 是跑在宿主机上的，修改配置有要执行reload命令使其生效。&lt;/p&gt;
 
-&lt;h2 id=&#34;session-persistence&#34;&gt;session persistence&lt;/h2&gt;
+&lt;h2 id=&#34;session-persistence:52606dea592d3c735e79f2d8234d11ea&#34;&gt;session persistence&lt;/h2&gt;
 
 &lt;p&gt;生产环境需要将一个用户的请求要路由到同一个server上面，因为server很多的业务处理还是需要server里面的session配合。上面用ip_hash方式做load balance，但是考虑到用户使用proxy或者流量不均衡等因素。还是要使用session sticky的方式。
 Nginx默认不支持session sticky，需要重新编译安装这个插件；因为直接使用公司的Nginx版本，所以懒得重新编译了。使用很简单，直接拷贝个bin文件，然后修改成这个样子：&lt;/p&gt;
@@ -1627,11 +1152,11 @@ ff1ad6f22e91        eshop_612:latest    &amp;quot;/var/eshop/install/   31 hours
 
 &lt;p&gt;说明： 本篇文章主要从&lt;a href=&#34;http://nikhilm.github.io/uvbook/&#34;&gt;An Introduction to libuv&lt;/a&gt;这本书翻译学习而来。&lt;/p&gt;
 
-&lt;h2 id=&#34;开始&#34;&gt;开始&lt;/h2&gt;
+&lt;h2 id=&#34;开始:1fb7be80e02e4b29d4cf88eae1d66804&#34;&gt;开始&lt;/h2&gt;
 
 &lt;p&gt;libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。&lt;/p&gt;
 
-&lt;h3 id=&#34;事件循环&#34;&gt;事件循环&lt;/h3&gt;
+&lt;h3 id=&#34;事件循环:1fb7be80e02e4b29d4cf88eae1d66804&#34;&gt;事件循环&lt;/h3&gt;
 
 &lt;p&gt;libuv的编译就不用多说，参考libuv的&lt;a href=&#34;https://github.com/libuv/libuv&#34;&gt;github网址&lt;/a&gt;。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。&lt;/p&gt;
 
@@ -1691,6 +1216,569 @@ gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平
 &lt;p&gt;由于NodeJS的异步编程思想，会让代码变得维护困难，调试也非常不直观，后面就出现了协程的思想。&lt;a href=&#34;https://bjouhier.wordpress.com/2012/03/11/fibers-and-threads-in-node-js-what-for/&#34;&gt;这篇文章&lt;/a&gt;对NodeJS的协程思想进行了介绍。&lt;a href=&#34;https://github.com/laverdet/node-fibers&#34;&gt;node-fibers&lt;/a&gt;尝试去协程花NodeJS的层层回调。这个module值得研究一下。后续会有个单独的文章对其进行详细的介绍。&lt;/p&gt;
 
 &lt;p&gt;NodeJS底层事件循环使用了libuv库，跨平台Linux下使用libev实现，windows下使用IOCP实现，后续也要仔细研究下这个库，应用广泛的东西，必定是好东西，值得学习的东西。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>straight_join when and why</title>
+      <link>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</link>
+      <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</guid>
+      <description>
+
+&lt;h3 id=&#34;问题过程&#34;&gt;问题过程&lt;/h3&gt;
+
+&lt;p&gt;最近优化了一个查询语句，使用到了straight_join这个查询提示，现对其做下总结。
+先看下这个查询语句：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;SELECT wp_posts.ID
+FROM wp_posts
+INNER JOIN wp_postmeta ON (wp_posts.ID = wp_postmeta.post_id)
+INNER JOIN
+  (SELECT
+   STRAIGHT_JOIN DISTINCT wp_posts.ID
+   FROM wp_posts
+   INNER JOIN wp_postmeta meta0 ON meta0.post_id = wp_posts.id
+   AND meta0.meta_key = &#39;sysfield_code&#39;
+   AND CAST(meta0.meta_value AS CHAR) LIKE &#39;%s%&#39;
+   INNER JOIN wp_postmeta meta1 ON meta1.post_id = wp_posts.id
+   AND meta1.meta_key = &#39;price_sales_RMB&#39;
+   AND CAST(meta1.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;20&#39;
+   INNER JOIN wp_postmeta meta2 ON meta2.post_id = wp_posts.id
+   AND meta2.meta_key = &#39;price_standard_RMB&#39;
+   AND CAST(meta2.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;20&#39;
+   INNER JOIN wp_postmeta meta3 ON meta3.post_id = wp_posts.id
+   AND meta3.meta_key = &#39;price_sales_USD&#39;
+   AND CAST(meta3.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;10&#39;
+   INNER JOIN wp_postmeta meta4 ON meta4.post_id = wp_posts.id
+   AND meta4.meta_key = &#39;price_standard_USD&#39;
+   AND CAST(meta4.meta_value AS DECIMAL(10,4)) &amp;gt; &#39;5&#39;
+   INNER JOIN wp_postmeta meta5 ON meta5.post_id = wp_posts.id
+   AND meta5.meta_key = &#39;sysfield_brand&#39;
+   AND CAST(meta5.meta_value AS CHAR) = &#39;Midori&#39;
+   INNER JOIN wp_postmeta meta6 ON meta6.post_id = wp_posts.id
+   AND meta6.meta_key = &#39;sysfield_manufacturer&#39;
+   AND CAST(meta6.meta_value AS CHAR) = &#39;aaaaaaaaa&#39;
+   INNER JOIN wp_postmeta meta7 ON meta7.post_id = wp_posts.id
+   AND meta7.meta_key = &#39;udf_100000001&#39;
+   AND CAST(meta7.meta_value AS CHAR) = &#39;肉身&#39;
+   INNER JOIN wp_postmeta meta8 ON meta8.post_id = wp_posts.id
+   AND meta8.meta_key = &#39;udf_100000004&#39;
+   AND CAST(meta8.meta_value AS CHAR) = &#39;30&#39;
+   WHERE 1=1
+     AND (wp_posts.post_type = &#39;product&#39;)
+     AND (wp_posts.post_status = &#39;publish&#39;
+          OR wp_posts.post_status = &#39;private&#39;)
+     AND wp_posts.post_title LIKE &#39;%s%&#39;
+     AND (wp_posts.ID IN
+            (SELECT object_id
+             FROM wp_term_relationships
+             WHERE term_taxonomy_id IN
+                 (SELECT term_taxonomy_id
+                  FROM wp_term_taxonomy
+                  WHERE term_id IN (100000001))))
+     AND wp_posts.post_date &amp;gt; &#39;2015-06-04 10:40:00&#39;) collection ON collection.ID = wp_posts.ID
+INNER JOIN
+  (SELECT DISTINCT wp_posts.ID
+   FROM wp_posts
+   INNER JOIN wp_postmeta meta0 ON meta0.post_id = wp_posts.id
+   AND (meta0.meta_key = &#39;price_standard_min_RMB&#39;
+        AND CAST(meta0.meta_value AS DECIMAL(10,4)) BETWEEN &#39;0&#39; AND &#39;0&#39;)
+   INNER JOIN wp_postmeta meta1 ON meta1.post_id = wp_posts.id
+   AND (meta1.meta_key = &#39;sysfield_manufacturer&#39;
+        AND CAST(meta1.meta_value AS CHAR) = &#39;aaaaaaaaa&#39;)
+   INNER JOIN wp_postmeta meta2 ON meta2.post_id = wp_posts.id
+   AND (meta2.meta_key = &#39;sysfield_brand&#39;
+        AND CAST(meta2.meta_value AS CHAR) = &#39;Midori&#39;)
+   INNER JOIN wp_postmeta meta3 ON meta3.post_id = wp_posts.id
+   AND (meta3.meta_key = &#39;sysfield_stamp&#39;
+        AND CAST(meta3.meta_value AS CHAR) = &#39;sddd&#39;)
+   INNER JOIN wp_postmeta meta4 ON meta4.post_id = wp_posts.id
+   AND (meta4.meta_key = &#39;udf_100000001&#39;
+        AND CAST(meta4.meta_value AS CHAR) IN (&#39;人肉&#39;,
+                                               &#39;肉身&#39;,
+                                               &#39;精神&#39;))
+   INNER JOIN wp_postmeta meta5 ON meta5.post_id = wp_posts.id
+   AND (meta5.meta_key = &#39;udf_100000002&#39;
+        AND CAST(meta5.meta_value AS CHAR) IN (&#39;20&#39;,
+                                               &#39;30&#39;,
+                                               &#39;40&#39;))
+   INNER JOIN wp_postmeta meta6 ON meta6.post_id = wp_posts.id
+   AND (meta6.meta_key = &#39;udf_100000003&#39;
+        AND CAST(meta6.meta_value AS CHAR) IN (&#39;10&#39;,
+                                               &#39;20&#39;,
+                                               &#39;30&#39;))
+   INNER JOIN wp_postmeta meta7 ON meta7.post_id = wp_posts.id
+   AND (meta7.meta_key = &#39;udf_100000004&#39;
+        AND CAST(meta7.meta_value AS CHAR) IN (&#39;30&#39;,
+                                               &#39;40&#39;,
+                                               &#39;50&#39;))
+   INNER JOIN wp_postmeta meta8 ON meta8.post_id = wp_posts.id
+   AND (meta8.meta_key = &#39;variant_200000001&#39;
+        AND CAST(meta8.meta_value AS CHAR) IN (&#39;200000001&#39;,
+                                               &#39;200000002&#39;,
+                                               &#39;200000003&#39;))
+   INNER JOIN wp_postmeta meta9 ON meta9.post_id = wp_posts.id
+   AND (meta9.meta_key = &#39;variant_200000002&#39;
+        AND CAST(meta9.meta_value AS CHAR) = &#39;200000006&#39;)
+   WHERE 1=1
+     AND (wp_posts.post_type = &#39;product&#39;)) filter ON filter.ID = wp_posts.ID
+WHERE 1=1
+  AND wp_posts.post_type = &#39;product&#39;
+  AND (wp_posts.post_status = &#39;publish&#39;
+       OR wp_posts.post_status = &#39;private&#39;)
+GROUP BY wp_posts.ID
+ORDER BY post_date DESC LIMIT 0,
+                              12
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;是不是庞大无比，的确这样的查询语句对MySQL来说过去庞大了，因为这个SQL关联次数过多了。
+过多的join导致MySQL的查询优化器变得很慢并且往往优化后的结果很不理想。对于MySQL来说N个表的关联就是N的阶层个优化顺序，即MySQL要检查N的阶层个不同的表的顺序，寻找最优化的查询顺序。&lt;/p&gt;
+
+&lt;p&gt;通过设置profiling，然后通过** show profile for query xx**得到结果可以说明这一点：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Status&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Duration&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;starting&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000441&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000009&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000010&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000003&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;checking permissions&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000008&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Opening tables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000732&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;init&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000073&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;System lock&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000030&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;optimizing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000007&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;optimizing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000188&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;font color=&#39;red&#39;&gt;&lt;strong&gt;statistics&lt;/strong&gt; &lt;/font&gt;&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.628449&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;preparing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000047&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Creating tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000075&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;statistics&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000060&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;preparing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000014&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Creating tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000050&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sorting result&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000005&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;executing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000008&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sending data&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000022&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;executing&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sending data&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000238&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;removing tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Sending data&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000073&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Creating sort index&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000010&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;end&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000001&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;removing tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;end&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;query end&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000004&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;closing tables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000002&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;removing tmp table&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000010&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;closing tables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000015&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;freeing items&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000046&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;cleaning up&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000088&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;可以看到statistics所占用的时间是非常巨大的这也是这个查询非常慢的根本原因。
+statistics就是说明MySQL的查询优化器在不断的向存储引擎索取统计信息以寻找最优化的查询顺序。
+可以通过explain extended 的方法获取最终的执行计划。虽然执行计划已经是最优的了，但是中间的过程代价太高了。
+这里就使用straight_join的优化提示来优化这个查询。由一开始的600多ms降低为十几ms了。&lt;/p&gt;
+
+&lt;h3 id=&#34;总结&#34;&gt;总结&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;大的SQL语句，这里主要说的是join次数过多的sql，需要进行查询优化。&lt;/li&gt;
+&lt;li&gt;尽量不要有大的SQL，大SQL对MySQL来说还是有些力不从心。&lt;/li&gt;
+&lt;li&gt;straight_join 禁止了MySQL的查询优化，但是可能随着数据集的变化会有新的性能问题。因此straight_join 不能说是最终的优化方案。&lt;/li&gt;
+&lt;li&gt;根据《高性能MySQL》书上的说法，分解大的查询语句能更好的利用MySQL的缓存机制，对优化大的SQL查询是首先。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;所以后续查询分解是不可避免的。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>高性能MySQL 读书摘要</title>
+      <link>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</link>
+      <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</guid>
+      <description>
+
+&lt;h2 id=&#34;前言:9e70b3f53d84350226052075ce54e259&#34;&gt;前言&lt;/h2&gt;
+
+&lt;p&gt;因工作需要，要不断的使用MySQL，前段时间还参与了MySQL的性能测试，及profiling。发现MySQL还是非常有意思的，自己也非常感兴趣，于是买了本牛逼的书：《高性能MySQL 第三版》。书是很好，但是第一遍基本没什么感觉，基本上是粗略了解，很多细节还是掌握不好。现在重新学习希望能够有更好的提高。
+读书摘要，既然是读书摘要就不会照搬原书，我会侧重点的做笔记，有意思的地方会多写，自己觉得不是很重要的东西会少写或者不写。但是内容的范围不会超出这本书。OK, Let&amp;rsquo;s Start。&lt;/p&gt;
+
+&lt;h3 id=&#34;mysql逻辑结构:9e70b3f53d84350226052075ce54e259&#34;&gt;MySQL逻辑结构&lt;/h3&gt;
+
+&lt;p&gt;逻辑架构图如下：
+&lt;img src=&#34;http://compasses.github.io/img/MySqlCapture.PNG&#34; alt=&#34;Mysql&#34; /&gt;
+分为三层结构，需要重点研究的是存储引擎层和查询优化层。存储引擎也主要研究InnoDB。&lt;/p&gt;
+
+&lt;h2 id=&#34;并发控制:9e70b3f53d84350226052075ce54e259&#34;&gt;并发控制&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;读写锁： 在并发读写数据库表时使用，也叫共享锁和排他锁，读锁是共享的，是互不阻塞的，写锁是排他的，一个写锁会阻塞其他的读锁和写锁。&lt;/li&gt;
+&lt;li&gt;锁粒度： 锁的数据越少，并发程度就越高，但锁的数量就会大增，锁的开销也会增加。这就需要一种平衡，即锁策略的选择。&lt;/li&gt;
+&lt;li&gt;锁策略，包含&lt;strong&gt;表锁&lt;/strong&gt;和&lt;strong&gt;行级锁&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;死锁： 多个事务以不同的顺序锁定资源时，就会可能产生死锁。InnoDB能检测到死锁的循环依赖（&lt;strong&gt;how?&lt;/strong&gt;），对死锁的处理方法是回滚最少行级排它锁的事务。&lt;/li&gt;
+&lt;li&gt;MVCC： 多版本并发控制，是行级锁的变种，在很多情况下避免的加锁操作。工作在REPEATABLE READ 和 REPEATABLE COMMITTED两个隔离级别下。&lt;/li&gt;
+&lt;li&gt;事务日志： 提高事务效率的一种方法，也叫预写式日志。日志操作是磁盘上小块区域内的顺序I/O，不是随机I/O，会快很多。关于顺序和随机I/O，需要后面讨论下。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如何检测死锁，在复杂系统里面是要重点考虑的，目前没有研究InnoDB的源码，不知道他是怎么判定死锁产生的。但是基于一般理论大致可以想一下它是怎么产生的，即多个线程加锁的顺序不一致，产生了循环依赖，基于此，可以设计一种数据结构，每个线程在试图加锁的时候就将该线程作为该锁的所有者，如果出现加锁失败，就要进行一次检测。每个锁的所有者里面是否有环，有环就说明有循环依赖，即可判定死锁，然后进行死锁解除。解除的策略估计会比较暴力，通过销毁某个死锁线程或者强制锁释放等等。&lt;a href=&#34;http://web.mit.edu/6.033/1997/reports/r03-ben.html&#34;&gt;这篇文章&lt;/a&gt;也有类似的讨论。&lt;/p&gt;
+
+&lt;p&gt;InnoDB中的MVCC实现机制： 在每行记录保存两个隐藏的列，一个是行的创建时间，一个是行的过期时间或者是删除时间。时间使用系统版本号标示，每个事务都会有一个，且递增。在REAPTABLE READ隔离级别下MVCC操作如下：
++ SELECT 满足两个条件： InnoDB只查找版本号早于当前事务版本的数据行。行的删除版本要么没有定义要么大于当前事务的版本号。
++ INSERT InnoDB为没一行保存当前系统版本号作为行版本号。
++ DELETE InnoDB为删除的每一行保存当前的版本号为删除版本号。
++ UPDATE InnoDB为新插入的行，保存当前的版本号为行版本号，同时保存当前系统版本号到原来的行作为删除的行作为行删除标示。与单纯的悲观锁和乐观锁，MVCC读操作简单，性能好，能保证只会读到符合标准的行。&lt;/p&gt;
+
+&lt;p&gt;MVCC工作在REAPTABLE READ 和 READ COMMIT两个隔离级别下。REAPTABLE READ 为可重复读，即同一个事务中多次读取同样的记录的结果是一致的。显然MVCC满足这点。READ COMMIT 提交读，一个事务开始时，只能更新到所有已提交事务的更改。即事务开始到提交前，所做的修改对其他事务都是不可见的。MVCC也天生支持。&lt;/p&gt;
+
+&lt;h2 id=&#34;mysql基准测试:9e70b3f53d84350226052075ce54e259&#34;&gt;MySQL基准测试&lt;/h2&gt;
+
+&lt;p&gt;本章主要是说的针对MySQL的基准测试，这里重点看下&lt;strong&gt;sql-bench&lt;/strong&gt;和&lt;strong&gt;sysbench&lt;/strong&gt;。 其中&lt;strong&gt;sql-bench&lt;/strong&gt;只有在源码安装的时候才会有，二进制安装没有,&lt;strong&gt;sysbench&lt;/strong&gt;需要单独安装。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;sql-bench&lt;/strong&gt; 是由perl脚本组成的测试工具。&lt;strong&gt;sysbench&lt;/strong&gt;也可以不只是用来进行数据库的基准测试，比如CPU、I/O等。这些工具的使用咱不赘述，后续如有使用再更新到这里。&lt;/p&gt;
+
+&lt;h2 id=&#34;服务器性能剖析:9e70b3f53d84350226052075ce54e259&#34;&gt;服务器性能剖析&lt;/h2&gt;
+
+&lt;p&gt;服务器性能剖析包含两个方面，一是应用程序，而是数据库；对应用程序剖析需要有相应的统计方法。例如PHP则需要统计每个方法的执行时间，执行数据库查询的时间，都可以在应用层获取；数据库上的性能剖析，就是分析并发查询时的性能问题。
+针对PHP方面，目前正在开发性能剖析的脚本，保证能在生产环境上work。做完后会更新到这里。
+数据库方面目前就使用了MySql的慢查询日志。慢查询日志的产生需要简单的配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1.  find /etc -name my.cnf; it should be locate in: sudo vi /etc/mysql/my.cnf;
+2.  add lines: under [mysqld]
+slow-query-log = 1
+slow-query-log-file = /var/log/mysql/localhost-slow.log
+long_query_time = 1
+log-queries-not-using-indexes
+if the directory /var/log/mysql/ does not exist, you need use : mkdir –p /var/log/mysql/ to create it.
+3.  restart your daemon: sudo service mysql restart .
+I have tested these steps on my Ubuntu machine.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;令&lt;strong&gt;long_query_time = 0&lt;/strong&gt;可以获得所有的查询语句，上述配置对MariaDB也是适用的。&lt;/p&gt;
+
+&lt;p&gt;获得的结果类似如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;35 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 36 # Query_time: 0.000169  Lock_time: 0.000075 Rows_sent: 0  Rows_examined: 1
+ 37 SET timestamp=1430214485;
+ 38 select count(*) into @discard from `information_schema`.`PROCESSLIST`;
+ 39 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 40 # Query_time: 0.000359  Lock_time: 0.000111 Rows_sent: 0  Rows_examined: 2
+ 41 SET timestamp=1430214485;
+ 42 select count(*) into @discard from `information_schema`.`ROUTINES`;
+ 43 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 44 # Query_time: 0.001736  Lock_time: 0.000090 Rows_sent: 0  Rows_examined: 0
+ 45 SET timestamp=1430214485;
+ 46 select count(*) into @discard from `information_schema`.`TRIGGERS`;
+ 47 # User@Host: debian-sys-maint[debian-sys-maint] @ localhost []
+ 48 # Query_time: 0.001403  Lock_time: 0.000080 Rows_sent: 0  Rows_examined: 4
+ 49 SET timestamp=1430214485;
+ 50 select count(*) into @discard from `information_schema`.`VIEWS`;
+ 51 # Time: 150428 17:49:08
+ 52 # User@Host: root[root] @ localhost []
+ 53 # Query_time: 0.144277  Lock_time: 0.000052 Rows_sent: 10061  Rows_examined: 10061
+ 54 use occ_eshop;
+ 55 SET timestamp=1430214548;
+ 56 select * from wp_posts;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后可以针对每一个查询进行分析，并剖析其性能问题。&lt;/p&gt;
+
+&lt;h2 id=&#34;schema与数据类型优化:9e70b3f53d84350226052075ce54e259&#34;&gt;Schema与数据类型优化&lt;/h2&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;创建高性能的索引:9e70b3f53d84350226052075ce54e259&#34;&gt;创建高性能的索引&lt;/h2&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;查询性能优化:9e70b3f53d84350226052075ce54e259&#34;&gt;查询性能优化&lt;/h2&gt;
+
+&lt;p&gt;一个复杂查询还是多个简单查询：
+切分查询：将大查询切分成小查询。每个查询功能完全一样。
+分解关联查询：分解关联查询的方式重构查询有如下的优势：1，让缓存效率更高。2，查询分解后，执行单个查询可以减少锁的竞争。3.在应用层做关联，可以更容易对数据库进行拆分。更容易做到高性能和可扩展。4，减少冗余记录的查询。5.这样做相当于在应用中实现了哈希关联，而不是使用MYSQL的嵌套循环关联。某些场景哈希关联的效率高很多。
+mysql客户端和服务器之间的通信协议是半双工的。show full processlist; 显示当前链接线程的状态。
+将一个SQL转成一个执行计划，包含多个子阶段：解析SQL、预处理、优化SQL执行计划。
+mysql通过关键字将SQL语句进行解析；生成一颗对应的解析树。预处理器根据一些mysql规则进一步检查解析树是否合法。
+查询优化器：一条查询有很多种执行方式，并能都返回相同的结果。有很多原因导致MYSQL优化器选择错误的执行计划。1.统计信息不准确；2.执行计划中的成本估算不等同于实际的执行成本。。。。。优化策略可以简单的分为两种，一种是静态优化，一种动态优化。
+MYSQL的优化类型：1.重新定义关联表的顺序。2.将外连接转化成内连接。3.使用等价变换规则，移除一些恒等成立和恒不成立的判断。4.优化COUNT MIN和MAX，得益于B-Tree结构。5.预估并转化为常数表达式6.覆盖索引扫描。7.子查询优化。8.提前终止查询。9.等值传播10.列表IN()的比较。使用IN的时候索引就用不了了。
+MYSQL的概念中，每个查询都是一次关联。所以读取结果临时表也是一次关联。MYSQL执行关联的策略：MYSQL对任何关联都执行嵌套循环关联操作。即先在一个表中循环取出单条数据，然后再嵌套循环到下一个表中寻找匹配的行，依次下去，直到找到所有表中匹配的行。如果最后一个关联表无法找到更多的行后，MYSQL返回上一层关联表，看是否能够找到更多的匹配记录。
+分别看一个内联和外联的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;select tb1.col1, tbl2.col2 from tb1 inner join tbl2 using(col3) where tb1.col1 in (5,6);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;伪代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;outer_iter = iterator over tb1 where col1 in (5, 6)
+outer_row = outer_iter.next
+while outer_row
+     inner_iter = iterator over tbl2 where col3 = outer_row.col3
+     inner_row = inner_iter.next
+     while inner_row
+          output [outer_row.col1 inner_row.col2]
+          inner_row = inner_iter.next
+     end
+     outer_row = outer_iter.next
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;select tb1.col1, tbl2.col2 from tb1 left outer join tbl2 using(col3) where tb1.col1 in (5,6);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;伪代码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;outer_iter = iterator over tb1 where col1 in (5, 6)
+outer_row = outer_iter.next
+while outer_row
+     inner_iter = iterator over tbl2 where col3 = outer_row.col3
+     inner_row = inner_iter.next
+     if inner_row
+          while inner_row
+               output [outer_row.col1 inner_row.col2]
+               inner_row = inner_iter.next
+          end
+     else 
+          out [outer_row.col1, null]
+     end
+     outer_row = outer_iter.next
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果超过n个表的关联，那么需要检查n的阶乘中关联顺序；当需要关联的表超过optimizer_search&lt;em&gt;depth时，优化器就会使用贪婪搜索模式。show variables like &amp;lsquo;optimizer&lt;/em&gt;%&amp;lsquo;;
+排序优化：应尽可能避免排序或者尽可能避免对大量数据进行排序。
+查询执行引擎，mysql根据查询计划完成整个查询。在执行过程中，有大量的操作需要通过调用存储引擎实现的接口来完成，这些接口为 handler API，查询中的每一个表由一个handler实例表示。&lt;/p&gt;
+
+&lt;p&gt;MySQL 查询优化的局限性
+1. 关联子查询：where条件里面包含IN()的子查询。通常建议使用EXISTS()等效的改写查询获取更好的效率。对任何查询应该通过测试来验证猜想。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;UNION的限制，mysql无法将限制条件从外层下推到内层，使得原本能够限制部分返回结果的条件无法应用到内层查询的优化上。因此UNION的两个子查询分别加上一个LIMIT 来减少临时表中的数据。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;待续&lt;/p&gt;
+
+&lt;h2 id=&#34;参考文献:9e70b3f53d84350226052075ce54e259&#34;&gt;参考文献&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;《高性能MySQL 第三版》&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>杂记 </title>
+      <link>http://compasses.github.io/2015/05/18/%E6%9D%82%E8%AE%B0/</link>
+      <pubDate>Mon, 18 May 2015 20:45:07 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2015/05/18/%E6%9D%82%E8%AE%B0/</guid>
+      <description>&lt;p&gt;最近一直有所恍惚，不知道自己的定位是什么，未来要做什么。
+极力的从一个公司挣脱到另一个公司，发现其实这种跳槽其实意义不大，发生这种事情还是自己考虑不周，不清楚自己的定位导致。
+说到定位，想想自己想做什么样的人，未来要做什么样的事情。。。&lt;/p&gt;
+
+&lt;p&gt;自己总是一意孤行的想多做点技术方面的工作，不计损失，可要想到任何地方其实都是跟业务相关的，不做业务怎么赚钱呢？纯粹的技术工作会有吗？应该寥寥无几，自己哪有什么本事能去做那样的工作呢。
+事情有因必有果，目前的境遇是我的造成的，是我应该面对的。工作和家庭，要轻松的工作可以更多的兼顾家庭，可是赚钱就不会太多；想要赚多点钱就要找奋斗型的公司，工作时间长，家庭生活要少很多。自己已经从后者的生活状态转变为前者，发现前者的生活更加让人迷茫。&lt;/p&gt;
+
+&lt;p&gt;每天都很清闲，生活在外企的工作氛围中，你会觉得自己很是个另类，如此的轻松愉快，不好吗？为啥还要有那么多的想法和迷茫呢。
+自己感觉是年轻的一类，而且也想更多的实现自身价值和获取更多的成就感。发现自己还是适合奋斗型的。&lt;/p&gt;
+
+&lt;p&gt;热烈的想工作，渴望面对更多的技术问题，解决更多的问题。目前阶段算是给自己的一个放松的机会，希望下一次机会来临，自己能够擦亮眼睛获取自己想要的环境，不然你不会&lt;strong&gt;幸福的&lt;/strong&gt;。&lt;/p&gt;
 </description>
     </item>
     

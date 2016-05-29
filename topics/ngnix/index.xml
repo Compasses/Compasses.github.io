@@ -20,7 +20,7 @@
       <guid>http://compasses.github.io/2015/07/06/nginx--docker-cluster--session-sticky/</guid>
       <description>
 
-&lt;h2 id=&#34;基本配置&#34;&gt;基本配置&lt;/h2&gt;
+&lt;h2 id=&#34;基本配置:52606dea592d3c735e79f2d8234d11ea&#34;&gt;基本配置&lt;/h2&gt;
 
 &lt;p&gt;本地开发环境和生产环境还是有很大的区分，最近性能测试发现结果很不好，于是想自己去搭建一个类似生产环境的性能测试环境。&lt;/p&gt;
 
@@ -109,7 +109,7 @@ server {
 3. https的crt和key需要&lt;a href=&#34;http://www.lovelucy.info/nginx-ssl-certificate-https-website.html&#34;&gt;自己生成&lt;/a&gt;。
 另外这个Nginx 是跑在宿主机上的，修改配置有要执行reload命令使其生效。&lt;/p&gt;
 
-&lt;h2 id=&#34;session-persistence&#34;&gt;session persistence&lt;/h2&gt;
+&lt;h2 id=&#34;session-persistence:52606dea592d3c735e79f2d8234d11ea&#34;&gt;session persistence&lt;/h2&gt;
 
 &lt;p&gt;生产环境需要将一个用户的请求要路由到同一个server上面，因为server很多的业务处理还是需要server里面的session配合。上面用ip_hash方式做load balance，但是考虑到用户使用proxy或者流量不均衡等因素。还是要使用session sticky的方式。
 Nginx默认不支持session sticky，需要重新编译安装这个插件；因为直接使用公司的Nginx版本，所以懒得重新编译了。使用很简单，直接拷贝个bin文件，然后修改成这个样子：&lt;/p&gt;
