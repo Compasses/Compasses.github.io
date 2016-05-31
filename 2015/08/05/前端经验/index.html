@@ -75,7 +75,7 @@
 
 <p>最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。</p>
 
-<h1 id="css相关:f2bccc30c6deb9603cdd35832971151d">CSS相关</h1>
+<h1 id="css相关">CSS相关</h1>
 
 <p>因为开发是基于LESS的，所以代码相关的都是<a href="http://less.bootcss.com/">LESS</a>的代码。
 ##mixin
@@ -97,7 +97,7 @@
 }
 </code></pre>
 
-<h2 id="media:f2bccc30c6deb9603cdd35832971151d">media</h2>
+<h2 id="media">media</h2>
 
 <p>由于前端一直在使用<a href="http://v3.bootcss.com/css/">bootstrap</a>，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
 其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。</p>
@@ -134,14 +134,14 @@
 | orientation=portrait| 高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。|
 | orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|</p>
 
-<h2 id="语义化标签:f2bccc30c6deb9603cdd35832971151d">语义化标签</h2>
+<h2 id="语义化标签">语义化标签</h2>
 
 <p>写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
 这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。</p>
 
 <p>上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。</p>
 
-<h1 id="js相关:f2bccc30c6deb9603cdd35832971151d">JS相关</h1>
+<h1 id="js相关">JS相关</h1>
 
 <p>JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
 封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。</p>
@@ -201,14 +201,7 @@ var duoshuoQuery = {short_name:"compasses"};
 <script src="/js/highlight.pack.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
-<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-70749774-1', 'auto');
-	ga('send', 'pageview');
-</script>
+
 
 </body>
 </html>
