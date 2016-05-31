@@ -51,7 +51,7 @@
         <ul>
           
           
-          <li><a href="https://github.com/Compasses" target="_blank">GitHub</a></li>
+          <li><a href="https://github.com/compasses" target="_blank">GitHub</a></li>
           
         </ul>
       </div>
@@ -182,7 +182,7 @@ Nginx默认不支持session sticky，需要重新编译安装这个插件；因�
 
 <p>这样直接访问 <a href="http://10.128.163.121">http://10.128.163.121</a> 即可，Nginx会自动路由请求到某一个server上。因为sticky是会话级别的，关掉浏览器会话就结束了。如果重新访问用户可能会被路由到另一个server上，可以通过查询Apache的accesslog来确认。</p>
 
-      
+
       
       <div id="share-this" class="col span_10">
         <span class='st_twitter_large' displayText='Tweet'></span>
@@ -190,27 +190,29 @@ Nginx默认不支持session sticky，需要重新编译安装这个插件；因�
         <span class='st_googleplus_large' displayText='Google +'></span>
         <span class='st_pocket_large' displayText='Pocket'></span>
         <span class='st_sharethis_large' displayText='ShareThis'></span>
-        <span class='st_email_large' displayText='Email'></span>  
+        <span class='st_email_large' displayText='Email'></span>
       </div>
     </article>
     
+    
+	<div class="ds-thread" data-thread-key="" data-title="Nginx &#43; Docker Cluster &amp; session sticky" data-url="http://compasses.github.io/2015/07/06/nginx--docker-cluster--session-sticky/"></div>
 
 
 <script type="text/javascript">
-     
-    var disqus_shortname = '';
+var duoshuoQuery = {short_name:"compasses"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
 
-     
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </main>
-  
+
   <nav class="pagination">
     
       <span class="previous">&larr; <a href="http://compasses.github.io/2015/06/26/deadlock-of-mysql/" rel="prev">deadlock of mysql</a></span>

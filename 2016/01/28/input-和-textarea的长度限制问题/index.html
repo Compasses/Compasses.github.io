@@ -51,7 +51,7 @@
         <ul>
           
           
-          <li><a href="https://github.com/Compasses" target="_blank">GitHub</a></li>
+          <li><a href="https://github.com/compasses" target="_blank">GitHub</a></li>
           
         </ul>
       </div>
@@ -77,7 +77,7 @@
 
 <p>一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是<a href="http://www.w3school.com.cn/tags/att_input_maxlength.asp">允许输入字段的最大字符数</a>。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。</p>
 
-<h2 id="编码问题:a4408d7234fd43d2930eca48e7402255">编码问题</h2>
+<h2 id="编码问题">编码问题</h2>
 
 <p>互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：</p>
 
@@ -86,7 +86,7 @@
 
 <p>UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看<a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">这篇文章</a>，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。</p>
 
-<h2 id="精确获取字符长度:a4408d7234fd43d2930eca48e7402255">精确获取字符长度</h2>
+<h2 id="精确获取字符长度">精确获取字符长度</h2>
 
 <p>由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。<strong>encodeURIComponent</strong>方法是比较好用的：</p>
 
@@ -113,7 +113,7 @@ encodeURIComponent('abc我的问题abc').replace(/%[A-F\d]{2}/g, 'i').length
 18
 </code></pre>
 
-<h2 id="textarea-中的换行符:a4408d7234fd43d2930eca48e7402255">textarea 中的换行符</h2>
+<h2 id="textarea-中的换行符">textarea 中的换行符</h2>
 
 <p>与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
 例如只有一个换行符的encode前端结果：</p>
@@ -126,7 +126,7 @@ encodeURIComponent('abc我的问题abc').replace(/%[A-F\d]{2}/g, 'i').length
 产生这个问题的原因是换行符在HTTP<a href="http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code">传输的过程中发生转换</a>，由‘\n’变成‘\r\n’。
 因此在计算textarea值时在遇到换行符时记得长度额外加1。</p>
 
-<h2 id="代码实现:a4408d7234fd43d2930eca48e7402255">代码实现</h2>
+<h2 id="代码实现">代码实现</h2>
 
 <p>既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
 针对input：</p>
@@ -179,11 +179,11 @@ encodeURIComponent('abc我的问题abc').replace(/%[A-F\d]{2}/g, 'i').length
 
 <p>上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。</p>
 
-<h2 id="总结:a4408d7234fd43d2930eca48e7402255">总结</h2>
+<h2 id="总结">总结</h2>
 
 <p>见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。</p>
 
-      
+
       
       <div id="share-this" class="col span_10">
         <span class='st_twitter_large' displayText='Tweet'></span>
@@ -191,27 +191,29 @@ encodeURIComponent('abc我的问题abc').replace(/%[A-F\d]{2}/g, 'i').length
         <span class='st_googleplus_large' displayText='Google +'></span>
         <span class='st_pocket_large' displayText='Pocket'></span>
         <span class='st_sharethis_large' displayText='ShareThis'></span>
-        <span class='st_email_large' displayText='Email'></span>  
+        <span class='st_email_large' displayText='Email'></span>
       </div>
     </article>
     
+    
+	<div class="ds-thread" data-thread-key="" data-title="input 和 textarea的长度限制问题" data-url="http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/"></div>
 
 
 <script type="text/javascript">
-     
-    var disqus_shortname = '';
+var duoshuoQuery = {short_name:"compasses"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
 
-     
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </main>
-  
+
   <nav class="pagination">
     
       <span class="previous">&larr; <a href="http://compasses.github.io/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/" rel="prev">系统性能 一</a></span>

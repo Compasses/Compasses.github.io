@@ -64,7 +64,7 @@
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
 
-&lt;h2 id=&#34;编码问题:a4408d7234fd43d2930eca48e7402255&#34;&gt;编码问题&lt;/h2&gt;
+&lt;h2 id=&#34;编码问题&#34;&gt;编码问题&lt;/h2&gt;
 
 &lt;p&gt;互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：&lt;/p&gt;
 
@@ -73,7 +73,7 @@
 
 &lt;p&gt;UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看&lt;a href=&#34;http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html&#34;&gt;这篇文章&lt;/a&gt;，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。&lt;/p&gt;
 
-&lt;h2 id=&#34;精确获取字符长度:a4408d7234fd43d2930eca48e7402255&#34;&gt;精确获取字符长度&lt;/h2&gt;
+&lt;h2 id=&#34;精确获取字符长度&#34;&gt;精确获取字符长度&lt;/h2&gt;
 
 &lt;p&gt;由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。&lt;strong&gt;encodeURIComponent&lt;/strong&gt;方法是比较好用的：&lt;/p&gt;
 
@@ -100,7 +100,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 18
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;textarea-中的换行符:a4408d7234fd43d2930eca48e7402255&#34;&gt;textarea 中的换行符&lt;/h2&gt;
+&lt;h2 id=&#34;textarea-中的换行符&#34;&gt;textarea 中的换行符&lt;/h2&gt;
 
 &lt;p&gt;与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
 例如只有一个换行符的encode前端结果：&lt;/p&gt;
@@ -113,7 +113,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 产生这个问题的原因是换行符在HTTP&lt;a href=&#34;http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code&#34;&gt;传输的过程中发生转换&lt;/a&gt;，由‘\n’变成‘\r\n’。
 因此在计算textarea值时在遇到换行符时记得长度额外加1。&lt;/p&gt;
 
-&lt;h2 id=&#34;代码实现:a4408d7234fd43d2930eca48e7402255&#34;&gt;代码实现&lt;/h2&gt;
+&lt;h2 id=&#34;代码实现&#34;&gt;代码实现&lt;/h2&gt;
 
 &lt;p&gt;既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
 针对input：&lt;/p&gt;
@@ -166,7 +166,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:a4408d7234fd43d2930eca48e7402255&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。&lt;/p&gt;
 </description>
@@ -182,7 +182,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;最近一直在做系统性能优化，包括性能问题定位，系统整体性能提升等。在性能测试环境上一边测试一边优化，从最开始的表象开始，修改代码和各种系统参数，然后就会出现新的表象，然后再修改代码和系统参数。性能测试涉及的节点很多，很多方面都有联动性，最后辛辛苦苦的搞了大半个月，确实有所进展但是总感觉缺少系统的方法。今天有幸看到这样的一篇文章&lt;a href=&#34;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&#34;&gt;Linux Performance Analysis in 60,000 Milliseconds&lt;/a&gt;，明确了在一个server上面，最开始你应该关注到什么。虽然里面的东西大家都有注意，但是可能还是不够全面。现在就结合这篇文章和自己的实践做下总结吧。&lt;/p&gt;
 
-&lt;h2 id=&#34;uptime:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;uptime&lt;/h2&gt;
+&lt;h2 id=&#34;uptime&#34;&gt;uptime&lt;/h2&gt;
 
 &lt;p&gt;首先出场的便是&lt;strong&gt;uptime&lt;/strong&gt;这个命令：&lt;/p&gt;
 
@@ -192,11 +192,11 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;这个命令明确告诉我们当前系统的时间，启动运行了多长时间，用户的登录数，以及当前系统分别在 1，5，15分钟内的进程平均数量，这些进程数量表示运行中或者处于不可中断的状态。这个命令是非常high level的总结，说明总体的系统负载情况。&lt;/p&gt;
 
-&lt;h2 id=&#34;dmesg-tail:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;dmesg|tail&lt;/h2&gt;
+&lt;h2 id=&#34;dmesg-tail&#34;&gt;dmesg|tail&lt;/h2&gt;
 
 &lt;p&gt;个人比较喜欢这个dmesg命令，一般是内核的日志，会有一些重要的信息抛出。例如进程异常退出，因为内存耗尽或者进程crash。还会记录些命令操作的异常。值得好好利用的命令。&lt;/p&gt;
 
-&lt;h2 id=&#34;vmstat-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;vmstat 1&lt;/h2&gt;
+&lt;h2 id=&#34;vmstat-1&#34;&gt;vmstat 1&lt;/h2&gt;
 
 &lt;p&gt;系统虚拟内存的统计信息，1表示没1秒输出一次。&lt;/p&gt;
 
@@ -220,7 +220,7 @@ free:剩余内存以kb为单位。
 si，so：换入换出，如果这些值非0，那么说明内存不足。
 us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用户时间，系统时间，空闲时间，wait IO时间和stolen time。需要注意的是system time也有IO处理的时间。如果比较高的系统时间占用说明内核处理IO不够高效。&lt;/p&gt;
 
-&lt;h2 id=&#34;mpstat-p-all-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;mpstat -P ALL 1&lt;/h2&gt;
+&lt;h2 id=&#34;mpstat-p-all-1&#34;&gt;mpstat -P ALL 1&lt;/h2&gt;
 
 &lt;p&gt;这个命令每个CPU的使用率情况，如果有单核CPU过载的情况，说明线程的任务分配有问题。需要做相应的调整。&lt;/p&gt;
 
@@ -236,7 +236,7 @@ us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用
 02:28:56 PM    7   86.93    0.00    5.03    0.00    0.50    0.00    0.00    0.00    0.00    7.54
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;pidstat-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;pidstat 1&lt;/h2&gt;
+&lt;h2 id=&#34;pidstat-1&#34;&gt;pidstat 1&lt;/h2&gt;
 
 &lt;p&gt;用这个命令可以观察到单个进程的运行情况。并且每个CPU会单独列出。&lt;/p&gt;
 
@@ -270,7 +270,7 @@ us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用
 02:44:57 PM     0     30423    1.50    0.00    0.00    1.50     0  java
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;iostat-xz-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;iostat -xz 1&lt;/h2&gt;
+&lt;h2 id=&#34;iostat-xz-1&#34;&gt;iostat -xz 1&lt;/h2&gt;
 
 &lt;p&gt;iostat 较好的反映IO密集型应用的负载情况。&lt;/p&gt;
 
@@ -291,7 +291,7 @@ sda               0.00     6.00    0.00   13.00     0.00  1364.00   209.85     0
 
 &lt;p&gt;针对IO的优化需要做到IO的异步处理即可。使得应用不直接阻塞在慢响应上面。适用的技术：提前读、写缓存。&lt;/p&gt;
 
-&lt;h2 id=&#34;free-m:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;free -m&lt;/h2&gt;
+&lt;h2 id=&#34;free-m&#34;&gt;free -m&lt;/h2&gt;
 
 &lt;p&gt;free命令用于展示系统内存的使用情况：&lt;/p&gt;
 
@@ -304,7 +304,7 @@ Swap:         1905          0       1905
 
 &lt;p&gt;需要注意的是cache 的memory也应该算到free里面。&lt;/p&gt;
 
-&lt;h2 id=&#34;sar-n-dev-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;sar -n DEV 1&lt;/h2&gt;
+&lt;h2 id=&#34;sar-n-dev-1&#34;&gt;sar -n DEV 1&lt;/h2&gt;
 
 &lt;p&gt;用于监控网卡的传输性能，确定是否带宽已经达到极限。&lt;/p&gt;
 
@@ -325,7 +325,7 @@ Swap:         1905          0       1905
 
 &lt;p&gt;通过rxkB/s和txkB/s可以得到网卡的负载情况。并可以确认是否已经超过带宽上限了。&lt;/p&gt;
 
-&lt;h2 id=&#34;sar-n-tcp-etcp-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;sar -n TCP,ETCP 1&lt;/h2&gt;
+&lt;h2 id=&#34;sar-n-tcp-etcp-1&#34;&gt;sar -n TCP,ETCP 1&lt;/h2&gt;
 
 &lt;p&gt;sar是个比较复杂的命令，有多种使用方式，上面的信息也是基于这个命令。要获得TCP相关的统计信息这个命令就格外重要了。&lt;/p&gt;
 
@@ -346,7 +346,7 @@ Average:         0.00      0.05      0.00      0.00      0.25
 passive/s：每秒钟远程发起的TCP链接数，例如通过accept()调用建立的链接。
 retrans/s：每秒钟TCP重传的数量。这个如果过高的话说明网络状况较差。这个是比较粗略的统计。&lt;/p&gt;
 
-&lt;h2 id=&#34;top:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;top&lt;/h2&gt;
+&lt;h2 id=&#34;top&#34;&gt;top&lt;/h2&gt;
 
 &lt;p&gt;top 命令是使用比较频繁的。内存、CPU、进程还有每个核的CPU使用情况都能一目了然。&lt;/p&gt;
 
@@ -375,7 +375,7 @@ KiB Swap:  1951740 total,        0 used,  1951740 free.  3726664 cached Mem
 
 &lt;p&gt;Ctrl+S 能让其先停止更新，Ctrl+Q让其继续执行。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;系统性能涉及很多的方面，遇到性能问题还是最好有个系统的方法，逐一解决每个问题。不然到了最后一团浆糊，还弄不清楚该优化那里。针对系统的性能优化需要一些经验的积累，慢慢就能轻车熟路，就像修车师父一样，老师父总能让人更放心些。
 所以呢，这种事情不能急，还是慢慢来吧。多总结、多实践、多解决些问题，就会水到渠成了。&lt;/p&gt;
@@ -395,7 +395,7 @@ Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_c
 mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
 具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
+&lt;h2 id=&#34;浏览器刷新原则:bca2f1e29878787021347a412fc3f8ce&#34;&gt;浏览器刷新原则&lt;/h2&gt;
 
 &lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
 这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
@@ -453,7 +453,7 @@ Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
 
 &lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
 
-&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
+&lt;h2 id=&#34;实施apache缓存:bca2f1e29878787021347a412fc3f8ce&#34;&gt;实施Apache缓存&lt;/h2&gt;
 
 &lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
 
@@ -486,7 +486,7 @@ CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#
 
 &lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
+&lt;h2 id=&#34;cache效果检查:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache效果检查&lt;/h2&gt;
 
 &lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
 例如能看到如下内容：&lt;/p&gt;
@@ -528,7 +528,7 @@ Accept-Encoding
 
 &lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间单位为秒，每次请求这个字段都是会增加的。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache的资源副本&#34;&gt;cache的资源副本&lt;/h2&gt;
+&lt;h2 id=&#34;cache的资源副本:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache的资源副本&lt;/h2&gt;
 
 &lt;p&gt;Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
 这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上&lt;code&gt;Accept-Encoding&lt;/code&gt;，响应头Vary域则是：&lt;code&gt;Vary: Accept-Encoding&lt;/code&gt;。
@@ -537,7 +537,7 @@ Accept-Encoding
 
 &lt;p&gt;当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。&lt;/p&gt;
 
-&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
+&lt;h2 id=&#34;缓存资源的更新周期:bca2f1e29878787021347a412fc3f8ce&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
 
 &lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
 如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。
@@ -561,22 +561,22 @@ Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcac
 
 &lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;
 
-&lt;h2 id=&#34;相关http-header字段:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;相关HTTP header字段&lt;/h2&gt;
+&lt;h2 id=&#34;相关http-header字段&#34;&gt;相关HTTP header字段&lt;/h2&gt;
 
-&lt;h3 id=&#34;last-modified和etag:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
+&lt;h3 id=&#34;last-modified和etag&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
 
 &lt;p&gt;两者的功能类似，一个是文件的最近一次的修改时间，一个是针对这个资源文件生成的tag。都是server端的返回。刷新页面时，请求头里面会带上If-Modified-Since或者 If-None-Match。
  但是Etag并&lt;a href=&#34;https://developer.yahoo.com/performance/rules.html#etags=&#34;&gt;不推荐使用&lt;/a&gt;，原因就是不同的server对Etag的生成算法可能不统一，特别在集群server的情况下。&lt;/p&gt;
 
-&lt;h3 id=&#34;pragma:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Pragma&lt;/h3&gt;
+&lt;h3 id=&#34;pragma&#34;&gt;Pragma&lt;/h3&gt;
 
 &lt;p&gt;纯协议上的指令，对请求响应链路上的所有代理使用。例如如果pragma：no-chache，则请求在请求响应链上的任意节点都不会被缓存，因其于cache-control：no-chache意义一致。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Expires&lt;/h3&gt;
+&lt;h3 id=&#34;expires&#34;&gt;Expires&lt;/h3&gt;
 
 &lt;p&gt;set response headers，对某个响应设置个超时时间，一般优先级不高，如果存在max-age的话，这个字段几乎不起作用。&lt;/p&gt;
 
-&lt;h3 id=&#34;cache-control:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Cache-Control&lt;/h3&gt;
+&lt;h3 id=&#34;cache-control&#34;&gt;Cache-Control&lt;/h3&gt;
 
 &lt;p&gt;public：标识验证后的respons可被缓存的。
 no-store：任何情况下不缓存，并尽量不要保存到磁盘中。不缓存的资源并不能保证不被保存到磁盘中。例如浏览器的后退键，可能会导致看到过期的页面。
@@ -586,7 +586,7 @@ proxy-revalidate： 和must 一样，只对proxy cache有效，对中间有cache
 max-age: 指定刷新超时时间，即cache的超时时间。
 s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache servers使用这个s-maxage，针对public的cache有效，其会覆盖max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
 
 &lt;p&gt;通过vary告诉http cache，寻找缓存对象时需要考虑的头域字段。比如：浏览器发了两个request，一个带有accept-encoding， 一个没有。http 缓存的时候会带上这个vary标记，表示只有带有accept-encoding的缓存对象才能是使用。达到的效果就是request里面带有accept-encoding的请求，响应缓存只能被这样的请求获取。&lt;/p&gt;
 
@@ -594,26 +594,26 @@ s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache se
 简单的理解vary用来区分请求的差别，识别出不同的request。
 vary的其他取值：user-agent, 让响应区分不同的agent；Referer, 区分这个request是从哪个页面而来。cookie, 不同认证信息不同的 request。vary指定的那些值就会影响浏览器的cache策略。&lt;/p&gt;
 
-&lt;h2 id=&#34;需要注意的几个问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;需要注意的几个问题&lt;/h2&gt;
+&lt;h2 id=&#34;需要注意的几个问题&#34;&gt;需要注意的几个问题&lt;/h2&gt;
 
-&lt;h3 id=&#34;https-证书问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;https 证书问题&lt;/h3&gt;
+&lt;h3 id=&#34;https-证书问题&#34;&gt;https 证书问题&lt;/h3&gt;
 
 &lt;p&gt;如果是无效的证书，会导致缓存无法完全起用。本地测试是doc无法被cache，静态资源还是可以的。当然这跟浏览器的行为也有关系，Firefox里面添加例外证书变成合法的就可以正常缓存了。chrome的证书比较严格不好把红叉叉去掉。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires和max-age-优先级问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
+&lt;h3 id=&#34;expires和max-age-优先级问题&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
 
 &lt;p&gt;当response头域里面两者都包含时，浏览器会优先选用max-age，当然这是我本地的测试结果。所有的情况可能难以覆盖，比如移动端的浏览器，其他的浏览器，除了Firefox、chrome、IE等等以外的。
 另外就是expires是http1.0里面的，max-age在http1.1被引入，但是&lt;a href=&#34;https://www.mnot.net/blog/2007/05/15/expires_max-age&#34;&gt;这篇文章&lt;/a&gt;建议最好两者都带上正确的值，或者只带上max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;conditional-requests:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Conditional Requests&lt;/h3&gt;
+&lt;h3 id=&#34;conditional-requests&#34;&gt;Conditional Requests&lt;/h3&gt;
 
 &lt;p&gt;条件请求是当浏览器发现资源超时时，如过了max-age或者expires date，会发起条件请求，如果server发现资源变化了会回复200 ok，否则回复304的status code。正确情况下资源cache后，浏览器是不会发条件请求的，直到资源超时后。当然也不排除某些浏览器会不停的发conditional request，更为详细的介绍，&lt;a href=&#34;https://greenbytes.de/tech/webdav/draft-ietf-httpbis-p4-conditional-20.html&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h2 id=&#34;静态资源缓存:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;静态资源缓存&lt;/h2&gt;
+&lt;h2 id=&#34;静态资源缓存&#34;&gt;静态资源缓存&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源，更新时更加推荐使用变更文件名的方式，例如让文件名包含一个版本号的方式。这种比文件末尾增加query string更加有效，例如有些中间proxy就不会缓存带有查询字符的url。&lt;/p&gt;
 
-&lt;h2 id=&#34;php配合apache-实现静态资源版本控制:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
+&lt;h2 id=&#34;php配合apache-实现静态资源版本控制&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源的cache设置，这个&lt;a href=&#34;https://github.com/Compasses/server-configs-apache/tree/master/src/web_performance&#34;&gt;github&lt;/a&gt;有较好的配置模板做参考。基本上enmod headers即可。
 针对静态文件php代码里面插入版本号，一般为时间戳或者数据库里面的更新时间：&lt;/p&gt;
@@ -665,7 +665,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;上述就完成了，只要后台修改了静态资源文件，则文件的名字会随着版本号的更新而更新，从而实现前端自动刷新缓存。否则这些资源文件会永远cache在客户端。超时时间为31104000s。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;http cache 很复杂，牵扯较多的组件，上述只是针对Apache+PHP的方案实施。&lt;/li&gt;

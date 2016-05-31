@@ -51,7 +51,7 @@
         <ul>
           
           
-          <li><a href="https://github.com/Compasses" target="_blank">GitHub</a></li>
+          <li><a href="https://github.com/compasses" target="_blank">GitHub</a></li>
           
         </ul>
       </div>
@@ -117,7 +117,7 @@ Session_tokens的更新是随着用户的login和 logout 更新的。Login时会
 回到开始的问题。session_tokens 是真对用户在不同的终端上登录时进行更新的，value是个array，如上代码所示。如果同一个用户在两个终端上，可以是不同的浏览器即可，就会有不同的session_tokens，在登录登出的时候就会update改用户的数据，即同一行数据就可能产生死锁。这里必须是同时有两个事务。
 现实中同一个用户在两个终端同时操作的可能性不大，但是也很难说。这也说明了wordpress的代码不够健壮吧。当然这里的死锁也并不可怕，INNODB会将持有最少行级排它锁的事务进行回滚。锁机制的了解还是要多多实践，网上也有较好的<a href="http://hedengcheng.com/?p=771">文章参考</a>。</p>
 
-      
+
       
       <div id="share-this" class="col span_10">
         <span class='st_twitter_large' displayText='Tweet'></span>
@@ -125,27 +125,29 @@ Session_tokens的更新是随着用户的login和 logout 更新的。Login时会
         <span class='st_googleplus_large' displayText='Google +'></span>
         <span class='st_pocket_large' displayText='Pocket'></span>
         <span class='st_sharethis_large' displayText='ShareThis'></span>
-        <span class='st_email_large' displayText='Email'></span>  
+        <span class='st_email_large' displayText='Email'></span>
       </div>
     </article>
     
+    
+	<div class="ds-thread" data-thread-key="" data-title="deadlock of mysql" data-url="http://compasses.github.io/2015/06/26/deadlock-of-mysql/"></div>
 
 
 <script type="text/javascript">
-     
-    var disqus_shortname = '';
+var duoshuoQuery = {short_name:"compasses"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
 
-     
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </main>
-  
+
   <nav class="pagination">
     
       <span class="previous">&larr; <a href="http://compasses.github.io/2015/06/19/docker-docker/" rel="prev">Docker Docker</a></span>
