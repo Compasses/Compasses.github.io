@@ -9,8 +9,109 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Sun, 29 May 2016 14:34:35 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 01 Jun 2016 13:32:34 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>读书：微服务设计</title>
+      <link>http://compasses.github.io/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Wed, 01 Jun 2016 13:32:34 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
+      <description>
+
+&lt;p&gt;就是这样的一本书，来的非常及时。&lt;/p&gt;
+
+&lt;h2 id=&#34;总体认识&#34;&gt;总体认识&lt;/h2&gt;
+
+&lt;p&gt;微服务绝不是什么新技术或者新框架之类的，就算概念也不是新的。没有看书之前或许会认为微服务是中心化新的架构模式，看书后会发现其实微服务是个生态圈。
+为什么会这么说，他是什么样的生态圈。或许这是整个软件行业的生态发展趋势，比如SaaS软件已在某些领域获得巨大成功，其背后的支撑技术跟微服务有莫大的关联。
+微服务是个生态，围绕这样的生态圈有强大的技术支撑。例如微服务的部署、监控、发现、故障处理、负载均衡、扩展、安全、高可用性、自动化测试等等。这些技术都不是新技术，
+或许就因为这些技术发展到一定程度后的一次整体升级换代，相比传统的单块软件部署开发模式，这些技术面临的挑战或许更让人激动人心。&lt;/p&gt;
+
+&lt;p&gt;书中最后总结得出微服务的原则：
+&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; xmlns:xlink=&#34;http://www.w3.org/1999/xlink&#34; width=&#34;574px&#34; version=&#34;1.1&#34; content=&#34;&amp;lt;mxfile userAgent=&amp;quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36&amp;quot; version=&amp;quot;5.5.0.1&amp;quot; editor=&amp;quot;www.draw.io&amp;quot; type=&amp;quot;device&amp;quot;&amp;gt;&amp;lt;diagram&amp;gt;zVnLcqs4EP0aLa+L10MswcZ3NlN1q7KYmSVjFEwNNi5C4ni+/nZLLQwYXHYCTrxwSa33OadbD5i93L3/rJLD9s8yFQWzjPSd2StmWYHrwD8aTsrg2Z4yZFWeKpNxNjzl/wtlNLX1NU/FC9mUqS7Los4PXeOm3O/Fpu7Ykqoqj91qz2VBo5LhkGR6xLPhaZMUl9a/8rTeKiu3aBVo/0Pk2VaPbHqBKvk32fyXVeXrnsZjlv0sf6p4l+i+aKEv2yQtjy2THQOsVVlCz5javS9FgdB2YVuPlDbzrsSe5na9ARRhg7ekeKWls9hlUczCmMUeC5aMr9DCQxZC514BvUZp/gbJDJMs5oz7LAyxdmSxCCw+C0LGHdmRwfh6vCOYV7svhUh90iwct3ktng7JBvNHEBpU2ta7AnImJJMiz/aQ3sBaRQWGQ5Hk+x8nWCFAqtYlqlqQKAewkSYC5qcod6KuTlCFGlicSCIRWwblj2dJmD4pfduSg+eSEkmFWdP1mQlIEBnDxNiDxAQRiwBYH3EOXBY7LOKI9lWGPBZ6jCti1yyCZpCAjiRnIb+dD6lrgRNE+D/GToXto6xK0hwKlmVRQtlqX+6hFxrxU6SZNhFCpPn8kjPtfB3OyPYZzmjkDmeNeyiGuEwsWQCRZICqxnXAY4Az/6L2VzP0nBeFNkFsW/PQBR1OwpztEFVfwBw5bIe5ALkIDKQw8GUYAy6AFPCfgHEbuRyi0MXQGUD0hDYxBkDlrdAStQDswkDflMvIDaNpuHSdbug0XdpoHkEmbdIdMmWghHiOHEqXVBxGak8CnmDVA2TKZqGsBKETGnx7f4wCUO0sHFo+eckjOPQHOASHili4xAToFNKNH6KLrfD48fX4x+ZUPmS7dAYg/G2HhP0I/Cn2DgREefyAAwWe9CDWgYeYGNngWBKSPr52P1rBOXOak4TeFTT+NnXxCPzpOtHDH6QVyBMEnN2AAgxGaxbCzgRBCrxDHvEgG6y/AxGWx6chghMYzTH8gXuJvpC2iehjK/ZpiHdORKxIXl7yTRdOWGZ1+hsyxiKwbW34B0sXhulrwy9R5TA/BHxlNMiJ9OKm2sMN5lK+VpLK84WuTqpMUC0ZRi7RbcHnDqCnbZUokjp/605iCFIa4VeZw/TOXtTdRPqcqKlTm/Y9tdeNbqfPE71u1HIvupHsNku+jXBa4USEQwxp842Z97xWZY4qhDyWGQsDAozKzyYFeUMZv/C6tMNolB3yvBulcrsqbNtZBI5p+p7jGy6HXbzj4X16b1XJ6AJm0MnAy8nHddIWibHQssAiLQlVIhUzmRrk/jauBq8HpjubGpyratCx/W41jC1gBjUMPNd8WA1N5lINUiiNGiYVg8RmXAx+D0v94Dm5GCyfzv6afpsmezf9Y1Oegf6Bl5+p6G82ifaGQhLAqpMJQB75rzyG9tD0Z4sG3tVooG+ld8thbAEzyGHgOeluOTSMz0a49LNxwvGRo42XPoZPT7h+WNAUe+ROd1M8NuUZKB54ZJp/+wegJuRfLmH8+cHogRnMxj+/6vAfvTKMLuDTaoDs+Qudqn7+CmrHvwE=&amp;lt;/diagram&amp;gt;&amp;lt;/mxfile&amp;gt;&#34; onclick=&#34;(function(svg){var src=window.event.target||window.event.srcElement;while (src!=null&amp;amp;&amp;amp;src.nodeName.toLowerCase()!=&#39;a&#39;){src=src.parentNode;}if(src==null){if(svg.wnd!=null&amp;amp;&amp;amp;!svg.wnd.closed){svg.wnd.focus();}else{var r=function(evt){if(evt.data==&#39;ready&#39;&amp;amp;&amp;amp;evt.source==svg.wnd){svg.wnd.postMessage(decodeURIComponent(svg.getAttribute(&#39;content&#39;)),&#39;*&#39;);window.removeEventListener(&#39;message&#39;,r);}};window.addEventListener(&#39;message&#39;,r);svg.wnd=window.open(&#39;https://www.draw.io/?client=1&amp;amp;lightbox=1&amp;amp;chrome=0&amp;amp;edit=_blank&#39;);}}})(this);&#34; viewBox=&#34;0 0 574 331&#34; style=&#34;cursor:pointer;max-width:100%;max-height:331px;&#34;&gt;&lt;defs&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-fff2cc-1-ffd966-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#FFF2CC&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#FFD966&#34;/&gt;&lt;/linearGradient&gt;&lt;/defs&gt;&lt;g transform=&#34;translate(0.5,0.5)&#34;&gt;&lt;rect x=&#34;192&#34; y=&#34;123&#34; width=&#34;174&#34; height=&#34;65&#34; fill=&#34;url(#mx-gradient-fff2cc-1-ffd966-1-s-0)&#34; stroke=&#34;#d6b656&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(242.5,142.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;72&#34; height=&#34;26&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 73px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;微服务&lt;div&gt;自治的小服务&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;36&#34; y=&#34;19&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;微服务&amp;lt;div&amp;gt;自治的小服务&amp;lt;/div&amp;gt;&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;46&#34; y=&#34;1&#34; width=&#34;120&#34; height=&#34;60&#34; rx=&#34;9&#34; ry=&#34;9&#34; fill=&#34;#f8cecc&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(81.5,17.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;26&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;围绕业务&lt;div&gt;概念建模&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;19&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;围绕业务&amp;lt;div&amp;gt;概念建模&amp;lt;/div&amp;gt;&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;260&#34; y=&#34;1&#34; width=&#34;120&#34; height=&#34;60&#34; rx=&#34;9&#34; ry=&#34;9&#34; fill=&#34;#f8a595&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(301.5,17.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;36&#34; height=&#34;26&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 37px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;自动化&lt;div&gt;的文化&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;18&#34; y=&#34;19&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;[Not supported by viewer]&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;452&#34; y=&#34;75&#34; width=&#34;120&#34; height=&#34;60&#34; rx=&#34;9&#34; ry=&#34;9&#34; fill=&#34;#f8b5ab&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(487.5,91.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;26&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;隐藏内部&lt;div&gt;实现细节&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;19&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;隐藏内部&amp;lt;div&amp;gt;实现细节&amp;lt;/div&amp;gt;&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;452&#34; y=&#34;198&#34; width=&#34;120&#34; height=&#34;60&#34; rx=&#34;9&#34; ry=&#34;9&#34; fill=&#34;#f8b99a&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(487.5,214.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;26&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;一切都去&lt;div&gt;中心化&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;19&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;一切都去&amp;lt;div&amp;gt;中心化&amp;lt;/div&amp;gt;&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;265&#34; y=&#34;269&#34; width=&#34;120&#34; height=&#34;60&#34; rx=&#34;9&#34; ry=&#34;9&#34; fill=&#34;#f8e1ab&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(300.5,292.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;独立部署&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;独立部署&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;37&#34; y=&#34;254&#34; width=&#34;120&#34; height=&#34;60&#34; rx=&#34;9&#34; ry=&#34;9&#34; fill=&#34;#f8ad8d&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(72.5,277.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;隔离失败&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;隔离失败&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;1&#34; y=&#34;125&#34; width=&#34;120&#34; height=&#34;60&#34; rx=&#34;9&#34; ry=&#34;9&#34; fill=&#34;#f8a268&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(30.5,148.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;60&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 61px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;高度可观察&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;30&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;高度可观察&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;path d=&#34;M 236.94 123 L 163.04 65.89&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 158.88 62.68 L 166.56 64.19 L 163.04 65.89 L 162.28 69.73 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 266 125 L 287.76 66.96&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 289.61 62.05 L 290.43 69.83 L 287.76 66.96 L 283.87 67.37 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 366 139 L 446.08 107.34&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 450.96 105.41 L 445.74 111.24 L 446.08 107.34 L 443.16 104.73 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 192 156 L 127.37 155.09&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 122.12 155.02 L 129.17 151.61 L 127.37 155.09 L 129.07 158.61 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 236 188 L 161.45 264.44&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 157.78 268.2 L 160.16 260.74 L 161.45 264.44 L 165.17 265.63 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 279 188 L 310.13 263.12&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 312.14 267.97 L 306.23 262.84 L 310.13 263.12 L 312.69 260.16 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 366 172 L 446.66 224.53&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 451.06 227.39 L 443.29 226.5 L 446.66 224.53 L 447.11 220.64 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/p&gt;
+
+&lt;p&gt;七个原则都有较好的指导性，在践行微服务前，先对照看下能否满足这七条原则。下面从头开始梳理、认识下微服务的设计过程。&lt;/p&gt;
+
+&lt;h2 id=&#34;微服务&#34;&gt;微服务&lt;/h2&gt;
+
+&lt;p&gt;概念先行这个很重要，任何学科都是。
+微服务定义：
+1. 很小，专注于做好一件事情。内聚性很重要，微服务需要有很好的内聚性，即做到因相同原因而变化的东西聚合到一起，而把不同原因而变化的东西的分离开来，这也是专注的含义。
+多小才算小，一个微服务可以在两周内重写掉。服务越小，独立性带来的好处就会越多，而同样服务管理也会越复杂。
+2. 自治性。独立部署，通过暴露API，使用网络通信，避免紧耦合。需要正确的建模服务和API。&lt;/p&gt;
+
+&lt;h2 id=&#34;演化式架构师&#34;&gt;演化式架构师&lt;/h2&gt;
+
+&lt;p&gt;本章讲解了如何去做一个合格的架构师。这个对于一个架构师或者将要成为架构师的人来说很有指导意义，特别是面临微服务架构演进时。&lt;/p&gt;
+
+&lt;h2 id=&#34;测试&#34;&gt;测试&lt;/h2&gt;
+
+&lt;h3 id=&#34;测试类型定义&#34;&gt;测试类型定义：&lt;/h3&gt;
+
+&lt;p&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; xmlns:xlink=&#34;http://www.w3.org/1999/xlink&#34; width=&#34;426px&#34; version=&#34;1.1&#34; content=&#34;&amp;lt;mxfile userAgent=&amp;quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36&amp;quot; version=&amp;quot;5.5.1.6&amp;quot; editor=&amp;quot;www.draw.io&amp;quot; type=&amp;quot;device&amp;quot;&amp;gt;&amp;lt;diagram&amp;gt;3VhNc6M4EP01ffQWHwbDUbLx7GVP2a09E5tg1WLkwXiczK+fJ9EYCP6YVJzUVlwuW7SkVuv161YL8ufb529Vutv8pddZQZ6zfiZ/QZ4XB1P8GsFLIwh9PBlBXql1I3I6wYP6mTVCt5Ue1DrbDwbWWhe12rHQbYQrXZbZqh7I0qrSx+GwJ13wqizYpXm7Yid4WKXFWPqvWtebRhp5YSf/M1P5pl3ZDeOm5zFd/ZdX+lDyeuT5T/bTdG/TVhfvar9J1/rYE/kJYK20hmbT2j7Ps8JAO4RteaH3ZHeVlWzb9Qnslh9pceCts131S4vFcaPq7GGXrszzEe4mX27qbYEnF80nVRRzXegKz6UuMUjmVbpWMOCVOC1UXuJxha4McslrZ1WdMXHO2G9FbPy3TG+zunrBEJ7gtcRiorntBo6d23yXZZu+y2bssZSpkp90d3ChwYidR88fo5fEJARFc0pCiqckQ9OQAUWSkojEkuKAvLCAFXKtfgyQDr8fjNsl0KgnDJbAiCJ7qrtetHL7D71RRLFLCZaRJJol7RpJQLFDAmsHJBKKE0pmFCUkHTsY9lmzxIKEb7qEa4ahEaNramZFgmLoiSjySS4oWZKcGwmbDmCs9WzKnTaE1WCL4PVFZBtY9iyGzlLVk6Uqs/3+klVvI/KInrsiVeXkBS5HhH4OVd2QKdWnKpz1bqZyPn7F1BgEQMOyhYkERp0cwFvsQWg8OUStyvbqZ/poBzgGNK3K2hoaSAoWBtdDrTHGDOjDbEngSwOpQuIVLK61ccseXlJl/rd5WEym98kVfjgbOsAZOyCIzqQKBu89+IOwI/xtgjDRikCeUwT84QgEcuMaOALh9pXwP6XcFn/s8bPw5xAa4G9TiUl3Nn/KGedGgQYc4RuPfCn8gykDyfh7Dhchn4A/R96N/INAwAGEQwqhMTfe+WL5Z8h/32FUPgF/Vjuo83qHdq+kSKxLZiSRm2ySgj9MSFyqYj6kFGAtcEN5Vk2Bc3/SYmT0uH+YDY0qCli8tCkWpQ32g4ri8n64xsHpdyqsUD2hDRSQGBZ2DOoTx0BjOLswyg1SKJGgBw1pi6ZR9dQh1WxouMkrAP4vMQUisQUuMDlT9Inwru09Vr839UOqvN2h2kHDHYLcRMatKm/KiWBQ5d0hylntIMuCjQ110cAX9f7V+8hbLhfjGwS65vaWceXecSU8bhDl2gWhvbvAEf+Uqu7FJYZgJ0i1H0ifRwP4/a8InsMevXVFiHnee8jTvnsZn9HGj+Mr4c2TYeC6pqLCNGQNKEIGBZ/gI7gOa9jjhhNwP23bXCNiO8u1LD6t2g7+ffacpva2cP4MsCaAwFi8CZvm5HjzAdhtvsmUjTK0P5KLukpLvN26RyrjqvnExnG94k7PFCxtCnwDG/HYvfSyfb0Xi37yCw==&amp;lt;/diagram&amp;gt;&amp;lt;/mxfile&amp;gt;&#34; onclick=&#34;(function(svg){var src=window.event.target||window.event.srcElement;while (src!=null&amp;amp;&amp;amp;src.nodeName.toLowerCase()!=&#39;a&#39;){src=src.parentNode;}if(src==null){if(svg.wnd!=null&amp;amp;&amp;amp;!svg.wnd.closed){svg.wnd.focus();}else{var r=function(evt){if(evt.data==&#39;ready&#39;&amp;amp;&amp;amp;evt.source==svg.wnd){svg.wnd.postMessage(decodeURIComponent(svg.getAttribute(&#39;content&#39;)),&#39;*&#39;);window.removeEventListener(&#39;message&#39;,r);}};window.addEventListener(&#39;message&#39;,r);svg.wnd=window.open(&#39;https://www.draw.io/?client=1&amp;amp;lightbox=1&amp;amp;chrome=0&amp;amp;edit=_blank&#39;);}}})(this);&#34; viewBox=&#34;0 0 426 223&#34; style=&#34;cursor:pointer;max-width:100%;max-height:223px;&#34;&gt;&lt;defs&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-fff2cc-1-ffd966-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#FFF2CC&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#FFD966&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-e1d5e7-1-8c6c9c-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#E1D5E7&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#8C6C9C&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-dae8fc-1-7ea6e0-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#DAE8FC&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#7EA6E0&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-ffcd28-1-ffa500-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#FFCD28&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#FFA500&#34;/&gt;&lt;/linearGradient&gt;&lt;/defs&gt;&lt;g transform=&#34;translate(0.5,0.5)&#34;&gt;&lt;rect x=&#34;54&#34; y=&#34;21&#34; width=&#34;312&#34; height=&#34;179&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; pointer-events=&#34;none&#34;/&gt;&lt;rect x=&#34;54&#34; y=&#34;21&#34; width=&#34;163&#34; height=&#34;86&#34; fill=&#34;url(#mx-gradient-fff2cc-1-ffd966-1-s-0)&#34; stroke=&#34;#d6b656&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(57.5,43.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;156&#34; height=&#34;40&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 157px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;验收测试&lt;div style=&#34;text-align: left&#34;&gt;我们是否实现了正确的功能？&lt;/div&gt;&lt;div style=&#34;text-align: left&#34;&gt;自动化测试 Fit-Finess&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;78&#34; y=&#34;26&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;[Not supported by viewer]&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(190.5,3.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;面向业务&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;面向业务&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(2.5,99.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;支持团队&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;支持团队&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(367.5,101.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;评价产品&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;评价产品&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(192.5,208.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;面向技术&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;面向技术&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;217&#34; y=&#34;21&#34; width=&#34;149&#34; height=&#34;84&#34; fill=&#34;url(#mx-gradient-e1d5e7-1-8c6c9c-1-s-0)&#34; stroke=&#34;#9673a6&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(218.5,28.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;145&#34; height=&#34;68&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 145px; white-space: normal; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;&lt;div&gt;探索性测试&lt;/div&gt;&lt;div style=&#34;text-align: left&#34;&gt;&lt;span style=&#34;line-height: 1.2&#34;&gt;可用性测试：我如何破坏系统功能&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;div style=&#34;text-align: left&#34;&gt;&lt;span style=&#34;line-height: 1.2&#34;&gt;手工&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;73&#34; y=&#34;40&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;[Not supported by viewer]&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;54&#34; y=&#34;108&#34; width=&#34;163&#34; height=&#34;92&#34; fill=&#34;url(#mx-gradient-dae8fc-1-7ea6e0-1-s-0)&#34; stroke=&#34;#6c8ebf&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(63.5,133.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;144&#34; height=&#34;40&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 145px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;单元测试&lt;div&gt;我们是否正确地实现了功能&lt;/div&gt;&lt;div&gt;自动化的 xUnit系列&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;72&#34; y=&#34;26&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;单元测试&amp;lt;div&amp;gt;我们是否正确地实现了功能&amp;lt;/div&amp;gt;&amp;lt;div&amp;gt;自动化的 xUnit系列&amp;lt;/div&amp;gt;&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;218&#34; y=&#34;106&#34; width=&#34;148&#34; height=&#34;95&#34; fill=&#34;url(#mx-gradient-ffcd28-1-ffa500-1-s-0)&#34; stroke=&#34;#d79b00&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(231.5,126.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;120&#34; height=&#34;54&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 121px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;非功能性测试&lt;div&gt;响应时间；可扩展性；&lt;/div&gt;&lt;div&gt;性能测试；安全测试&lt;/div&gt;&lt;div&gt;工具&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;60&#34; y=&#34;33&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;[Not supported by viewer]&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/p&gt;
+
+&lt;p&gt;深入微服务之前，首先要解决的就是自动化的测试。&lt;/p&gt;
+
+&lt;h3 id=&#34;测试范围&#34;&gt;测试范围&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;单元测试：是帮助开发人员的，是面向技术而非业务的。单元测试对于代码重构非常重要。&lt;/li&gt;
+&lt;li&gt;服务测试：绕开用户界面，直接对服务的测试。测试单独的服务，可以提高测试的隔离性，这样可以更快的定位解决问题。&lt;/li&gt;
+&lt;li&gt;端到端测试：覆盖整个系统，是需要通过浏览器操作图形用户界面。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;实现服务测试&#34;&gt;实现服务测试&lt;/h3&gt;
+
+&lt;p&gt;打桩还是mock，打桩是指被测试服务的请求创建一些有着预设响应的打桩服务。mock还会进一步验证请求本身是否被正确调用，也可以用来验证预期的副作用是否发生。&lt;/p&gt;
+
+&lt;h3 id=&#34;脆弱的测试&#34;&gt;脆弱的测试&lt;/h3&gt;
+
+&lt;p&gt;随着测试范围的扩大，纳入测试的服务范围也会变多，这样测试失败的可能性就会更大。&lt;/p&gt;
+
+&lt;h3 id=&#34;拯救消费者驱动的测试&#34;&gt;拯救消费者驱动的测试&lt;/h3&gt;
+
+&lt;p&gt;端到端测试试图解决的关键问题，就是确保部署新的服务到生产环境后，变更不会破坏新服务的消费者。一种不需要真正的消费者也能达到相同的目的：CDC，Consumer-Driven Contact
+消费者驱动的契约。使用CDC时，我们会定义服务（或生产者）的消费者的期望。这些期望会变成对生产者运行的测试代码。
+&lt;strong&gt;PACT&lt;/strong&gt; 是一个消费者驱动的测试工具。
+工作流程：&lt;/p&gt;
+
+&lt;p&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; xmlns:xlink=&#34;http://www.w3.org/1999/xlink&#34; width=&#34;465px&#34; version=&#34;1.1&#34; content=&#34;&amp;lt;mxfile userAgent=&amp;quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36&amp;quot; version=&amp;quot;5.5.1.6&amp;quot; editor=&amp;quot;www.draw.io&amp;quot; type=&amp;quot;device&amp;quot;&amp;gt;&amp;lt;diagram&amp;gt;7VlNb+M2EP01PGahb0tHSVZ2C7RAgBRoe6QtWiZCiwatxMn++h1SQ0uylMRNvKm3iA8GOfx+M/M4HBE/3zx+VXS7/kOWTBDPKR+JPyeel4QB/GvBUyuIfKhpQaV42YqcTnDLv7NW6FrpPS/ZbtCxkVI0fItCtxUuZV2zZTOQUaXkfthtJQWuioItreyKneB2ScVY+hcvm3Urjb2ok39jvFrbld0oaVsWdHlXKXlf43rE81fm1zZvqJ0LT7Vb01LueyK/AFiVlDCzLm0ecyY0tEPYrp9pPexbsRr39vIAVMsDFfd4dFKEJL0mWaILcUiyiBQxya5J4uhC6pI4x703Txav/Zo37HZLl7q+B5MgfrZuNgJqLhSp4FUN5SXsiikQbAXl9VWl6BOuz1TD0HgmzmBEeICvTG5Yo2CgYwe4CD4am+f4bX3fqc61gK97avMCFFI0l+owdwcZFBC1aQRxrT6C/xKdFRcil0ICMPNa1tApA2RKDsc/Eo9wPAN6QYRD/hP0kCcG9heQbK4NrpiRJCBpfJPmf0Kf+e+3xjYLkqSmU0JiMFLolJI4IEVEkpwkMKwtIDbvNlLFyp9hoxbR11COzgBy+LqJsrpMNW/q8wu62/HlEBw4pnr6GyrOl9BW/9FVXXnkTa8JarpFj2qXYeUR2e7kvTJK6Aygoapi9sgng9sDL5zAzsoUE7ThD8NNTAGKK9xIDgsfdHflzQa6ixA+O0N7HBzU59qjeSxV4DTu0TQtBKNpjHIPZz5J3whgT9/oQhu5vEP/iOeG31NN6FBIEnC0M3nMQi97fpfxA6x/hMugxge8FOm7MI7NdWjoBwqxo+9IIKE007fmL8X8xwAHzokA++i07wEYjW0AsOH7lsEBZh1vvAA5hCIzw/sgAXNG37oU4/Vm6ITWeEOc4jVsQwTmPdiiGs/D9wO2PzC8bjL9kO3blhP4HmHp8z2e+JPv38r39tU0JvyFkndg3F4kAKKs5A9QrHQx/w0mzc0dkAF5gT+1wf5sGFAVpgDyjGQQdIHDwT0BXgi+mJHEN02pLuAKMGlvkUtzyaFaD4+fj3BJF7f7M2Iw64fjGEw77wk+iefr+6Q1qYtxSt++No6jgcv1ymfe1nOSwIUG7ubpkEvHXvlU7AWGrn2op3/Fdvw7XZgOWrNbvUmz7TAj4XzKgbTDcEhrpNiw4WWpx2eCLpjIDskKG2106YoXIgxMuuBOulzGwFZe9sUr54vj+sOH5xUq5q2GYrvI1WoHZvxO5Y2f9TcUEk2e842JrabUC3pcjp7wpzLbOSJld+oJf4jk4KKAJwbcKjZuu2TcfJu2/BDczvoqP3OUZul/cCWgS3zGaW8mlfHD3DhGYeIuuBEgyWqyrTGEZOn/7UYw9v6sL8KFYL8R2PsAJ7+M+2AqIfA8y/2aCYFjPgwst7+aCj6Kxd7Eh1MZgclU8Pjpr9MDgDsUsN/l5Dctaw6YFGH9ZNIT3RGq3Sextnv32dEvfgA=&amp;lt;/diagram&amp;gt;&amp;lt;/mxfile&amp;gt;&#34; onclick=&#34;(function(svg){var src=window.event.target||window.event.srcElement;while (src!=null&amp;amp;&amp;amp;src.nodeName.toLowerCase()!=&#39;a&#39;){src=src.parentNode;}if(src==null){if(svg.wnd!=null&amp;amp;&amp;amp;!svg.wnd.closed){svg.wnd.focus();}else{var r=function(evt){if(evt.data==&#39;ready&#39;&amp;amp;&amp;amp;evt.source==svg.wnd){svg.wnd.postMessage(decodeURIComponent(svg.getAttribute(&#39;content&#39;)),&#39;*&#39;);window.removeEventListener(&#39;message&#39;,r);}};window.addEventListener(&#39;message&#39;,r);svg.wnd=window.open(&#39;https://www.draw.io/?client=1&amp;amp;lightbox=1&amp;amp;chrome=0&amp;amp;edit=_blank&#39;);}}})(this);&#34; viewBox=&#34;0 0 465 243&#34; style=&#34;cursor:pointer;max-width:100%;max-height:243px;&#34;&gt;&lt;defs&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-f5f5f5-1-b3b3b3-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#F5F5F5&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#B3B3B3&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-f8cecc-1-ea6b66-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#F8CECC&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#EA6B66&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-dae8fc-1-7ea6e0-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#DAE8FC&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#7EA6E0&#34;/&gt;&lt;/linearGradient&gt;&lt;/defs&gt;&lt;g transform=&#34;translate(0.5,0.5)&#34;&gt;&lt;rect x=&#34;1&#34; y=&#34;1&#34; width=&#34;120&#34; height=&#34;240&#34; fill=&#34;url(#mx-gradient-f5f5f5-1-b3b3b3-1-s-0)&#34; stroke=&#34;#666666&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(36.5,114.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;对其运行&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;对其运行&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;343&#34; y=&#34;1&#34; width=&#34;120&#34; height=&#34;240&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; pointer-events=&#34;none&#34;/&gt;&lt;rect x=&#34;1&#34; y=&#34;18&#34; width=&#34;120&#34; height=&#34;60&#34; fill=&#34;url(#mx-gradient-f8cecc-1-ea6b66-1-s-0)&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(2.5,34.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;116&#34; height=&#34;26&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 116px; white-space: normal; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;使用PACT DLS定义的期望&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;58&#34; y=&#34;19&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;使用PACT DLS定义的期望&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;path d=&#34;M 61 78 L 61 140.63&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 61 145.88 L 57.5 138.88 L 61 140.63 L 64.5 138.88 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;rect x=&#34;1&#34; y=&#34;147&#34; width=&#34;120&#34; height=&#34;60&#34; fill=&#34;url(#mx-gradient-dae8fc-1-7ea6e0-1-s-0)&#34; stroke=&#34;#6c8ebf&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(10.5,170.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;100&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 100px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;PACT mock服务器&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;50&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;PACT mock服务器&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;1&#34; y=&#34;207&#34; width=&#34;120&#34; height=&#34;34&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(36.5,217.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;消费者端&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;消费者端&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;158&#34; y=&#34;149&#34; width=&#34;120&#34; height=&#34;58&#34; fill=&#34;url(#mx-gradient-dae8fc-1-7ea6e0-1-s-0)&#34; stroke=&#34;#6c8ebf&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(175.5,171.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;84&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 85px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;生成消费者规范&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;42&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;生成消费者规范&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;path d=&#34;M 121 177 L 151.63 177.83&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 156.88 177.97 L 149.79 181.28 L 151.63 177.83 L 149.98 174.28 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;rect x=&#34;159&#34; y=&#34;20&#34; width=&#34;120&#34; height=&#34;58&#34; fill=&#34;url(#mx-gradient-dae8fc-1-7ea6e0-1-s-0)&#34; stroke=&#34;#6c8ebf&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(160.5,28.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;116&#34; height=&#34;40&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 116px; white-space: normal; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;PACT broker&lt;div&gt;CI/CD工具的构建物仓库&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;58&#34; y=&#34;26&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;PACT broker&amp;lt;div&amp;gt;CI/CD工具的构建物仓库&amp;lt;/div&amp;gt;&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;path d=&#34;M 218 149 L 218.91 84.37&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 218.98 79.12 L 222.39 86.17 L 218.91 84.37 L 215.39 86.07 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(203.5,108.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;36&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;background-color:#ffffff;&#34;&gt;存储在&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;18&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;存储在&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;343&#34; y=&#34;20&#34; width=&#34;120&#34; height=&#34;60&#34; fill=&#34;url(#mx-gradient-f8cecc-1-ea6b66-1-s-0)&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(371.5,43.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;62&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 64px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;Pact Helper&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;31&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;Pact Helper&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;343&#34; y=&#34;152&#34; width=&#34;120&#34; height=&#34;60&#34; fill=&#34;url(#mx-gradient-f8cecc-1-ea6b66-1-s-0)&#34; stroke=&#34;#b85450&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(384.5,175.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;36&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 37px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;生产者&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;18&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;生产者&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;path d=&#34;M 279 49 L 336.63 49.9&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 341.88 49.98 L 334.83 53.37 L 336.63 49.9 L 334.94 46.37 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(293.5,44.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;36&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;background-color:#ffffff;&#34;&gt;获取自&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;18&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;获取自&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;343&#34; y=&#34;212&#34; width=&#34;120&#34; height=&#34;29&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(378.5,220.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 49px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;生产者端&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;生产者端&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;path d=&#34;M 403 80 L 403 145.63&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;path d=&#34;M 403 150.88 L 399.5 143.88 L 403 145.63 L 406.5 143.88 Z&#34; fill=&#34;#000000&#34; stroke=&#34;#000000&#34; stroke-miterlimit=&#34;10&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(355.5,110.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;95&#34; height=&#34;11&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 11px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;background-color:#ffffff;&#34;&gt;使用PACT规范调用&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;48&#34; y=&#34;11&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;11px&#34; font-family=&#34;Helvetica&#34;&gt;使用PACT规范调用&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/p&gt;
+
+&lt;p&gt;后面会补充下实践经验。&lt;/p&gt;
+
+&lt;h2 id=&#34;如果建模微服务&#34;&gt;如果建模微服务&lt;/h2&gt;
+
+&lt;p&gt;好的微服务的定义：&lt;strong&gt;高内聚&lt;/strong&gt;，&lt;strong&gt;松耦合&lt;/strong&gt;。从而引出服务边界的问题。&lt;/p&gt;
+
+&lt;h3 id=&#34;限界上下文&#34;&gt;限界上下文&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;共享的隐藏模型；&lt;/li&gt;
+&lt;li&gt;模块和服务&lt;/li&gt;
+&lt;li&gt;过早划分&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;边界问题如何划分；基于业务功能、还是技术边界。本章主要是一些概念的陈述。&lt;/p&gt;
+
+&lt;h2 id=&#34;集成&#34;&gt;集成&lt;/h2&gt;
+
+&lt;p&gt;当然是指微服务的集成。集成做的好，才能保证微服务的自治性。&lt;/p&gt;
+
+&lt;h2 id=&#34;分解单块系统&#34;&gt;分解单块系统&lt;/h2&gt;
+
+&lt;h2 id=&#34;部署&#34;&gt;部署&lt;/h2&gt;
+
+&lt;h2 id=&#34;监控&#34;&gt;监控&lt;/h2&gt;
+
+&lt;h2 id=&#34;安全&#34;&gt;安全&lt;/h2&gt;
+
+&lt;h2 id=&#34;康威定律和系统设计&#34;&gt;康威定律和系统设计&lt;/h2&gt;
+
+&lt;h2 id=&#34;规模化微服务&#34;&gt;规模化微服务&lt;/h2&gt;
+</description>
+    </item>
     
     <item>
       <title>SaaS DataBase</title>
@@ -561,22 +662,22 @@ Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcac
 
 &lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;
 
-&lt;h2 id=&#34;相关http-header字段:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;相关HTTP header字段&lt;/h2&gt;
+&lt;h2 id=&#34;相关http-header字段&#34;&gt;相关HTTP header字段&lt;/h2&gt;
 
-&lt;h3 id=&#34;last-modified和etag:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
+&lt;h3 id=&#34;last-modified和etag&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
 
 &lt;p&gt;两者的功能类似，一个是文件的最近一次的修改时间，一个是针对这个资源文件生成的tag。都是server端的返回。刷新页面时，请求头里面会带上If-Modified-Since或者 If-None-Match。
  但是Etag并&lt;a href=&#34;https://developer.yahoo.com/performance/rules.html#etags=&#34;&gt;不推荐使用&lt;/a&gt;，原因就是不同的server对Etag的生成算法可能不统一，特别在集群server的情况下。&lt;/p&gt;
 
-&lt;h3 id=&#34;pragma:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Pragma&lt;/h3&gt;
+&lt;h3 id=&#34;pragma&#34;&gt;Pragma&lt;/h3&gt;
 
 &lt;p&gt;纯协议上的指令，对请求响应链路上的所有代理使用。例如如果pragma：no-chache，则请求在请求响应链上的任意节点都不会被缓存，因其于cache-control：no-chache意义一致。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Expires&lt;/h3&gt;
+&lt;h3 id=&#34;expires&#34;&gt;Expires&lt;/h3&gt;
 
 &lt;p&gt;set response headers，对某个响应设置个超时时间，一般优先级不高，如果存在max-age的话，这个字段几乎不起作用。&lt;/p&gt;
 
-&lt;h3 id=&#34;cache-control:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Cache-Control&lt;/h3&gt;
+&lt;h3 id=&#34;cache-control&#34;&gt;Cache-Control&lt;/h3&gt;
 
 &lt;p&gt;public：标识验证后的respons可被缓存的。
 no-store：任何情况下不缓存，并尽量不要保存到磁盘中。不缓存的资源并不能保证不被保存到磁盘中。例如浏览器的后退键，可能会导致看到过期的页面。
@@ -586,7 +687,7 @@ proxy-revalidate： 和must 一样，只对proxy cache有效，对中间有cache
 max-age: 指定刷新超时时间，即cache的超时时间。
 s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache servers使用这个s-maxage，针对public的cache有效，其会覆盖max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
 
 &lt;p&gt;通过vary告诉http cache，寻找缓存对象时需要考虑的头域字段。比如：浏览器发了两个request，一个带有accept-encoding， 一个没有。http 缓存的时候会带上这个vary标记，表示只有带有accept-encoding的缓存对象才能是使用。达到的效果就是request里面带有accept-encoding的请求，响应缓存只能被这样的请求获取。&lt;/p&gt;
 
@@ -594,26 +695,26 @@ s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache se
 简单的理解vary用来区分请求的差别，识别出不同的request。
 vary的其他取值：user-agent, 让响应区分不同的agent；Referer, 区分这个request是从哪个页面而来。cookie, 不同认证信息不同的 request。vary指定的那些值就会影响浏览器的cache策略。&lt;/p&gt;
 
-&lt;h2 id=&#34;需要注意的几个问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;需要注意的几个问题&lt;/h2&gt;
+&lt;h2 id=&#34;需要注意的几个问题&#34;&gt;需要注意的几个问题&lt;/h2&gt;
 
-&lt;h3 id=&#34;https-证书问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;https 证书问题&lt;/h3&gt;
+&lt;h3 id=&#34;https-证书问题&#34;&gt;https 证书问题&lt;/h3&gt;
 
 &lt;p&gt;如果是无效的证书，会导致缓存无法完全起用。本地测试是doc无法被cache，静态资源还是可以的。当然这跟浏览器的行为也有关系，Firefox里面添加例外证书变成合法的就可以正常缓存了。chrome的证书比较严格不好把红叉叉去掉。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires和max-age-优先级问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
+&lt;h3 id=&#34;expires和max-age-优先级问题&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
 
 &lt;p&gt;当response头域里面两者都包含时，浏览器会优先选用max-age，当然这是我本地的测试结果。所有的情况可能难以覆盖，比如移动端的浏览器，其他的浏览器，除了Firefox、chrome、IE等等以外的。
 另外就是expires是http1.0里面的，max-age在http1.1被引入，但是&lt;a href=&#34;https://www.mnot.net/blog/2007/05/15/expires_max-age&#34;&gt;这篇文章&lt;/a&gt;建议最好两者都带上正确的值，或者只带上max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;conditional-requests:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Conditional Requests&lt;/h3&gt;
+&lt;h3 id=&#34;conditional-requests&#34;&gt;Conditional Requests&lt;/h3&gt;
 
 &lt;p&gt;条件请求是当浏览器发现资源超时时，如过了max-age或者expires date，会发起条件请求，如果server发现资源变化了会回复200 ok，否则回复304的status code。正确情况下资源cache后，浏览器是不会发条件请求的，直到资源超时后。当然也不排除某些浏览器会不停的发conditional request，更为详细的介绍，&lt;a href=&#34;https://greenbytes.de/tech/webdav/draft-ietf-httpbis-p4-conditional-20.html&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h2 id=&#34;静态资源缓存:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;静态资源缓存&lt;/h2&gt;
+&lt;h2 id=&#34;静态资源缓存&#34;&gt;静态资源缓存&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源，更新时更加推荐使用变更文件名的方式，例如让文件名包含一个版本号的方式。这种比文件末尾增加query string更加有效，例如有些中间proxy就不会缓存带有查询字符的url。&lt;/p&gt;
 
-&lt;h2 id=&#34;php配合apache-实现静态资源版本控制:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
+&lt;h2 id=&#34;php配合apache-实现静态资源版本控制&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源的cache设置，这个&lt;a href=&#34;https://github.com/Compasses/server-configs-apache/tree/master/src/web_performance&#34;&gt;github&lt;/a&gt;有较好的配置模板做参考。基本上enmod headers即可。
 针对静态文件php代码里面插入版本号，一般为时间戳或者数据库里面的更新时间：&lt;/p&gt;
@@ -665,7 +766,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;上述就完成了，只要后台修改了静态资源文件，则文件的名字会随着版本号的更新而更新，从而实现前端自动刷新缓存。否则这些资源文件会永远cache在客户端。超时时间为31104000s。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;http cache 很复杂，牵扯较多的组件，上述只是针对Apache+PHP的方案实施。&lt;/li&gt;
@@ -687,7 +788,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
 
-&lt;h2 id=&#34;interface-内部存储:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface 内部存储&lt;/h2&gt;
+&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
 
 &lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
 
@@ -799,7 +900,7 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 &lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;interface使用:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface使用&lt;/h2&gt;
+&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
 
 &lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
@@ -921,7 +1022,7 @@ func main() {
 
 &lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
 
-&lt;h1 id=&#34;css相关:f2bccc30c6deb9603cdd35832971151d&#34;&gt;CSS相关&lt;/h1&gt;
+&lt;h1 id=&#34;css相关&#34;&gt;CSS相关&lt;/h1&gt;
 
 &lt;p&gt;因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
 ##mixin
@@ -943,7 +1044,7 @@ func main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;media:f2bccc30c6deb9603cdd35832971151d&#34;&gt;media&lt;/h2&gt;
+&lt;h2 id=&#34;media&#34;&gt;media&lt;/h2&gt;
 
 &lt;p&gt;由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
 其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。&lt;/p&gt;
@@ -980,14 +1081,14 @@ func main() {
 | orientation=portrait| 高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。|
 | orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|&lt;/p&gt;
 
-&lt;h2 id=&#34;语义化标签:f2bccc30c6deb9603cdd35832971151d&#34;&gt;语义化标签&lt;/h2&gt;
+&lt;h2 id=&#34;语义化标签&#34;&gt;语义化标签&lt;/h2&gt;
 
 &lt;p&gt;写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
 这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。&lt;/p&gt;
 
 &lt;p&gt;上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。&lt;/p&gt;
 
-&lt;h1 id=&#34;js相关:f2bccc30c6deb9603cdd35832971151d&#34;&gt;JS相关&lt;/h1&gt;
+&lt;h1 id=&#34;js相关&#34;&gt;JS相关&lt;/h1&gt;
 
 &lt;p&gt;JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
 封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。&lt;/p&gt;
@@ -1678,63 +1779,6 @@ ff1ad6f22e91        eshop_612:latest    &amp;quot;/var/eshop/install/   31 hours
 &lt;p&gt;dokcer的开发环境相对于本地的开发环境速度上有个质的飞跃，由于本地是XAMPP的，然后在windows上。很显然web的开发环境更适宜运行在docker里面了。&lt;/p&gt;
 
 &lt;p&gt;当然还有个非常大的优点，你可以运行任意多个container，每个container里面的code版本可以不一样啊，尤其在多版本并行开发的时候，带来的开发体验是本地不能有的。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>libuv 初认识</title>
-      <link>http://compasses.github.io/2015/06/03/libuv-%E5%88%9D%E8%AE%A4%E8%AF%86/</link>
-      <pubDate>Wed, 03 Jun 2015 19:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/06/03/libuv-%E5%88%9D%E8%AE%A4%E8%AF%86/</guid>
-      <description>
-
-&lt;p&gt;说明： 本篇文章主要从&lt;a href=&#34;http://nikhilm.github.io/uvbook/&#34;&gt;An Introduction to libuv&lt;/a&gt;这本书翻译学习而来。&lt;/p&gt;
-
-&lt;h2 id=&#34;开始:1fb7be80e02e4b29d4cf88eae1d66804&#34;&gt;开始&lt;/h2&gt;
-
-&lt;p&gt;libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。&lt;/p&gt;
-
-&lt;h3 id=&#34;事件循环:1fb7be80e02e4b29d4cf88eae1d66804&#34;&gt;事件循环&lt;/h3&gt;
-
-&lt;p&gt;libuv的编译就不用多说，参考libuv的&lt;a href=&#34;https://github.com/libuv/libuv&#34;&gt;github网址&lt;/a&gt;。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。&lt;/p&gt;
-
-&lt;p&gt;先从运行一个程序开始：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#include &amp;quot;uv.h&amp;quot;
-#include &amp;lt;stdio.h&amp;gt;
-#include &amp;lt;stdlib.h&amp;gt;
-
-int main() {
-    uv_loop_t *loop = malloc(sizeof(uv_loop_t));
-    uv_loop_init(loop);
-    printf(&amp;quot;Now quitting.\n&amp;quot;);
-    uv_run(loop, UV_RUN_DEFAULT);
-    uv_loop_close(loop);
-    free(loop);
-    return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{
-  &#39;targets&#39;: [
-    {
-      &#39;dependencies&#39;: [&#39;../../uv.gyp:libuv&#39;],
-      &#39;target_name&#39;: &#39;helloword&#39;,
-      &#39;type&#39;: &#39;executable&#39;,
-      &#39;sources&#39;: [
-        &#39;main.c&#39;,
-      ]
-    }
-  ],
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;然后执行** gyp &amp;ndash;format=make -Duv_library=static_library &amp;ndash;depth=$PWD build.gyp &lt;strong&gt;生产相应的makefile，最后直接执行&lt;/strong&gt;make**，就会生成自己想要的可执行文件。
-gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平台方面也表现很好，后续有时间也好好学习下。
-待续。&lt;/p&gt;
 </description>
     </item>
     
