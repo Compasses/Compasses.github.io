@@ -9,8 +9,35 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Wed, 01 Jun 2016 13:32:34 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 19 Jul 2016 16:55:26 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>人生不是演出</title>
+      <link>http://compasses.github.io/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</link>
+      <pubDate>Tue, 19 Jul 2016 16:55:26 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</guid>
+      <description>&lt;p&gt;最近看了两个电影《遇见你之前》和《初恋这首情歌》。一个关于死亡，一个关于青春，很是巧合。&lt;/p&gt;
+
+&lt;p&gt;两部电影都给了我很多很多感动，感动到哭。&lt;/p&gt;
+
+&lt;p&gt;死亡一点不可怕，更何况是自己主动选择的呢。当发现自己已经不回不去正常人的生活时，那是多么的绝望，威尔深深的认识到自己的人生不能是这样的，活着有什么意义，为了父母他答应继续多活半年。半年的时间里小露作为护工来到他身边，带给他快乐，同时也意识到平凡人的生活如此。爱又能如何，参加了本来是自己的妻子的婚礼，生老病死人又能如何，家庭殷实他也许会让他活的还算可以，可是不是他的人生。从一个喜欢极限运动，喜欢冒险的人，到一个半身不遂的人，这样的转变，谁又能接受得了。也许已经是大彻大悟了，看尽了世态炎凉，看尽了苦尽甘来。该有了不能有，没有的终究也是没有。&lt;/p&gt;
+
+&lt;p&gt;人越到老就越怕死，会是这样的吧。年轻人无所谓，能够看尽人生也许本身比活的更久的人知道什么是重要的。需要的是什么的，自己的人生是什么。
+关于青春，都有很多希望和机会，每个人都可能会有大的作为。《初恋这首情歌》已经超出了初恋的范畴，讲了很多关于人生的思考，带给人很多深思，也许这就是这部电影能拿高分的原因吧。&lt;/p&gt;
+
+&lt;p&gt;那就让我们思考一下。&lt;/p&gt;
+
+&lt;p&gt;康纳因为看上了一个女孩，因为女孩非常想当模特，康纳要组建乐队让他在MV可以当模特。组建了乐队，开始了歌曲创作。事情也会发展会很顺利，可是现实不容的半点马虎。康纳父母不合，将要离婚，哥哥因为早年带着梦想想出去闯荡，却被父母强行的留在了身边，导致了哥哥的颓废。电源中有很多镜头都是展示他是多么的颓废和失望，所以他最不希望他的弟弟步他的后尘。这也是电影最后所要表达的，很有杀伤力的情感。&lt;/p&gt;
+
+&lt;p&gt;康纳的歌都是为他心爱的姑娘所写，所以演出的时候多么的希望她的出现，不仅如此，他还希望父母是恩爱的，并能结伴来看他的演出；还有他的哥哥，希望他能重振旗鼓意气风发的来看他的演出，也希望同学、老师都是和蔼可能一群人；当然最最希望的是他心爱的姑娘跟他的不靠谱男朋友分手。。。可是演出结束回到了现实，发现一无所有了。父母要离婚、心爱的姑娘离开去了英国、哥哥还是那样的自暴自弃。这就是现实，让人喘不过气来。&lt;/p&gt;
+
+&lt;p&gt;好在电影最后有了反转，心爱的姑娘受伤回来了，康纳还在继续他的歌曲创作。最后一起出逃，离开这里，因为这里只会让才华腐烂、让人颓废并变成酒鬼。康纳的哥哥带他们走了最后一段路，从最后他那欲言又止的表情，可以深深的感受到，康纳是对的，因为他年轻的时候就该这样的出逃。他是欣慰的。&lt;/p&gt;
+
+&lt;p&gt;以史为镜，人人都有一个过去。但人生不是演出，更不会顺着你的希望发展，因为这是现实。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>读书：微服务设计</title>
@@ -165,7 +192,7 @@
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
 
-&lt;h2 id=&#34;编码问题&#34;&gt;编码问题&lt;/h2&gt;
+&lt;h2 id=&#34;编码问题:a4408d7234fd43d2930eca48e7402255&#34;&gt;编码问题&lt;/h2&gt;
 
 &lt;p&gt;互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：&lt;/p&gt;
 
@@ -174,7 +201,7 @@
 
 &lt;p&gt;UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看&lt;a href=&#34;http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html&#34;&gt;这篇文章&lt;/a&gt;，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。&lt;/p&gt;
 
-&lt;h2 id=&#34;精确获取字符长度&#34;&gt;精确获取字符长度&lt;/h2&gt;
+&lt;h2 id=&#34;精确获取字符长度:a4408d7234fd43d2930eca48e7402255&#34;&gt;精确获取字符长度&lt;/h2&gt;
 
 &lt;p&gt;由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。&lt;strong&gt;encodeURIComponent&lt;/strong&gt;方法是比较好用的：&lt;/p&gt;
 
@@ -201,7 +228,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 18
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;textarea-中的换行符&#34;&gt;textarea 中的换行符&lt;/h2&gt;
+&lt;h2 id=&#34;textarea-中的换行符:a4408d7234fd43d2930eca48e7402255&#34;&gt;textarea 中的换行符&lt;/h2&gt;
 
 &lt;p&gt;与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
 例如只有一个换行符的encode前端结果：&lt;/p&gt;
@@ -214,7 +241,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 产生这个问题的原因是换行符在HTTP&lt;a href=&#34;http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code&#34;&gt;传输的过程中发生转换&lt;/a&gt;，由‘\n’变成‘\r\n’。
 因此在计算textarea值时在遇到换行符时记得长度额外加1。&lt;/p&gt;
 
-&lt;h2 id=&#34;代码实现&#34;&gt;代码实现&lt;/h2&gt;
+&lt;h2 id=&#34;代码实现:a4408d7234fd43d2930eca48e7402255&#34;&gt;代码实现&lt;/h2&gt;
 
 &lt;p&gt;既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
 针对input：&lt;/p&gt;
@@ -267,7 +294,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结:a4408d7234fd43d2930eca48e7402255&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。&lt;/p&gt;
 </description>
@@ -496,7 +523,7 @@ Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_c
 mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
 具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
+&lt;h2 id=&#34;浏览器刷新原则:bca2f1e29878787021347a412fc3f8ce&#34;&gt;浏览器刷新原则&lt;/h2&gt;
 
 &lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
 这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
@@ -554,7 +581,7 @@ Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
 
 &lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
 
-&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
+&lt;h2 id=&#34;实施apache缓存:bca2f1e29878787021347a412fc3f8ce&#34;&gt;实施Apache缓存&lt;/h2&gt;
 
 &lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
 
@@ -587,7 +614,7 @@ CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#
 
 &lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
+&lt;h2 id=&#34;cache效果检查:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache效果检查&lt;/h2&gt;
 
 &lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
 例如能看到如下内容：&lt;/p&gt;
@@ -629,7 +656,7 @@ Accept-Encoding
 
 &lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间单位为秒，每次请求这个字段都是会增加的。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache的资源副本&#34;&gt;cache的资源副本&lt;/h2&gt;
+&lt;h2 id=&#34;cache的资源副本:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache的资源副本&lt;/h2&gt;
 
 &lt;p&gt;Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
 这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上&lt;code&gt;Accept-Encoding&lt;/code&gt;，响应头Vary域则是：&lt;code&gt;Vary: Accept-Encoding&lt;/code&gt;。
@@ -638,7 +665,7 @@ Accept-Encoding
 
 &lt;p&gt;当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。&lt;/p&gt;
 
-&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
+&lt;h2 id=&#34;缓存资源的更新周期:bca2f1e29878787021347a412fc3f8ce&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
 
 &lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
 如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。
@@ -788,7 +815,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
 
-&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
+&lt;h2 id=&#34;interface-内部存储:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface 内部存储&lt;/h2&gt;
 
 &lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
 
@@ -900,7 +927,7 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 &lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
+&lt;h2 id=&#34;interface使用:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface使用&lt;/h2&gt;
 
 &lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
@@ -1022,7 +1049,7 @@ func main() {
 
 &lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
 
-&lt;h1 id=&#34;css相关&#34;&gt;CSS相关&lt;/h1&gt;
+&lt;h1 id=&#34;css相关:f2bccc30c6deb9603cdd35832971151d&#34;&gt;CSS相关&lt;/h1&gt;
 
 &lt;p&gt;因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
 ##mixin
@@ -1044,7 +1071,7 @@ func main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;media&#34;&gt;media&lt;/h2&gt;
+&lt;h2 id=&#34;media:f2bccc30c6deb9603cdd35832971151d&#34;&gt;media&lt;/h2&gt;
 
 &lt;p&gt;由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
 其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。&lt;/p&gt;
@@ -1081,14 +1108,14 @@ func main() {
 | orientation=portrait| 高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。|
 | orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|&lt;/p&gt;
 
-&lt;h2 id=&#34;语义化标签&#34;&gt;语义化标签&lt;/h2&gt;
+&lt;h2 id=&#34;语义化标签:f2bccc30c6deb9603cdd35832971151d&#34;&gt;语义化标签&lt;/h2&gt;
 
 &lt;p&gt;写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
 这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。&lt;/p&gt;
 
 &lt;p&gt;上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。&lt;/p&gt;
 
-&lt;h1 id=&#34;js相关&#34;&gt;JS相关&lt;/h1&gt;
+&lt;h1 id=&#34;js相关:f2bccc30c6deb9603cdd35832971151d&#34;&gt;JS相关&lt;/h1&gt;
 
 &lt;p&gt;JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
 封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。&lt;/p&gt;
@@ -1329,7 +1356,7 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 
 &lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
 
-&lt;h1 id=&#34;position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;POSITION&lt;/h1&gt;
+&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
 
 &lt;p&gt;解释说明：&lt;/p&gt;
 
@@ -1373,23 +1400,23 @@ User agents may treat position as &#39;static&#39; on the root element.
 
 &lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
 
-&lt;h2 id=&#34;relative-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;relative position&lt;/h2&gt;
+&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
 
 &lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
 
-&lt;h2 id=&#34;absolute-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;absolute position&lt;/h2&gt;
+&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
 
 &lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
 
-&lt;h2 id=&#34;fixed-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;fixed position&lt;/h2&gt;
+&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
 
 &lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
 
-&lt;h2 id=&#34;floating:22153868a43551ee8f9f1515ff4cd978&#34;&gt;floating&lt;/h2&gt;
+&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
 
 &lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
 
-&lt;h1 id=&#34;overflow:22153868a43551ee8f9f1515ff4cd978&#34;&gt;overflow&lt;/h1&gt;
+&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
 
 &lt;p&gt;解释：&lt;/p&gt;
 
@@ -1753,32 +1780,6 @@ Session_tokens的更新是随着用户的login和 logout 更新的。Login时会
 &lt;p&gt;INNODB支持所有的事务隔离级别，但是MVCC只在REPEATABLE READ 和READ COMMITTED两个隔离级别下工作。
 回到开始的问题。session_tokens 是真对用户在不同的终端上登录时进行更新的，value是个array，如上代码所示。如果同一个用户在两个终端上，可以是不同的浏览器即可，就会有不同的session_tokens，在登录登出的时候就会update改用户的数据，即同一行数据就可能产生死锁。这里必须是同时有两个事务。
 现实中同一个用户在两个终端同时操作的可能性不大，但是也很难说。这也说明了wordpress的代码不够健壮吧。当然这里的死锁也并不可怕，INNODB会将持有最少行级排它锁的事务进行回滚。锁机制的了解还是要多多实践，网上也有较好的&lt;a href=&#34;http://hedengcheng.com/?p=771&#34;&gt;文章参考&lt;/a&gt;。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Docker Docker</title>
-      <link>http://compasses.github.io/2015/06/19/docker-docker/</link>
-      <pubDate>Fri, 19 Jun 2015 17:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/06/19/docker-docker/</guid>
-      <description>&lt;p&gt;一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。&lt;/p&gt;
-
-&lt;p&gt;首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照&lt;a href=&#34;https://docs.docker.com/installation/ubuntulinux/&#34;&gt;官网&lt;/a&gt;即可&lt;/p&gt;
-
-&lt;p&gt;公司的镜像是基于Ubuntu+wordpress+Apache，MySQL在宿主机上。运行container的时候带上相应的参数，这里主要是端口映射，将docker里面的80端口映射到宿主机上的某一个端口例如7080，最后运行起来类似这个样子：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                                               NAMES
-ff1ad6f22e91        eshop_612:latest    &amp;quot;/var/eshop/install/   31 hours ago        Up 31 hours         0.0.0.0:7022-&amp;gt;22/tcp, 0.0.0.0:7080-&amp;gt;80/tcp, 0.0.0.0:7443-&amp;gt;443/tcp   eshop_instance_7080  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;开始遇到一个问题就是这个端口的映射问题，起来后外部访问时还是用的宿主机的Apache，后续停掉宿主机的Apache，目的是干掉80监听端口，在docker里面增加proxy。后面就一路畅通了。&lt;/p&gt;
-
-&lt;p&gt;修改源码如何更新到docker里面是个麻烦的事情，如果有个外挂文件目录的功能就好了，现在只能是修改后的代码传到docker里面。其实传代码也很简单，相比以前编写C++代码，先把本地代码传到Linux服务器上进行编译，编译完再传到运行的服务器上，已经简单多了。现在做的只是把修改后的代码通过filezilla传到docker里面，然后浏览器访问就ok了。&lt;/p&gt;
-
-&lt;p&gt;dokcer的开发环境相对于本地的开发环境速度上有个质的飞跃，由于本地是XAMPP的，然后在windows上。很显然web的开发环境更适宜运行在docker里面了。&lt;/p&gt;
-
-&lt;p&gt;当然还有个非常大的优点，你可以运行任意多个container，每个container里面的code版本可以不一样啊，尤其在多版本并行开发的时候，带来的开发体验是本地不能有的。&lt;/p&gt;
 </description>
     </item>
     
