@@ -9,8 +9,440 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Tue, 19 Jul 2016 16:55:26 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 26 Jul 2016 09:50:57 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Book review thinking in java</title>
+      <link>http://compasses.github.io/2016/07/26/book-review-thinking-in-java/</link>
+      <pubDate>Tue, 26 Jul 2016 09:50:57 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2016/07/26/book-review-thinking-in-java/</guid>
+      <description>
+
+&lt;h2 id=&#34;book-review-thinking-in-java:4af39f9da4817f250b5b39645428aec6&#34;&gt;Book Review: Thinking in Java&lt;/h2&gt;
+
+&lt;p&gt;断断续续的看了将近一个多月，算是系统复习下，一来不能让书白买了，二来毕竟很长一段时间没有做过大规模的Java开发了，Java还是很有意思的，后面还会有很多Book Review。
+  需要说明的是，后面几个章节没有什么笔记。原因是他们都太工程化了，需要更多的实践，就没再记录。后面尽量每个topic都有单独的blog。
+                  学无止境&lt;/p&gt;
+
+&lt;h3 id=&#34;第五章-初始化与清理:4af39f9da4817f250b5b39645428aec6&#34;&gt;第五章 初始化与清理&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;根据参数列表不同进行函数重载，无法根据返回值进行函数重载。因为函数调用者不关心函数的返回值，编译器就无法判定。参数列表的不同顺序也能区分不同的函数，但是这样维护性不够好，不建议这样做。&lt;/li&gt;
+&lt;li&gt;如果自己类里面已经定义了一个构造器，无论是否有参数，编译器都不会再生成默认的构造器了，跟C++一样。&lt;/li&gt;
+&lt;li&gt;this 关键字代表当前对象，可以用this调用一个构造器，但是不能同时调用两个；也必须将构造器调用置于最开始的地方，否则编译器会报错。&lt;/li&gt;
+&lt;li&gt;finalize 用于验证终结条件。垃圾回收和终结，都不保证一定会发生。如果java虚拟机并未面临内存耗尽的情况。
+
+&lt;ol&gt;
+&lt;li&gt;对象可能不被垃圾回收&lt;/li&gt;
+&lt;li&gt;垃圾回收不等价与析构&lt;/li&gt;
+&lt;li&gt;垃圾回收只与内存有关。&lt;/li&gt;
+&lt;li&gt;终结函数要避免使用&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在定义类成员变量的地方为其赋值。构造器初始化之前，类成员变量就已经进行了初始化。类内部，变量定义的先后顺序决定了初始化的顺序。即使变量定义散布于方法定义之间，他仍旧会在任何方法被调用之前得到初始化。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;初始化顺序是先静态对象，并只在Class对象首次加载时执行一次；&lt;/li&gt;
+&lt;li&gt;new 分配内存；&lt;/li&gt;
+&lt;li&gt;执行字段定义处的初始化动作；&lt;/li&gt;
+&lt;li&gt;执行构造器。&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;静态初始化只在Class 对象首次加载的时候进行一次。非静态实例初始化，与静态初始化子句一模一样，只是少了static关键字。这种语法对于支持匿名内部类的初始化是必须的。
+实例初始化字句：&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;  class Mug {
+  Mug(int marker) {
+    print(&amp;quot;Mug(&amp;quot; + marker + &amp;quot;)&amp;quot;);
+  }
+  void f(int marker) {
+    print(&amp;quot;f(&amp;quot; + marker + &amp;quot;)&amp;quot;);
+  }
+}
+
+public class Mugs {
+  Mug mug1;
+  Mug mug2;
+  {
+    mug1 = new Mug(1);
+    mug2 = new Mug(2);
+    print(&amp;quot;mug1 &amp;amp; mug2 initialized&amp;quot;);
+  }
+  Mugs() {
+    print(&amp;quot;Mugs()&amp;quot;);
+  }
+  Mugs(int i) {
+    print(&amp;quot;Mugs(int)&amp;quot;);
+  }
+  public static void main(String[] args) {
+    print(&amp;quot;Inside main()&amp;quot;);
+    new Mugs();
+    print(&amp;quot;new Mugs() completed&amp;quot;);
+    new Mugs(1);
+    print(&amp;quot;new Mugs(1) completed&amp;quot;);
+  }
+} /* Output:
+Inside main()
+Mug(1)
+Mug(2)
+mug1 &amp;amp; mug2 initialized
+Mugs()
+new Mugs() completed
+Mug(1)
+Mug(2)
+mug1 &amp;amp; mug2 initialized
+Mugs(int)
+new Mugs(1) completed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;可变参数列表：void f(Object&amp;hellip; args),除了Object之外，其他的数据类型也可以作为可变参数列表。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第六章-访问权限控制:4af39f9da4817f250b5b39645428aec6&#34;&gt;第六章 访问权限控制&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;访问权限等级：public，protected，包访问权限，private。&lt;/li&gt;
+&lt;li&gt;一个java源文件为一个编译单元，每个编译单元只能有一个public类。java可运行程序是一组可以打包压缩为一个java文档文件的.class文件，java解释器负责这些文件的查找、装载和解释。&lt;/li&gt;
+&lt;li&gt;包访问权限，默认包访问权限没有任何关键字。默认包：处于相同的目录并且没有给自己设定任何包名称，这样的文件自动看作是隶属于该目录的默认包之中。&lt;/li&gt;
+&lt;li&gt;类既不可以是private的，也不可以是protected。如果没能为类访问权限指定一个访问修饰符，它就会默认得到包访问权限。相同目录下的所有不具有明确package声明的文件，都被视作该目录下默认包的一部分。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第七章-复用类:4af39f9da4817f250b5b39645428aec6&#34;&gt;第七章 复用类&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;组合语法和继承语法，带参数的构造器，使用super调用，并传递适当的参数。组合技术通常用于在新类中使用现有类的功能而非它的接口这种情形。
+protected：任何继承于此类的导出类或者其他任何位于同一个包内的类来说，是可以访问的。protected提供了包内访问权限。&lt;/li&gt;
+&lt;li&gt;代理：将一个成员对象置于所要构造的类中，就像组合，但与此同时我们在新类中暴露了该成员对象的所有方法，就像继承。&lt;/li&gt;
+&lt;li&gt;覆写与重载：@Override&lt;/li&gt;
+&lt;li&gt;向上转型：导出类转换为基类。&lt;/li&gt;
+&lt;li&gt;final：一个既是static又是final的域只占据一段不能改变的存储空间。Blank Final：必须在域的定义处或者每个构造器中用表达式对final进行赋值。final参数，这一特性主要用来想匿名内部类传递数据。final方法，只有在想明确禁止覆盖时，才将方法设置为final。final和private关键字，所有的private的方法都隐式地指定为final的。final类，类不做任何改动，不能继承。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第八章-多态:4af39f9da4817f250b5b39645428aec6&#34;&gt;第八章 多态&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;面向对象程序设计语言中，多态是继数据抽象和继承之后的第三种基本特征。&lt;/li&gt;
+&lt;li&gt;java中除了static方法和final方法之外，其他所有的方法都是后期绑定。只有非private的方法才能被覆盖。&lt;/li&gt;
+&lt;li&gt;初始化过程：将分配给对象的存储空间初始化成二进制的零；调用基类构造器；按照声明的顺序调用成员的初始化方法；调用导出类的构造器主体。基类构造器内调用final方法，既不能被覆盖的方法。&lt;/li&gt;
+&lt;li&gt;用继承表达行为间的差异，并用字段表达状态上的变化。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第九章-接口:4af39f9da4817f250b5b39645428aec6&#34;&gt;第九章 接口&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;接口和内部类为我们提供了一种将接口与实现分离的更加结构化的方法&lt;/li&gt;
+&lt;li&gt;抽象方法，abstract void f（），包含抽象方法的类为抽象类。&lt;/li&gt;
+&lt;li&gt;interface关键字使抽象的概念更向前迈进了一步。提供了接口部分，没有提供任何相应的具体实现，接口被用来建立类与类之间的协议。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;创建一个能够根据所传递的参数对象的不同而具有不同行为的方法，被称为策略设计模式。通过接口容易实现策略模式，同一个入口点，不同的实现实例来调用。
+适配器设计模式：适配器中的代码将接受你所拥有的接口，并产生你所需要的接口。将接口从具体实现中解耦使得接口可以应用于多种不同的的具体实现。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//FilterAdapter 为一个适配器，实现了process 接口。
+class FilterAdapter implements Processor {
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;使用接口的原因：可以能够向上转型为多个基类型；使用抽象基类相同，防止客户端程序员创建该类的对象，并确保这仅仅是建立一个接口。接口的一种常见的用法就是策略设计模式。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;通过interface关键字提供伪多重继承机制，让方法接受接口类型，是一种让任何类都可以对该方法进行适配的方式。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;接口中的变量都是自动是static和final的。接口是实现多重继承的途径，而生成遵循某个接口对象的典型方式就是工厂方法设计模式，在工厂对象上调用的是创建方法，而该工厂对象将生成某个实现的对象。通过这种方式，代码完全与接口的实现分离，这样可以透明的使得我们将某个实现替换为另一种实现。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;优先选择类而不是接口，从类开始，如果接口的必需性变得非常明确，那么就进行重构。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;interface前面加上关键字public，则所有成员都是public的，否则只具有包访问权限。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十章-内部类:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十章 内部类&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;内部类自动拥有对其外围类所有成员的访问权。构建内部类时，需要一个指向其外围类对象的引用。内部类对象会秘密的捕获一个外部类对象的引用。拥有外部类对象之前是不可能创建内部类对象的。因为内部类对象会暗暗地连接到创建外部类对象上，除非是嵌套类，即静态内部类。&lt;/li&gt;
+&lt;li&gt;在拥有外部类对象之前是不可能创建内部类的。但如果创建是嵌套类，即静态内部类，那么它不需要对外部类对象的引用。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;public class Parcel3 {
+  class Contents {
+    private int i = 11;
+    public int value() { return i; }
+  }
+  class Destination {
+    private String label;
+    Destination(String whereTo) { label = whereTo; }
+    String readLabel() { return label; }
+  }
+  public static void main(String[] args) {
+    Parcel3 p = new Parcel3();
+    // Must use instance of outer class
+    // to create an instance of the inner class:
+    Parcel3.Contents c = p.new Contents();
+    Parcel3.Destination d = p.new Destination(&amp;quot;Tasmania&amp;quot;);
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;局部内部类：在方法的作用域内创建一个完整的内部类；匿名内部类，工厂方法可以使用匿名内部类实现。Java内部类主要分为成员内部类，局部内部类，匿名内部类，静态内部类。&lt;/li&gt;
+&lt;li&gt;嵌套类：将内部类声明为static。创建嵌套类对象，不需要其外围类的对象；不能从嵌套类的对象中访问非静态的外围类对象。普通的内部类不能有static数据和字段，也不能包含嵌套类。嵌套类可以包含。&lt;/li&gt;
+&lt;li&gt;为啥需要内部类：每个内部类都能独立继承自一个接口的实现，所以无论外围类是否已经继承了某个实现，对于内部类没有影响。它使得多重继承的解决方案变得完整，内部类允许继承多个非接口类型。内部类提供了更好的封装，除了外围类，其他类都不能访问。&lt;/li&gt;
+&lt;li&gt;闭包：是一个可调用的对象，它记录了一些信息。内部类是面向对象的闭包，通过内部类实现闭包，即可实现回调。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十一章-持有对象:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十一章 持有对象&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;通过使用泛型，就可以在编译期防止将错误的类型对象放置到容器中。&lt;/li&gt;
+&lt;li&gt;迭代器是一个对象，它的工作是遍历并选择序列中的对象。iterator，ListIterator。&lt;/li&gt;
+&lt;li&gt;当你有一个接口，并需要另一个接口时，编写适配器可以解决问题。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十二章通过异常处理错误:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十二章通过异常处理错误&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;终止和恢复：大型程序一般不实用恢复。直接终止程序，利于代码编写和维护。
+2.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十三章-字符串:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十三章 字符串&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;StringBuilder创建字符串更加高效；&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十四章-类型信息:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十四章 类型信息&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Class对象就是用来创建类所有的常规对象的。使用Class的newInstance 创建的类必须有默认的构造函数。&lt;/li&gt;
+&lt;li&gt;RTTI：运行时，识别一个对象的类型；java使用Class对象执行RTTI。RTTI必须在编译时已知的对象。instanceof保持了类型的概念，class比较没有考虑继承，只看是否为这个确切的类型。&lt;/li&gt;
+&lt;li&gt;类字面常量，xxx.class，使用其创建对象时，并不会自动初始化该Class对象。初始化延迟到对静态方法或者非常数静态域即非编译期常量进行首次引用时。如果一个static域不是final的，那么在访问时总是要进行连接和初始化。&lt;/li&gt;
+&lt;li&gt;向Class引用提供泛型语法的原因是为了提供编译器类型检查。&lt;/li&gt;
+&lt;li&gt;工厂方法设计模式；将对象的创建工作交给类自己去完成:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;//interface
+public interface Factory&amp;lt;T&amp;gt; { T create(); } ///:~
+
+class Part {
+  public String toString() {
+    return getClass().getSimpleName();
+  }
+  static List&amp;lt;Factory&amp;lt;? extends Part&amp;gt;&amp;gt; partFactories =
+    new ArrayList&amp;lt;Factory&amp;lt;? extends Part&amp;gt;&amp;gt;();
+  static {
+    // Collections.addAll() gives an &amp;quot;unchecked generic
+    // array creation ... for varargs parameter&amp;quot; warning.
+    partFactories.add(new FuelFilter.Factory());
+    partFactories.add(new AirFilter.Factory());
+    partFactories.add(new CabinAirFilter.Factory());
+    partFactories.add(new OilFilter.Factory());
+    partFactories.add(new FanBelt.Factory());
+    partFactories.add(new PowerSteeringBelt.Factory());
+    partFactories.add(new GeneratorBelt.Factory());
+  }
+  private static Random rand = new Random(47);
+  public static Part createRandom() {
+    int n = rand.nextInt(partFactories.size());
+    return partFactories.get(n).create();
+  }
+}
+
+class Filter extends Part {}
+
+class FuelFilter extends Filter {
+  // Create a Class Factory for each specific type:
+  public static class Factory
+  implements typeinfo.factory.Factory&amp;lt;FuelFilter&amp;gt; {
+    public FuelFilter create() { return new FuelFilter(); }
+  }
+}
+
+class AirFilter extends Filter {
+  public static class Factory
+  implements typeinfo.factory.Factory&amp;lt;AirFilter&amp;gt; {
+    public AirFilter create() { return new AirFilter(); }
+  }
+}
+
+class CabinAirFilter extends Filter {
+  public static class Factory
+  implements typeinfo.factory.Factory&amp;lt;CabinAirFilter&amp;gt; {
+    public CabinAirFilter create() {
+      return new CabinAirFilter();
+    }
+  }
+}
+
+class OilFilter extends Filter {
+  public static class Factory
+  implements typeinfo.factory.Factory&amp;lt;OilFilter&amp;gt; {
+    public OilFilter create() { return new OilFilter(); }
+  }
+}
+
+class Belt extends Part {}
+
+class FanBelt extends Belt {
+  public static class Factory
+  implements typeinfo.factory.Factory&amp;lt;FanBelt&amp;gt; {
+    public FanBelt create() { return new FanBelt(); }
+  }
+}
+
+class GeneratorBelt extends Belt {
+  public static class Factory
+  implements typeinfo.factory.Factory&amp;lt;GeneratorBelt&amp;gt; {
+    public GeneratorBelt create() {
+      return new GeneratorBelt();
+    }
+  }
+}
+
+class PowerSteeringBelt extends Belt {
+  public static class Factory
+  implements typeinfo.factory.Factory&amp;lt;PowerSteeringBelt&amp;gt; {
+    public PowerSteeringBelt create() {
+      return new PowerSteeringBelt();
+    }
+  }
+}
+
+public class RegisteredFactories {
+  public static void main(String[] args) {
+    for(int i = 0; i &amp;lt; 10; i++)
+      System.out.println(Part.createRandom());
+  }
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;动态代理：代理模式是为了提供额外的或不同的操作，而插入的用来代替实际对象的对象。任何时刻只要你想要从额外的操作从实际的对象分离出来，这就是代理模式要达到的目的，封装修改。&lt;/li&gt;
+&lt;li&gt;反射：反射机制，.class文件在编译时是不可获取的，在运行时打开和检查class文件。&lt;/li&gt;
+&lt;li&gt;类三个步骤：加载、链接、初始化。instanceof 保持了类型的概念。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十五章-泛型:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十五章 泛型&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;主要目的之一：用来指定容器要持有什么类型的对象，而且编译器来保证类型的正确性。&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;泛型方法，泛型方法不必指明参数类型，需要将泛型参数列表置于返回值前。编译器会为我们找出具体的类型，这称为类型参数推断。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public class GenericMethods {
+public &amp;lt;T&amp;gt; void f(T x) {
+System.out.println(x.getClass().getName());
+}
+public static void main(String[] args) {
+GenericMethods gm = new GenericMethods();
+gm.f(&amp;quot;&amp;quot;);
+gm.f(1);
+gm.f(1.0);
+gm.f(1.0F);
+gm.f(&#39;c&#39;);
+gm.f(gm);
+}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在泛型代码内部，无法获得任何有关泛型参数类型的信息。数组可以向上转型，仅在编译时期：&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;class Fruit {}
+class Apple extends Fruit {}
+class Jonathan extends Apple {}
+class Orange extends Fruit {}
+
+public class CovariantArrays {
+  public static void main(String[] args) {
+    Fruit[] fruit = new Apple[10];
+    fruit[0] = new Apple(); // OK
+    fruit[1] = new Jonathan(); // OK
+    // Runtime type is Apple[], not Fruit[] or Orange[]:
+    try {
+      // Compiler allows you to add Fruit:
+      fruit[0] = new Fruit(); // ArrayStoreException
+    } catch(Exception e) { System.out.println(e); }
+    try {
+      // Compiler allows you to add Oranges:
+      fruit[0] = new Orange(); // ArrayStoreException
+    } catch(Exception e) { System.out.println(e); }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;通配符：List&amp;lt;? extends MyClass&amp;gt;， 读作 &amp;laquo;具有任何从MyClass继承的类型的列表&amp;raquo;，通配符引用的是明确的类型。超类型通配符：&amp;lt;? super MyClass&amp;gt;，可以接受MyClass类型或者从MyClass类型导出的类型。无界通配符&amp;lt;?&amp;gt;&lt;/li&gt;
+&lt;li&gt;任何基本类型不能作为类型参数。autoboxing 提供了一种可行方案。&lt;/li&gt;
+&lt;li&gt;装饰器模式使用分层对象来动态的透明地向单个对象添加责任。&lt;/li&gt;
+&lt;li&gt;Java泛型是通过擦除来实现的。类型参数将擦除到它的第一个边界。类型变量在没有指定边界的情况下被擦除为Object。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十六章-数组:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十六章 数组&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;数组与泛型不能很好地结合；数组必须知道它们所持有的确切类型。但是可以参数化数组本身的类型；&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十七章-容器深入研究:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十七章 容器深入研究&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;如果要使用自己的类作为HashMap的键，必须同时重载hashCode 和 equals 方法。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十八章-java-i-o-系统:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十八章 Java I/O 系统&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;需要理解Java I/O 系统的演化过程，如果缺乏历史的眼光，很快我们就会对什么时候该使用哪些类，以及什么时候不该使用他们而感到迷惑。&lt;/li&gt;
+&lt;li&gt;对象序列化的概念加入到语言中是为了支持两种特性：
+
+&lt;ol&gt;
+&lt;li&gt;RMI，使得存活于其他计算机上的对象使用起来像是存活于本机一样。&lt;/li&gt;
+&lt;li&gt;Java Beans，Beans信息需要保存，在下一次启动时可以能够自动恢复。&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;transient 关键字: 关闭字段的序列化&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第十九章-枚举类型:4af39f9da4817f250b5b39645428aec6&#34;&gt;第十九章 枚举类型&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;switch中可以直接使用enum。&lt;/li&gt;
+&lt;li&gt;命令模式：需要有一个只有单一方法的接口，然后从该接口实现具有各种不同行为的多个子类。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;pre&gt;&lt;code&gt;interface Command {void action();}
+
+EnumMap&amp;lt;enumType, Command&amp;gt; em = new EnumMap&amp;lt;enumType, Command&amp;gt;(enumType.class);
+em.put(ACTION_ONE, new Command() {
+  public void action() {print(&amp;quot;ACTION_ONE fired!&amp;quot;);}
+  })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;enum 实例可以编写方法，从而为每个enum实例赋予不同的行为。&lt;/li&gt;
+&lt;li&gt;职责链模式：程序员以多种不同的方式来解决一个问题然后将它们链接在一起。当一个请求到来时，它遍历整个链，直到链中的某个解决方案能够处理该请求。&lt;/li&gt;
+&lt;li&gt;enum类型非常适合创建状态机。&lt;/li&gt;
+&lt;li&gt;多路分发，java只支持单路分发。例如a.plus(b)，不知道a，b的类型时，必须自己来判定其他的类型，从而实现自己的动态绑定行为。
+
+&lt;ol&gt;
+&lt;li&gt;使用接口超类，每个类型实现接口。&lt;/li&gt;
+&lt;li&gt;使用enum分发。&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;第二十章-注解:4af39f9da4817f250b5b39645428aec6&#34;&gt;第二十章 注解&lt;/h3&gt;
+
+&lt;h3 id=&#34;第二十一章-并发:4af39f9da4817f250b5b39645428aec6&#34;&gt;第二十一章 并发&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Java的线程机制来自C的低级pthread线程。&lt;/li&gt;
+&lt;li&gt;synchronized，同步方法，不属于方法特征签名，覆盖方法上使用。volatile解决可视性问题。&lt;code&gt;javap -c classname&lt;/code&gt; 看class字节码。&lt;/li&gt;
+&lt;li&gt;临界区也叫同步控制块，一个代码段，多个线程同时访问。同一个互斥锁可以被同一个线程多次获得。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
     
     <item>
       <title>人生不是演出</title>
@@ -49,7 +481,7 @@
 
 &lt;p&gt;就是这样的一本书，来的非常及时。&lt;/p&gt;
 
-&lt;h2 id=&#34;总体认识&#34;&gt;总体认识&lt;/h2&gt;
+&lt;h2 id=&#34;总体认识:d44432819f78b681c7719da2e447145c&#34;&gt;总体认识&lt;/h2&gt;
 
 &lt;p&gt;微服务绝不是什么新技术或者新框架之类的，就算概念也不是新的。没有看书之前或许会认为微服务是中心化新的架构模式，看书后会发现其实微服务是个生态圈。
 为什么会这么说，他是什么样的生态圈。或许这是整个软件行业的生态发展趋势，比如SaaS软件已在某些领域获得巨大成功，其背后的支撑技术跟微服务有莫大的关联。
@@ -61,7 +493,7 @@
 
 &lt;p&gt;七个原则都有较好的指导性，在践行微服务前，先对照看下能否满足这七条原则。下面从头开始梳理、认识下微服务的设计过程。&lt;/p&gt;
 
-&lt;h2 id=&#34;微服务&#34;&gt;微服务&lt;/h2&gt;
+&lt;h2 id=&#34;微服务:d44432819f78b681c7719da2e447145c&#34;&gt;微服务&lt;/h2&gt;
 
 &lt;p&gt;概念先行这个很重要，任何学科都是。
 微服务定义：
@@ -69,19 +501,19 @@
 多小才算小，一个微服务可以在两周内重写掉。服务越小，独立性带来的好处就会越多，而同样服务管理也会越复杂。
 2. 自治性。独立部署，通过暴露API，使用网络通信，避免紧耦合。需要正确的建模服务和API。&lt;/p&gt;
 
-&lt;h2 id=&#34;演化式架构师&#34;&gt;演化式架构师&lt;/h2&gt;
+&lt;h2 id=&#34;演化式架构师:d44432819f78b681c7719da2e447145c&#34;&gt;演化式架构师&lt;/h2&gt;
 
 &lt;p&gt;本章讲解了如何去做一个合格的架构师。这个对于一个架构师或者将要成为架构师的人来说很有指导意义，特别是面临微服务架构演进时。&lt;/p&gt;
 
-&lt;h2 id=&#34;测试&#34;&gt;测试&lt;/h2&gt;
+&lt;h2 id=&#34;测试:d44432819f78b681c7719da2e447145c&#34;&gt;测试&lt;/h2&gt;
 
-&lt;h3 id=&#34;测试类型定义&#34;&gt;测试类型定义：&lt;/h3&gt;
+&lt;h3 id=&#34;测试类型定义:d44432819f78b681c7719da2e447145c&#34;&gt;测试类型定义：&lt;/h3&gt;
 
 &lt;p&gt;&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; xmlns:xlink=&#34;http://www.w3.org/1999/xlink&#34; width=&#34;426px&#34; version=&#34;1.1&#34; content=&#34;&amp;lt;mxfile userAgent=&amp;quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36&amp;quot; version=&amp;quot;5.5.1.6&amp;quot; editor=&amp;quot;www.draw.io&amp;quot; type=&amp;quot;device&amp;quot;&amp;gt;&amp;lt;diagram&amp;gt;3VhNc6M4EP01ffQWHwbDUbLx7GVP2a09E5tg1WLkwXiczK+fJ9EYCP6YVJzUVlwuW7SkVuv161YL8ufb529Vutv8pddZQZ6zfiZ/QZ4XB1P8GsFLIwh9PBlBXql1I3I6wYP6mTVCt5Ue1DrbDwbWWhe12rHQbYQrXZbZqh7I0qrSx+GwJ13wqizYpXm7Yid4WKXFWPqvWtebRhp5YSf/M1P5pl3ZDeOm5zFd/ZdX+lDyeuT5T/bTdG/TVhfvar9J1/rYE/kJYK20hmbT2j7Ps8JAO4RteaH3ZHeVlWzb9Qnslh9pceCts131S4vFcaPq7GGXrszzEe4mX27qbYEnF80nVRRzXegKz6UuMUjmVbpWMOCVOC1UXuJxha4McslrZ1WdMXHO2G9FbPy3TG+zunrBEJ7gtcRiorntBo6d23yXZZu+y2bssZSpkp90d3ChwYidR88fo5fEJARFc0pCiqckQ9OQAUWSkojEkuKAvLCAFXKtfgyQDr8fjNsl0KgnDJbAiCJ7qrtetHL7D71RRLFLCZaRJJol7RpJQLFDAmsHJBKKE0pmFCUkHTsY9lmzxIKEb7qEa4ahEaNramZFgmLoiSjySS4oWZKcGwmbDmCs9WzKnTaE1WCL4PVFZBtY9iyGzlLVk6Uqs/3+klVvI/KInrsiVeXkBS5HhH4OVd2QKdWnKpz1bqZyPn7F1BgEQMOyhYkERp0cwFvsQWg8OUStyvbqZ/poBzgGNK3K2hoaSAoWBtdDrTHGDOjDbEngSwOpQuIVLK61ccseXlJl/rd5WEym98kVfjgbOsAZOyCIzqQKBu89+IOwI/xtgjDRikCeUwT84QgEcuMaOALh9pXwP6XcFn/s8bPw5xAa4G9TiUl3Nn/KGedGgQYc4RuPfCn8gykDyfh7Dhchn4A/R96N/INAwAGEQwqhMTfe+WL5Z8h/32FUPgF/Vjuo83qHdq+kSKxLZiSRm2ySgj9MSFyqYj6kFGAtcEN5Vk2Bc3/SYmT0uH+YDY0qCli8tCkWpQ32g4ri8n64xsHpdyqsUD2hDRSQGBZ2DOoTx0BjOLswyg1SKJGgBw1pi6ZR9dQh1WxouMkrAP4vMQUisQUuMDlT9Inwru09Vr839UOqvN2h2kHDHYLcRMatKm/KiWBQ5d0hylntIMuCjQ110cAX9f7V+8hbLhfjGwS65vaWceXecSU8bhDl2gWhvbvAEf+Uqu7FJYZgJ0i1H0ifRwP4/a8InsMevXVFiHnee8jTvnsZn9HGj+Mr4c2TYeC6pqLCNGQNKEIGBZ/gI7gOa9jjhhNwP23bXCNiO8u1LD6t2g7+ffacpva2cP4MsCaAwFi8CZvm5HjzAdhtvsmUjTK0P5KLukpLvN26RyrjqvnExnG94k7PFCxtCnwDG/HYvfSyfb0Xi37yCw==&amp;lt;/diagram&amp;gt;&amp;lt;/mxfile&amp;gt;&#34; onclick=&#34;(function(svg){var src=window.event.target||window.event.srcElement;while (src!=null&amp;amp;&amp;amp;src.nodeName.toLowerCase()!=&#39;a&#39;){src=src.parentNode;}if(src==null){if(svg.wnd!=null&amp;amp;&amp;amp;!svg.wnd.closed){svg.wnd.focus();}else{var r=function(evt){if(evt.data==&#39;ready&#39;&amp;amp;&amp;amp;evt.source==svg.wnd){svg.wnd.postMessage(decodeURIComponent(svg.getAttribute(&#39;content&#39;)),&#39;*&#39;);window.removeEventListener(&#39;message&#39;,r);}};window.addEventListener(&#39;message&#39;,r);svg.wnd=window.open(&#39;https://www.draw.io/?client=1&amp;amp;lightbox=1&amp;amp;chrome=0&amp;amp;edit=_blank&#39;);}}})(this);&#34; viewBox=&#34;0 0 426 223&#34; style=&#34;cursor:pointer;max-width:100%;max-height:223px;&#34;&gt;&lt;defs&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-fff2cc-1-ffd966-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#FFF2CC&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#FFD966&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-e1d5e7-1-8c6c9c-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#E1D5E7&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#8C6C9C&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-dae8fc-1-7ea6e0-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#DAE8FC&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#7EA6E0&#34;/&gt;&lt;/linearGradient&gt;&lt;linearGradient x1=&#34;0%&#34; y1=&#34;0%&#34; x2=&#34;0%&#34; y2=&#34;100%&#34; id=&#34;mx-gradient-ffcd28-1-ffa500-1-s-0&#34;&gt;&lt;stop offset=&#34;0%&#34; style=&#34;stop-color:#FFCD28&#34;/&gt;&lt;stop offset=&#34;100%&#34; style=&#34;stop-color:#FFA500&#34;/&gt;&lt;/linearGradient&gt;&lt;/defs&gt;&lt;g transform=&#34;translate(0.5,0.5)&#34;&gt;&lt;rect x=&#34;54&#34; y=&#34;21&#34; width=&#34;312&#34; height=&#34;179&#34; fill=&#34;none&#34; stroke=&#34;#000000&#34; pointer-events=&#34;none&#34;/&gt;&lt;rect x=&#34;54&#34; y=&#34;21&#34; width=&#34;163&#34; height=&#34;86&#34; fill=&#34;url(#mx-gradient-fff2cc-1-ffd966-1-s-0)&#34; stroke=&#34;#d6b656&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(57.5,43.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;156&#34; height=&#34;40&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 157px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;验收测试&lt;div style=&#34;text-align: left&#34;&gt;我们是否实现了正确的功能？&lt;/div&gt;&lt;div style=&#34;text-align: left&#34;&gt;自动化测试 Fit-Finess&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;78&#34; y=&#34;26&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;[Not supported by viewer]&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(190.5,3.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;面向业务&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;面向业务&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(2.5,99.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;支持团队&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;支持团队&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(367.5,101.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;评价产品&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;评价产品&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;g transform=&#34;translate(192.5,208.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;48&#34; height=&#34;12&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;面向技术&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;24&#34; y=&#34;12&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;面向技术&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;217&#34; y=&#34;21&#34; width=&#34;149&#34; height=&#34;84&#34; fill=&#34;url(#mx-gradient-e1d5e7-1-8c6c9c-1-s-0)&#34; stroke=&#34;#9673a6&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(218.5,28.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;145&#34; height=&#34;68&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 145px; white-space: normal; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;&lt;div&gt;探索性测试&lt;/div&gt;&lt;div style=&#34;text-align: left&#34;&gt;&lt;span style=&#34;line-height: 1.2&#34;&gt;可用性测试：我如何破坏系统功能&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;div style=&#34;text-align: left&#34;&gt;&lt;span style=&#34;line-height: 1.2&#34;&gt;手工&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;73&#34; y=&#34;40&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;[Not supported by viewer]&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;54&#34; y=&#34;108&#34; width=&#34;163&#34; height=&#34;92&#34; fill=&#34;url(#mx-gradient-dae8fc-1-7ea6e0-1-s-0)&#34; stroke=&#34;#6c8ebf&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(63.5,133.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;144&#34; height=&#34;40&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 145px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;单元测试&lt;div&gt;我们是否正确地实现了功能&lt;/div&gt;&lt;div&gt;自动化的 xUnit系列&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;72&#34; y=&#34;26&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;单元测试&amp;lt;div&amp;gt;我们是否正确地实现了功能&amp;lt;/div&amp;gt;&amp;lt;div&amp;gt;自动化的 xUnit系列&amp;lt;/div&amp;gt;&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;rect x=&#34;218&#34; y=&#34;106&#34; width=&#34;148&#34; height=&#34;95&#34; fill=&#34;url(#mx-gradient-ffcd28-1-ffa500-1-s-0)&#34; stroke=&#34;#d79b00&#34; pointer-events=&#34;none&#34;/&gt;&lt;g transform=&#34;translate(231.5,126.5)&#34;&gt;&lt;switch&gt;&lt;foreignObject style=&#34;overflow:visible;&#34; pointer-events=&#34;all&#34; width=&#34;120&#34; height=&#34;54&#34; requiredFeatures=&#34;http://www.w3.org/TR/SVG11/feature#Extensibility&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 121px; white-space: nowrap; word-wrap: normal; text-align: center;&#34;&gt;&lt;div xmlns=&#34;http://www.w3.org/1999/xhtml&#34; style=&#34;display:inline-block;text-align:inherit;text-decoration:inherit;&#34;&gt;非功能性测试&lt;div&gt;响应时间；可扩展性；&lt;/div&gt;&lt;div&gt;性能测试；安全测试&lt;/div&gt;&lt;div&gt;工具&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/foreignObject&gt;&lt;text x=&#34;60&#34; y=&#34;33&#34; fill=&#34;#000000&#34; text-anchor=&#34;middle&#34; font-size=&#34;12px&#34; font-family=&#34;Helvetica&#34;&gt;[Not supported by viewer]&lt;/text&gt;&lt;/switch&gt;&lt;/g&gt;&lt;/g&gt;&lt;/svg&gt;&lt;/p&gt;
 
 &lt;p&gt;深入微服务之前，首先要解决的就是自动化的测试。&lt;/p&gt;
 
-&lt;h3 id=&#34;测试范围&#34;&gt;测试范围&lt;/h3&gt;
+&lt;h3 id=&#34;测试范围:d44432819f78b681c7719da2e447145c&#34;&gt;测试范围&lt;/h3&gt;
 
 &lt;ol&gt;
 &lt;li&gt;单元测试：是帮助开发人员的，是面向技术而非业务的。单元测试对于代码重构非常重要。&lt;/li&gt;
@@ -89,15 +521,15 @@
 &lt;li&gt;端到端测试：覆盖整个系统，是需要通过浏览器操作图形用户界面。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;实现服务测试&#34;&gt;实现服务测试&lt;/h3&gt;
+&lt;h3 id=&#34;实现服务测试:d44432819f78b681c7719da2e447145c&#34;&gt;实现服务测试&lt;/h3&gt;
 
 &lt;p&gt;打桩还是mock，打桩是指被测试服务的请求创建一些有着预设响应的打桩服务。mock还会进一步验证请求本身是否被正确调用，也可以用来验证预期的副作用是否发生。&lt;/p&gt;
 
-&lt;h3 id=&#34;脆弱的测试&#34;&gt;脆弱的测试&lt;/h3&gt;
+&lt;h3 id=&#34;脆弱的测试:d44432819f78b681c7719da2e447145c&#34;&gt;脆弱的测试&lt;/h3&gt;
 
 &lt;p&gt;随着测试范围的扩大，纳入测试的服务范围也会变多，这样测试失败的可能性就会更大。&lt;/p&gt;
 
-&lt;h3 id=&#34;拯救消费者驱动的测试&#34;&gt;拯救消费者驱动的测试&lt;/h3&gt;
+&lt;h3 id=&#34;拯救消费者驱动的测试:d44432819f78b681c7719da2e447145c&#34;&gt;拯救消费者驱动的测试&lt;/h3&gt;
 
 &lt;p&gt;端到端测试试图解决的关键问题，就是确保部署新的服务到生产环境后，变更不会破坏新服务的消费者。一种不需要真正的消费者也能达到相同的目的：CDC，Consumer-Driven Contact
 消费者驱动的契约。使用CDC时，我们会定义服务（或生产者）的消费者的期望。这些期望会变成对生产者运行的测试代码。
@@ -108,11 +540,11 @@
 
 &lt;p&gt;后面会补充下实践经验。&lt;/p&gt;
 
-&lt;h2 id=&#34;如果建模微服务&#34;&gt;如果建模微服务&lt;/h2&gt;
+&lt;h2 id=&#34;如果建模微服务:d44432819f78b681c7719da2e447145c&#34;&gt;如果建模微服务&lt;/h2&gt;
 
 &lt;p&gt;好的微服务的定义：&lt;strong&gt;高内聚&lt;/strong&gt;，&lt;strong&gt;松耦合&lt;/strong&gt;。从而引出服务边界的问题。&lt;/p&gt;
 
-&lt;h3 id=&#34;限界上下文&#34;&gt;限界上下文&lt;/h3&gt;
+&lt;h3 id=&#34;限界上下文:d44432819f78b681c7719da2e447145c&#34;&gt;限界上下文&lt;/h3&gt;
 
 &lt;ol&gt;
 &lt;li&gt;共享的隐藏模型；&lt;/li&gt;
@@ -122,21 +554,21 @@
 
 &lt;p&gt;边界问题如何划分；基于业务功能、还是技术边界。本章主要是一些概念的陈述。&lt;/p&gt;
 
-&lt;h2 id=&#34;集成&#34;&gt;集成&lt;/h2&gt;
+&lt;h2 id=&#34;集成:d44432819f78b681c7719da2e447145c&#34;&gt;集成&lt;/h2&gt;
 
 &lt;p&gt;当然是指微服务的集成。集成做的好，才能保证微服务的自治性。&lt;/p&gt;
 
-&lt;h2 id=&#34;分解单块系统&#34;&gt;分解单块系统&lt;/h2&gt;
+&lt;h2 id=&#34;分解单块系统:d44432819f78b681c7719da2e447145c&#34;&gt;分解单块系统&lt;/h2&gt;
 
-&lt;h2 id=&#34;部署&#34;&gt;部署&lt;/h2&gt;
+&lt;h2 id=&#34;部署:d44432819f78b681c7719da2e447145c&#34;&gt;部署&lt;/h2&gt;
 
-&lt;h2 id=&#34;监控&#34;&gt;监控&lt;/h2&gt;
+&lt;h2 id=&#34;监控:d44432819f78b681c7719da2e447145c&#34;&gt;监控&lt;/h2&gt;
 
-&lt;h2 id=&#34;安全&#34;&gt;安全&lt;/h2&gt;
+&lt;h2 id=&#34;安全:d44432819f78b681c7719da2e447145c&#34;&gt;安全&lt;/h2&gt;
 
-&lt;h2 id=&#34;康威定律和系统设计&#34;&gt;康威定律和系统设计&lt;/h2&gt;
+&lt;h2 id=&#34;康威定律和系统设计:d44432819f78b681c7719da2e447145c&#34;&gt;康威定律和系统设计&lt;/h2&gt;
 
-&lt;h2 id=&#34;规模化微服务&#34;&gt;规模化微服务&lt;/h2&gt;
+&lt;h2 id=&#34;规模化微服务:d44432819f78b681c7719da2e447145c&#34;&gt;规模化微服务&lt;/h2&gt;
 </description>
     </item>
     
@@ -192,7 +624,7 @@
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
 
-&lt;h2 id=&#34;编码问题:a4408d7234fd43d2930eca48e7402255&#34;&gt;编码问题&lt;/h2&gt;
+&lt;h2 id=&#34;编码问题&#34;&gt;编码问题&lt;/h2&gt;
 
 &lt;p&gt;互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：&lt;/p&gt;
 
@@ -201,7 +633,7 @@
 
 &lt;p&gt;UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看&lt;a href=&#34;http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html&#34;&gt;这篇文章&lt;/a&gt;，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。&lt;/p&gt;
 
-&lt;h2 id=&#34;精确获取字符长度:a4408d7234fd43d2930eca48e7402255&#34;&gt;精确获取字符长度&lt;/h2&gt;
+&lt;h2 id=&#34;精确获取字符长度&#34;&gt;精确获取字符长度&lt;/h2&gt;
 
 &lt;p&gt;由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。&lt;strong&gt;encodeURIComponent&lt;/strong&gt;方法是比较好用的：&lt;/p&gt;
 
@@ -228,7 +660,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 18
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;textarea-中的换行符:a4408d7234fd43d2930eca48e7402255&#34;&gt;textarea 中的换行符&lt;/h2&gt;
+&lt;h2 id=&#34;textarea-中的换行符&#34;&gt;textarea 中的换行符&lt;/h2&gt;
 
 &lt;p&gt;与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
 例如只有一个换行符的encode前端结果：&lt;/p&gt;
@@ -241,7 +673,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 产生这个问题的原因是换行符在HTTP&lt;a href=&#34;http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code&#34;&gt;传输的过程中发生转换&lt;/a&gt;，由‘\n’变成‘\r\n’。
 因此在计算textarea值时在遇到换行符时记得长度额外加1。&lt;/p&gt;
 
-&lt;h2 id=&#34;代码实现:a4408d7234fd43d2930eca48e7402255&#34;&gt;代码实现&lt;/h2&gt;
+&lt;h2 id=&#34;代码实现&#34;&gt;代码实现&lt;/h2&gt;
 
 &lt;p&gt;既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
 针对input：&lt;/p&gt;
@@ -294,7 +726,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:a4408d7234fd43d2930eca48e7402255&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。&lt;/p&gt;
 </description>
@@ -523,7 +955,7 @@ Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_c
 mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
 具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;浏览器刷新原则:bca2f1e29878787021347a412fc3f8ce&#34;&gt;浏览器刷新原则&lt;/h2&gt;
+&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
 
 &lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
 这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
@@ -581,7 +1013,7 @@ Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
 
 &lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
 
-&lt;h2 id=&#34;实施apache缓存:bca2f1e29878787021347a412fc3f8ce&#34;&gt;实施Apache缓存&lt;/h2&gt;
+&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
 
 &lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
 
@@ -614,7 +1046,7 @@ CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#
 
 &lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache效果检查:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache效果检查&lt;/h2&gt;
+&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
 
 &lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
 例如能看到如下内容：&lt;/p&gt;
@@ -656,7 +1088,7 @@ Accept-Encoding
 
 &lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间单位为秒，每次请求这个字段都是会增加的。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache的资源副本:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache的资源副本&lt;/h2&gt;
+&lt;h2 id=&#34;cache的资源副本&#34;&gt;cache的资源副本&lt;/h2&gt;
 
 &lt;p&gt;Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
 这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上&lt;code&gt;Accept-Encoding&lt;/code&gt;，响应头Vary域则是：&lt;code&gt;Vary: Accept-Encoding&lt;/code&gt;。
@@ -665,7 +1097,7 @@ Accept-Encoding
 
 &lt;p&gt;当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。&lt;/p&gt;
 
-&lt;h2 id=&#34;缓存资源的更新周期:bca2f1e29878787021347a412fc3f8ce&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
+&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
 
 &lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
 如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。
@@ -689,22 +1121,22 @@ Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcac
 
 &lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;
 
-&lt;h2 id=&#34;相关http-header字段&#34;&gt;相关HTTP header字段&lt;/h2&gt;
+&lt;h2 id=&#34;相关http-header字段:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;相关HTTP header字段&lt;/h2&gt;
 
-&lt;h3 id=&#34;last-modified和etag&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
+&lt;h3 id=&#34;last-modified和etag:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Last-Modified和ETag&lt;/h3&gt;
 
 &lt;p&gt;两者的功能类似，一个是文件的最近一次的修改时间，一个是针对这个资源文件生成的tag。都是server端的返回。刷新页面时，请求头里面会带上If-Modified-Since或者 If-None-Match。
  但是Etag并&lt;a href=&#34;https://developer.yahoo.com/performance/rules.html#etags=&#34;&gt;不推荐使用&lt;/a&gt;，原因就是不同的server对Etag的生成算法可能不统一，特别在集群server的情况下。&lt;/p&gt;
 
-&lt;h3 id=&#34;pragma&#34;&gt;Pragma&lt;/h3&gt;
+&lt;h3 id=&#34;pragma:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Pragma&lt;/h3&gt;
 
 &lt;p&gt;纯协议上的指令，对请求响应链路上的所有代理使用。例如如果pragma：no-chache，则请求在请求响应链上的任意节点都不会被缓存，因其于cache-control：no-chache意义一致。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires&#34;&gt;Expires&lt;/h3&gt;
+&lt;h3 id=&#34;expires:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Expires&lt;/h3&gt;
 
 &lt;p&gt;set response headers，对某个响应设置个超时时间，一般优先级不高，如果存在max-age的话，这个字段几乎不起作用。&lt;/p&gt;
 
-&lt;h3 id=&#34;cache-control&#34;&gt;Cache-Control&lt;/h3&gt;
+&lt;h3 id=&#34;cache-control:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Cache-Control&lt;/h3&gt;
 
 &lt;p&gt;public：标识验证后的respons可被缓存的。
 no-store：任何情况下不缓存，并尽量不要保存到磁盘中。不缓存的资源并不能保证不被保存到磁盘中。例如浏览器的后退键，可能会导致看到过期的页面。
@@ -714,7 +1146,7 @@ proxy-revalidate： 和must 一样，只对proxy cache有效，对中间有cache
 max-age: 指定刷新超时时间，即cache的超时时间。
 s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache servers使用这个s-maxage，针对public的cache有效，其会覆盖max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&#34;vary-https-www-fastly-com-blog-best-practices-for-using-the-vary-header:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;&lt;a href=&#34;https://www.fastly.com/blog/best-practices-for-using-the-vary-header&#34;&gt;vary&lt;/a&gt;&lt;/h3&gt;
 
 &lt;p&gt;通过vary告诉http cache，寻找缓存对象时需要考虑的头域字段。比如：浏览器发了两个request，一个带有accept-encoding， 一个没有。http 缓存的时候会带上这个vary标记，表示只有带有accept-encoding的缓存对象才能是使用。达到的效果就是request里面带有accept-encoding的请求，响应缓存只能被这样的请求获取。&lt;/p&gt;
 
@@ -722,26 +1154,26 @@ s-maxage: 和 max-age一样，如果cache不是private的，他会指明cache se
 简单的理解vary用来区分请求的差别，识别出不同的request。
 vary的其他取值：user-agent, 让响应区分不同的agent；Referer, 区分这个request是从哪个页面而来。cookie, 不同认证信息不同的 request。vary指定的那些值就会影响浏览器的cache策略。&lt;/p&gt;
 
-&lt;h2 id=&#34;需要注意的几个问题&#34;&gt;需要注意的几个问题&lt;/h2&gt;
+&lt;h2 id=&#34;需要注意的几个问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;需要注意的几个问题&lt;/h2&gt;
 
-&lt;h3 id=&#34;https-证书问题&#34;&gt;https 证书问题&lt;/h3&gt;
+&lt;h3 id=&#34;https-证书问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;https 证书问题&lt;/h3&gt;
 
 &lt;p&gt;如果是无效的证书，会导致缓存无法完全起用。本地测试是doc无法被cache，静态资源还是可以的。当然这跟浏览器的行为也有关系，Firefox里面添加例外证书变成合法的就可以正常缓存了。chrome的证书比较严格不好把红叉叉去掉。&lt;/p&gt;
 
-&lt;h3 id=&#34;expires和max-age-优先级问题&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
+&lt;h3 id=&#34;expires和max-age-优先级问题:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;expires和max-age 优先级问题&lt;/h3&gt;
 
 &lt;p&gt;当response头域里面两者都包含时，浏览器会优先选用max-age，当然这是我本地的测试结果。所有的情况可能难以覆盖，比如移动端的浏览器，其他的浏览器，除了Firefox、chrome、IE等等以外的。
 另外就是expires是http1.0里面的，max-age在http1.1被引入，但是&lt;a href=&#34;https://www.mnot.net/blog/2007/05/15/expires_max-age&#34;&gt;这篇文章&lt;/a&gt;建议最好两者都带上正确的值，或者只带上max-age。&lt;/p&gt;
 
-&lt;h3 id=&#34;conditional-requests&#34;&gt;Conditional Requests&lt;/h3&gt;
+&lt;h3 id=&#34;conditional-requests:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;Conditional Requests&lt;/h3&gt;
 
 &lt;p&gt;条件请求是当浏览器发现资源超时时，如过了max-age或者expires date，会发起条件请求，如果server发现资源变化了会回复200 ok，否则回复304的status code。正确情况下资源cache后，浏览器是不会发条件请求的，直到资源超时后。当然也不排除某些浏览器会不停的发conditional request，更为详细的介绍，&lt;a href=&#34;https://greenbytes.de/tech/webdav/draft-ietf-httpbis-p4-conditional-20.html&#34;&gt;请看这里&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h2 id=&#34;静态资源缓存&#34;&gt;静态资源缓存&lt;/h2&gt;
+&lt;h2 id=&#34;静态资源缓存:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;静态资源缓存&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源，更新时更加推荐使用变更文件名的方式，例如让文件名包含一个版本号的方式。这种比文件末尾增加query string更加有效，例如有些中间proxy就不会缓存带有查询字符的url。&lt;/p&gt;
 
-&lt;h2 id=&#34;php配合apache-实现静态资源版本控制&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
+&lt;h2 id=&#34;php配合apache-实现静态资源版本控制:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;PHP配合apache 实现静态资源版本控制&lt;/h2&gt;
 
 &lt;p&gt;针对静态资源的cache设置，这个&lt;a href=&#34;https://github.com/Compasses/server-configs-apache/tree/master/src/web_performance&#34;&gt;github&lt;/a&gt;有较好的配置模板做参考。基本上enmod headers即可。
 针对静态文件php代码里面插入版本号，一般为时间戳或者数据库里面的更新时间：&lt;/p&gt;
@@ -793,7 +1225,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;上述就完成了，只要后台修改了静态资源文件，则文件的名字会随着版本号的更新而更新，从而实现前端自动刷新缓存。否则这些资源文件会永远cache在客户端。超时时间为31104000s。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结:0e78749757b1f3981cc79e957aa9cfa7&#34;&gt;总结&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;http cache 很复杂，牵扯较多的组件，上述只是针对Apache+PHP的方案实施。&lt;/li&gt;
@@ -815,7 +1247,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
 
-&lt;h2 id=&#34;interface-内部存储:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface 内部存储&lt;/h2&gt;
+&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
 
 &lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
 
@@ -927,7 +1359,7 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 &lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;interface使用:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface使用&lt;/h2&gt;
+&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
 
 &lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
@@ -1049,7 +1481,7 @@ func main() {
 
 &lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
 
-&lt;h1 id=&#34;css相关:f2bccc30c6deb9603cdd35832971151d&#34;&gt;CSS相关&lt;/h1&gt;
+&lt;h1 id=&#34;css相关&#34;&gt;CSS相关&lt;/h1&gt;
 
 &lt;p&gt;因为开发是基于LESS的，所以代码相关的都是&lt;a href=&#34;http://less.bootcss.com/&#34;&gt;LESS&lt;/a&gt;的代码。
 ##mixin
@@ -1071,7 +1503,7 @@ func main() {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;media:f2bccc30c6deb9603cdd35832971151d&#34;&gt;media&lt;/h2&gt;
+&lt;h2 id=&#34;media&#34;&gt;media&lt;/h2&gt;
 
 &lt;p&gt;由于前端一直在使用&lt;a href=&#34;http://v3.bootcss.com/css/&#34;&gt;bootstrap&lt;/a&gt;，所以所有的responsive相关的design都是依赖bootstrap来实现。bootstrap的栅格系统需要一定的使用规则，有的时候过度使用会导致DOM结构过去复杂化了。例如其中的form，form里面必须按照一个input一个label的排列，如果想要添加一些文本信息或者增加其他的标签，又让他保持responsive，必须通过类似row下的col再嵌套row和col，这样就实现很复杂，让DOM结构看起来混乱不堪。
 其实看看bootstrap.css里面的代码也不难发现，其实responsive的代码也不难写，问题是你不需要去写一个框架，框架的代码是普适的。你只是为了满足一个小特性，所以代码也会写的很精简。&lt;/p&gt;
@@ -1108,14 +1540,14 @@ func main() {
 | orientation=portrait| 高度大于或等于宽度的任意浏览器适用的规则。相当于竖屏。|
 | orientation=landscape| 宽度大于高度的任意浏览器适用的规则。相当于横屏。|&lt;/p&gt;
 
-&lt;h2 id=&#34;语义化标签:f2bccc30c6deb9603cdd35832971151d&#34;&gt;语义化标签&lt;/h2&gt;
+&lt;h2 id=&#34;语义化标签&#34;&gt;语义化标签&lt;/h2&gt;
 
 &lt;p&gt;写一些复杂网页的时候，DOM元素的选取至关重要。要尽量结合Object的属性，进行语义上的对应选择，多使用语义化的标签。例如一个product detail页面，product属性是非常复杂的，有多个variant，variant下面有多个value。当选择variant和对应的value 的时候，就能确定一个单品，这时还会有多个事件的处理，例如每个单品的价格、库存都是变化的，产品的variant对应有相应的产品图片。
 这样的DOM结构，全部使用div能做出来吗，肯定能做出来，但是复杂度就上去了。因为要兼顾前端UI的展示、JS的交互等等。通过观察多个电商网站的DOM结构，也能发现，大部分是使用：dl dt dd + ul li。即外层展示使用dl dt，dd里面套上ul + li 展示具体的variant value，这样的DOM结构清晰，CSS class的selector也很容易写，包括JS的也是一样的。&lt;/p&gt;
 
 &lt;p&gt;上面只是简单举个实际过程中遇到的例子。其实语义化标签的使用包含很多其他的东西；随着经验的积累使用起来也会更加得心应手。&lt;/p&gt;
 
-&lt;h1 id=&#34;js相关:f2bccc30c6deb9603cdd35832971151d&#34;&gt;JS相关&lt;/h1&gt;
+&lt;h1 id=&#34;js相关&#34;&gt;JS相关&lt;/h1&gt;
 
 &lt;p&gt;JS遵从语言规范外，对单个页面使用的JS进行封装，让代码看起来不是太过去杂乱。如果前端的JS使用了框架应该不存在这样的问题。
 封装的时候要对照页面的DOM结构和交互流程，让Object能更好为事件响应服务。&lt;/p&gt;
@@ -1130,11 +1562,11 @@ func main() {
       <guid>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
       <description>
 
-&lt;h1 id=&#34;说明:08afb798474a9037df6f2df800659b05&#34;&gt;说明&lt;/h1&gt;
+&lt;h1 id=&#34;说明&#34;&gt;说明&lt;/h1&gt;
 
 &lt;p&gt;最近产品考虑更换前端框架，重点考察了CodeIgniter 和 Laravel两个框架，现对其进行下对比分析。&lt;/p&gt;
 
-&lt;h1 id=&#34;总体对比:08afb798474a9037df6f2df800659b05&#34;&gt;总体对比&lt;/h1&gt;
+&lt;h1 id=&#34;总体对比&#34;&gt;总体对比&lt;/h1&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -1193,12 +1625,12 @@ func main() {
 &lt;p&gt;CodeIgniter 基本上是个MVC的空架子，代码量极小，开发的花基本上 100%的掌控在自己手里。 Laravel还是加载了不少的三方 component，比CodeIgniter 庞大些。
 对MVC的支持都很清晰，URL的路由也很简单易扩展。&lt;/p&gt;
 
-&lt;h1 id=&#34;测试环境:08afb798474a9037df6f2df800659b05&#34;&gt;测试环境：&lt;/h1&gt;
+&lt;h1 id=&#34;测试环境&#34;&gt;测试环境：&lt;/h1&gt;
 
 &lt;p&gt;主要是使用了Laravel 的HomeStead环境，通过virtual box + vagrant标准用法，加载Laravel的框架代码；要使其加载CodeIgniter框架，需要修改Nginx的配置，增加新的server，只要端口号换成新的，root指定到CodeIgniter的跟目录即可。
 总体上是Nginx+php5-fpm+mysql+ Ubuntu + CodeIgniter 源码包 + Laravel 源码包。源码包共享在本机上。&lt;/p&gt;
 
-&lt;h1 id=&#34;测试页面:08afb798474a9037df6f2df800659b05&#34;&gt;测试页面：&lt;/h1&gt;
+&lt;h1 id=&#34;测试页面&#34;&gt;测试页面：&lt;/h1&gt;
 
 &lt;p&gt;Modal：使用product数据，获取某个product上的所有信息。
 View：引入Twig模板引擎，创建几个twig模板，在controller层render。
@@ -1206,14 +1638,14 @@ Controller：调用modal获取数据，使用 twig render 页面。&lt;/p&gt;
 
 &lt;p&gt;这两个框架都用非常清晰的 MVC结构，上述页面的代码几乎可以在两者之间无缝迁移。&lt;/p&gt;
 
-&lt;h1 id=&#34;性能对比测试:08afb798474a9037df6f2df800659b05&#34;&gt;性能对比测试：&lt;/h1&gt;
+&lt;h1 id=&#34;性能对比测试&#34;&gt;性能对比测试：&lt;/h1&gt;
 
 &lt;p&gt;针对这个页面进行性能测试：页面大小为 8KB， 加载一个已有的CSS文件大小为 87.7KB。
 使用Apache的ab test进行测试：
 AB test:
 ab -n 1000 -c 80 &lt;a href=&#34;http://192.168.10.10:8080/productdetail/&#34;&gt;http://192.168.10.10:8080/productdetail/&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;laravel-结果:08afb798474a9037df6f2df800659b05&#34;&gt;Laravel 结果:&lt;/h2&gt;
+&lt;h2 id=&#34;laravel-结果&#34;&gt;Laravel 结果:&lt;/h2&gt;
 
 &lt;p&gt;Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
@@ -1264,7 +1696,7 @@ WARNING: The median and mean for the initial connection time are not within a no
 
 &lt;p&gt;100%  17271 (longest request)&lt;/p&gt;
 
-&lt;h2 id=&#34;codeigniter-结果:08afb798474a9037df6f2df800659b05&#34;&gt;CodeIgniter 结果:&lt;/h2&gt;
+&lt;h2 id=&#34;codeigniter-结果&#34;&gt;CodeIgniter 结果:&lt;/h2&gt;
 
 &lt;p&gt;Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
@@ -1312,7 +1744,7 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 
 &lt;p&gt;100%   3649 (longest request)&lt;/p&gt;
 
-&lt;h1 id=&#34;总结:08afb798474a9037df6f2df800659b05&#34;&gt;总结&lt;/h1&gt;
+&lt;h1 id=&#34;总结&#34;&gt;总结&lt;/h1&gt;
 
 &lt;p&gt;CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。
 如果选择从头开始的话，感觉CodeIgniter更好些。&lt;/p&gt;
@@ -1356,7 +1788,7 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 
 &lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
 
-&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
+&lt;h1 id=&#34;position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;POSITION&lt;/h1&gt;
 
 &lt;p&gt;解释说明：&lt;/p&gt;
 
@@ -1400,23 +1832,23 @@ User agents may treat position as &#39;static&#39; on the root element.
 
 &lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
 
-&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
+&lt;h2 id=&#34;relative-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;relative position&lt;/h2&gt;
 
 &lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
 
-&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
+&lt;h2 id=&#34;absolute-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;absolute position&lt;/h2&gt;
 
 &lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
 
-&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
+&lt;h2 id=&#34;fixed-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;fixed position&lt;/h2&gt;
 
 &lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
 
-&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
+&lt;h2 id=&#34;floating:22153868a43551ee8f9f1515ff4cd978&#34;&gt;floating&lt;/h2&gt;
 
 &lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
 
-&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
+&lt;h1 id=&#34;overflow:22153868a43551ee8f9f1515ff4cd978&#34;&gt;overflow&lt;/h1&gt;
 
 &lt;p&gt;解释：&lt;/p&gt;
 
@@ -1726,60 +2158,6 @@ Nginx默认不支持session sticky，需要重新编译安装这个插件；因�
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;这样直接访问 &lt;a href=&#34;http://10.128.163.121&#34;&gt;http://10.128.163.121&lt;/a&gt; 即可，Nginx会自动路由请求到某一个server上。因为sticky是会话级别的，关掉浏览器会话就结束了。如果重新访问用户可能会被路由到另一个server上，可以通过查询Apache的accesslog来确认。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>deadlock of mysql</title>
-      <link>http://compasses.github.io/2015/06/26/deadlock-of-mysql/</link>
-      <pubDate>Fri, 26 Jun 2015 15:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/06/26/deadlock-of-mysql/</guid>
-      <description>&lt;p&gt;没有想到在看似简单的场景里面也能遇到mysql的deadlock。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;[Thu Jun 25 05:18:40.589897 2015] [:error] [pid 737] [client 172.17.42.1:41290] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query UPDATE `wp_usermeta` SET `meta_value` = &#39;a:2:{s:64:\\&amp;quot;1161a6271c528045db428cc8698bbc8e3e26ad4fb9d7436e32cbbe01a00079d0\\&amp;quot;;i:1436419120;s:64:\\&amp;quot;bf2e3582e17c7dfa1e6b02c700f537b8095f2b31ef58e4b448939eb9406e11f7\\&amp;quot;;i:1435382320;}&#39; WHERE `user_id` = 188 AND `meta_key` = &#39;session_tokens&#39; made by require(&#39;wp-blog-header.php&#39;), require_once(&#39;wp-includes/template-loader.php&#39;), do_action(&#39;template_redirect&#39;), call_user_func_array, anw_template_redirect, ANW_Base_Controller-&amp;gt;process, call_user_func, ANW_AccountOnePage_Controller-&amp;gt;authenticate, wp_signon, wp_set_auth_cookie, WP_Session_Tokens-&amp;gt;create, WP_Session_Tokens-&amp;gt;update, WP_User_Meta_Session_Tokens-&amp;gt;update_session, WP_User_Meta_Session_Tokens-&amp;gt;update_sessions, update_user_meta, update_metadata
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;这是wordpress本身的缺陷导致的，死锁的场景也是不复杂。即session_tokens的更新机制所致。
-Session_tokens的更新是随着用户的login和 logout 更新的。Login时会增加session_tokens, 在不同的 浏览器 login会增加新的 tokens，在 logout时会删除这个 tokens。
-这个死锁用户有两个 session，场景可能就是不同的浏览器同时做 login或者 logout，或者一个 login另一个 logout。看这个环境上有大量的用户存在，并且每个用户至多有两个 session，也只有跑性能脚本会有这个问题。现实情况比较难复现。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;                /**
-                * Update a user&#39;s sessions in the usermeta table.
-                *
-                * @since 4.0.0
-                * @access protected
-                *
-                * @param array $sessions Sessions.
-                */
-                protected function update_sessions( $sessions ) {
-                                if ( ! has_filter( &#39;attach_session_information&#39; ) ) {
-                                                $sessions = wp_list_pluck( $sessions, &#39;expiration&#39; );
-                                }
-
-                                if ( $sessions ) {
-                                                update_user_meta( $this-&amp;gt;user_id, &#39;session_tokens&#39;, $sessions );
-                                } else {
-                                                delete_user_meta( $this-&amp;gt;user_id, &#39;session_tokens&#39; );
-                                }
-                }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;看到这里应该要在仔细深入了解下mysql的加锁机制，当然这个会比较复杂，也不能一蹴而就。整体上重新熟悉下。
-事务的隔离级别有四种，分别是READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ、SERIALIZEABLE。mysql默认的是可重复读。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;MariaDB [(none)]&amp;gt; show global variables like &#39;%isolation%&#39;;
-+---------------+-----------------+
-| Variable_name | Value           |
-+---------------+-----------------+
-| tx_isolation  | REPEATABLE-READ |
-+---------------+-----------------+
-1 row in set (0.00 sec)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;INNODB支持所有的事务隔离级别，但是MVCC只在REPEATABLE READ 和READ COMMITTED两个隔离级别下工作。
-回到开始的问题。session_tokens 是真对用户在不同的终端上登录时进行更新的，value是个array，如上代码所示。如果同一个用户在两个终端上，可以是不同的浏览器即可，就会有不同的session_tokens，在登录登出的时候就会update改用户的数据，即同一行数据就可能产生死锁。这里必须是同时有两个事务。
-现实中同一个用户在两个终端同时操作的可能性不大，但是也很难说。这也说明了wordpress的代码不够健壮吧。当然这里的死锁也并不可怕，INNODB会将持有最少行级排它锁的事务进行回滚。锁机制的了解还是要多多实践，网上也有较好的&lt;a href=&#34;http://hedengcheng.com/?p=771&#34;&gt;文章参考&lt;/a&gt;。&lt;/p&gt;
 </description>
     </item>
     

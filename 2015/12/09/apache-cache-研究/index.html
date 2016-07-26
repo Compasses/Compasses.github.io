@@ -80,7 +80,7 @@ Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_c
 mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
 具体详细的信息可以参考Apache的官方文档<a href="http://httpd.apache.org/docs/2.2/caching.html#inmemory">Caching Guide</a></p>
 
-<h2 id="浏览器刷新原则:bca2f1e29878787021347a412fc3f8ce">浏览器刷新原则</h2>
+<h2 id="浏览器刷新原则">浏览器刷新原则</h2>
 
 <p>不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
 这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
@@ -138,7 +138,7 @@ Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
 
 <p>以上三种不同的请求头会使得cache服务器的有着完全不同的行为。</p>
 
-<h2 id="实施apache缓存:bca2f1e29878787021347a412fc3f8ce">实施Apache缓存</h2>
+<h2 id="实施apache缓存">实施Apache缓存</h2>
 
 <p>因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：</p>
 
@@ -171,7 +171,7 @@ CacheLock 配置是为了防止大量的资源刷新请求造成的<a href="http
 
 <p>配置Apache的log level为debug，可以 对的cache 执行结果检查。</p>
 
-<h2 id="cache效果检查:bca2f1e29878787021347a412fc3f8ce">cache效果检查</h2>
+<h2 id="cache效果检查">cache效果检查</h2>
 
 <p>按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
 例如能看到如下内容：</p>
@@ -213,7 +213,7 @@ Accept-Encoding
 
 <p>看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间单位为秒，每次请求这个字段都是会增加的。</p>
 
-<h2 id="cache的资源副本:bca2f1e29878787021347a412fc3f8ce">cache的资源副本</h2>
+<h2 id="cache的资源副本">cache的资源副本</h2>
 
 <p>Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
 这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上<code>Accept-Encoding</code>，响应头Vary域则是：<code>Vary: Accept-Encoding</code>。
@@ -222,7 +222,7 @@ Accept-Encoding
 
 <p>当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。</p>
 
-<h2 id="缓存资源的更新周期:bca2f1e29878787021347a412fc3f8ce">缓存资源的更新周期</h2>
+<h2 id="缓存资源的更新周期">缓存资源的更新周期</h2>
 
 <p>使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
 如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考<a href="http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor">官方文档</a>。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以<a href="http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire">自己配置任意时间</a>。

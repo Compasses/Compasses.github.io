@@ -73,11 +73,11 @@
     <article>
       
 
-<h1 id="说明:08afb798474a9037df6f2df800659b05">说明</h1>
+<h1 id="说明">说明</h1>
 
 <p>最近产品考虑更换前端框架，重点考察了CodeIgniter 和 Laravel两个框架，现对其进行下对比分析。</p>
 
-<h1 id="总体对比:08afb798474a9037df6f2df800659b05">总体对比</h1>
+<h1 id="总体对比">总体对比</h1>
 
 <table>
 <thead>
@@ -136,12 +136,12 @@
 <p>CodeIgniter 基本上是个MVC的空架子，代码量极小，开发的花基本上 100%的掌控在自己手里。 Laravel还是加载了不少的三方 component，比CodeIgniter 庞大些。
 对MVC的支持都很清晰，URL的路由也很简单易扩展。</p>
 
-<h1 id="测试环境:08afb798474a9037df6f2df800659b05">测试环境：</h1>
+<h1 id="测试环境">测试环境：</h1>
 
 <p>主要是使用了Laravel 的HomeStead环境，通过virtual box + vagrant标准用法，加载Laravel的框架代码；要使其加载CodeIgniter框架，需要修改Nginx的配置，增加新的server，只要端口号换成新的，root指定到CodeIgniter的跟目录即可。
 总体上是Nginx+php5-fpm+mysql+ Ubuntu + CodeIgniter 源码包 + Laravel 源码包。源码包共享在本机上。</p>
 
-<h1 id="测试页面:08afb798474a9037df6f2df800659b05">测试页面：</h1>
+<h1 id="测试页面">测试页面：</h1>
 
 <p>Modal：使用product数据，获取某个product上的所有信息。
 View：引入Twig模板引擎，创建几个twig模板，在controller层render。
@@ -149,14 +149,14 @@ Controller：调用modal获取数据，使用 twig render 页面。</p>
 
 <p>这两个框架都用非常清晰的 MVC结构，上述页面的代码几乎可以在两者之间无缝迁移。</p>
 
-<h1 id="性能对比测试:08afb798474a9037df6f2df800659b05">性能对比测试：</h1>
+<h1 id="性能对比测试">性能对比测试：</h1>
 
 <p>针对这个页面进行性能测试：页面大小为 8KB， 加载一个已有的CSS文件大小为 87.7KB。
 使用Apache的ab test进行测试：
 AB test:
 ab -n 1000 -c 80 <a href="http://192.168.10.10:8080/productdetail/">http://192.168.10.10:8080/productdetail/</a></p>
 
-<h2 id="laravel-结果:08afb798474a9037df6f2df800659b05">Laravel 结果:</h2>
+<h2 id="laravel-结果">Laravel 结果:</h2>
 
 <p>Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
@@ -207,7 +207,7 @@ WARNING: The median and mean for the initial connection time are not within a no
 
 <p>100%  17271 (longest request)</p>
 
-<h2 id="codeigniter-结果:08afb798474a9037df6f2df800659b05">CodeIgniter 结果:</h2>
+<h2 id="codeigniter-结果">CodeIgniter 结果:</h2>
 
 <p>Server Software:        nginx/1.8.0
 Server Hostname:        192.168.10.10
@@ -255,7 +255,7 @@ Total:        351 3098 455.5   3170    3649</p>
 
 <p>100%   3649 (longest request)</p>
 
-<h1 id="总结:08afb798474a9037df6f2df800659b05">总结</h1>
+<h1 id="总结">总结</h1>
 
 <p>CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。
 如果选择从头开始的话，感觉CodeIgniter更好些。</p>
