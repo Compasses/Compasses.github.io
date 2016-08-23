@@ -9,8 +9,146 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Tue, 26 Jul 2016 09:50:57 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 15 Aug 2016 13:57:02 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/topics/topic-1/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>kubernetes start</title>
+      <link>http://compasses.github.io/2016/08/15/kubernetes-start/</link>
+      <pubDate>Mon, 15 Aug 2016 13:57:02 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2016/08/15/kubernetes-start/</guid>
+      <description>
+
+&lt;p&gt;先从几个概念理解开始：&lt;/p&gt;
+
+&lt;h2 id=&#34;pods-http-kubernetes-io-docs-user-guide-pods:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/pods/&#34;&gt;Pods&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;是一个container的集合，针对特定应用服务的建模，一个或者多个容器分布于相同的物理主机或者虚拟主机。位于相同pod的应用是共享存储的。容器位于相同的pod，共享IP address 和端口空间。类推到docker上，就是pod定义了一组containers。跟单个container部署类似，pods的生命周期也是跟随宿主node的。&lt;/p&gt;
+
+&lt;p&gt;pod建模于多个相互合作的进程，整体表现为一个内聚的service。pod作为部署的独立单位，支持水平扩张，复制等，共享各种相互依赖的资源。使用pods会有诸多好处：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;透明化，pod中的容器在基础框架中变得可见，为提供各种服务提供了便利。&lt;/li&gt;
+&lt;li&gt;解耦，pod中的容器可以被重新构建和升级。&lt;/li&gt;
+&lt;li&gt;容易使用。&lt;/li&gt;
+&lt;li&gt;高性能，基础框架会统一处理容器的管理。
+Pod的生命周期，通常情况下，用户不需要直接去创建pod，应该只有通过controllers RC来创建。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;rs-rc:091cda0b59885368668b194756b39d27&#34;&gt;RS &amp;amp; RC&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/replicasets/&#34;&gt;Replica Sets&lt;/a&gt; 和 &lt;a href=&#34;http://kubernetes.io/docs/user-guide/replication-controller/&#34;&gt;Replication Controller&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Replica Sets 是 Replication Controller的升级概念，共同的使命都是管理pod，让他们高可用。名字上也透漏了这一点，复制集。但是着两种东西基本都不会用，建议使用其更上层的deployment。这里还是看你的服务是通过什么方式部署的，是否通过deployment。&lt;/p&gt;
+
+&lt;h2 id=&#34;deployment-http-kubernetes-io-docs-user-guide-deployments:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/deployments/&#34;&gt;Deployment&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;一个Deployment提供了更新Pod和Replica Set的机制。通过Deployment可以创建新的resource和替换已有的resource。
+常用的方法，更新deployment中的image，让其开始做rolling-update。deployment 是在实际使用中使用较多的API。&lt;/p&gt;
+
+&lt;h2 id=&#34;services-http-kubernetes-io-docs-user-guide-services:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/services/&#34;&gt;Services&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;k8s中的service是构建在Pods之上的逻辑概念。打通Pods之间的通信。service正好建模于微服务。对于Service的endpoints对应于Pods，pods通过selector 确定。&lt;/p&gt;
+
+&lt;h2 id=&#34;resource-management-http-kubernetes-io-docs-user-guide-managing-deployments-in-place-updates-of-resources:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/managing-deployments/#in-place-updates-of-resources&#34;&gt;Resource management&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;k8s的强大之处在于管理集群中的资源，提供了方便的接口。升级、回滚等等。链接中的命令通过kubectrl提供，可以多多操作练习。&lt;/p&gt;
+
+&lt;h2 id=&#34;volumes-http-kubernetes-io-docs-user-guide-volumes:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/volumes/&#34;&gt;Volumes&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;volumes提供了一种持久化数据的功能，能够跨pods使用。有很多类型的volume可用。&lt;/p&gt;
+
+&lt;p&gt;还有其他非常有用的概念：&lt;a href=&#34;http://kubernetes.io/docs/user-guide/namespaces/&#34;&gt;Namespaces&lt;/a&gt;，&lt;a href=&#34;http://kubernetes.io/docs/user-guide/jobs/&#34;&gt;Job&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;实用操作:091cda0b59885368668b194756b39d27&#34;&gt;实用操作&lt;/h2&gt;
+
+&lt;p&gt;下面总结下平常使用较多的kubectl命令；
+先看配置:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  ~ cat ~/.kube/config
+apiVersion: v1
+clusters:
+- cluster:
+    server: http://10.58.80.171:8080
+  name: demo
+- cluster:
+    server: 10.58.117.209:8080
+  name: dmz
+- cluster:
+    server: http://10.58.113.74:8080
+  name: hypercd
+- cluster:
+    server: 10.58.113.114:8080
+  name: u
+contexts:
+- context:
+    cluster: demo
+    user: &amp;quot;&amp;quot;
+  name: demo
+- context:
+    cluster: dmz
+    user: &amp;quot;&amp;quot;
+  name: dmz
+- context:
+    cluster: hypercd
+    user: &amp;quot;&amp;quot;
+  name: hypercd
+- context:
+    cluster: u
+    user: &amp;quot;&amp;quot;
+  name: u
+current-context: u
+kind: Config
+preferences: {}
+users: []
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;针对哪个cluster操作就更换当前的context：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl config use-context dmz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对于工作在多个cluster上的服务操作，这种方式还是比较便利的。
+如何更新某个pod，例如修改了代码需要验证，不用重新部署整个cluster，只需要更新需要验证的服务即可：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl edit deployment/crm --namespace=aw
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;namespace是用来指定namespace，edit 会打开crm 的deployment yaml 文件。修改就是拿到你的提交的image 的id，更新下image id即可。例如：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;containers:
+        image: hyper.cd/occ/bff-web:b2c232c8e088aa1d3b3320b5e4c99782e6f85b79
+        imagePullPolicy: IfNotPresent
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;修改后，pods随后会被更新到最新的deployment对应的image。
+k8s有UI可用的，如何拿到UI信息？可通过cluster-info获得：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  ~ kubectl cluster-info               
+Kubernetes master is running at 10.58.117.209:8080
+KubeDNS is running at 10.58.117.209:8080/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at 10.58.117.209:8080/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
+grafana is running at 10.58.117.209:8080/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
+
+To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;kubernetes-dashboard 便是cluster的web前端。web前端可以做各种操作，也能看到cluster的资源利用率。&lt;/p&gt;
+
+&lt;p&gt;describe也是个比较有用的命令，在做rolling-update的时候，可以看到具体的升级信息。&lt;/p&gt;
+
+&lt;p&gt;获取deployment的yaml文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl get deployment/bff-web -o yaml --namespace=jq
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以进行修改重新deploy。&lt;/p&gt;
+
+&lt;p&gt;k8s作为一个开源的应用容器管理平台，已经得到了广泛的应用。看k8s的代码会是一个艰辛过程，代码量实在大，打算从kubectl入手。
+kubectl 的编译只需单独编译即可，cd到src/k8s.io/kubernetes/cmd/kubectl，直接运行&lt;strong&gt;go build&lt;/strong&gt;编译即可。就会在当前目录下生成kubectl可执行文件。cmd目录下的都可以这样build。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Book Review: Thinking in Java</title>
@@ -742,7 +880,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;最近一直在做系统性能优化，包括性能问题定位，系统整体性能提升等。在性能测试环境上一边测试一边优化，从最开始的表象开始，修改代码和各种系统参数，然后就会出现新的表象，然后再修改代码和系统参数。性能测试涉及的节点很多，很多方面都有联动性，最后辛辛苦苦的搞了大半个月，确实有所进展但是总感觉缺少系统的方法。今天有幸看到这样的一篇文章&lt;a href=&#34;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&#34;&gt;Linux Performance Analysis in 60,000 Milliseconds&lt;/a&gt;，明确了在一个server上面，最开始你应该关注到什么。虽然里面的东西大家都有注意，但是可能还是不够全面。现在就结合这篇文章和自己的实践做下总结吧。&lt;/p&gt;
 
-&lt;h2 id=&#34;uptime:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;uptime&lt;/h2&gt;
+&lt;h2 id=&#34;uptime&#34;&gt;uptime&lt;/h2&gt;
 
 &lt;p&gt;首先出场的便是&lt;strong&gt;uptime&lt;/strong&gt;这个命令：&lt;/p&gt;
 
@@ -752,11 +890,11 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;这个命令明确告诉我们当前系统的时间，启动运行了多长时间，用户的登录数，以及当前系统分别在 1，5，15分钟内的进程平均数量，这些进程数量表示运行中或者处于不可中断的状态。这个命令是非常high level的总结，说明总体的系统负载情况。&lt;/p&gt;
 
-&lt;h2 id=&#34;dmesg-tail:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;dmesg|tail&lt;/h2&gt;
+&lt;h2 id=&#34;dmesg-tail&#34;&gt;dmesg|tail&lt;/h2&gt;
 
 &lt;p&gt;个人比较喜欢这个dmesg命令，一般是内核的日志，会有一些重要的信息抛出。例如进程异常退出，因为内存耗尽或者进程crash。还会记录些命令操作的异常。值得好好利用的命令。&lt;/p&gt;
 
-&lt;h2 id=&#34;vmstat-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;vmstat 1&lt;/h2&gt;
+&lt;h2 id=&#34;vmstat-1&#34;&gt;vmstat 1&lt;/h2&gt;
 
 &lt;p&gt;系统虚拟内存的统计信息，1表示没1秒输出一次。&lt;/p&gt;
 
@@ -780,7 +918,7 @@ free:剩余内存以kb为单位。
 si，so：换入换出，如果这些值非0，那么说明内存不足。
 us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用户时间，系统时间，空闲时间，wait IO时间和stolen time。需要注意的是system time也有IO处理的时间。如果比较高的系统时间占用说明内核处理IO不够高效。&lt;/p&gt;
 
-&lt;h2 id=&#34;mpstat-p-all-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;mpstat -P ALL 1&lt;/h2&gt;
+&lt;h2 id=&#34;mpstat-p-all-1&#34;&gt;mpstat -P ALL 1&lt;/h2&gt;
 
 &lt;p&gt;这个命令每个CPU的使用率情况，如果有单核CPU过载的情况，说明线程的任务分配有问题。需要做相应的调整。&lt;/p&gt;
 
@@ -796,7 +934,7 @@ us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用
 02:28:56 PM    7   86.93    0.00    5.03    0.00    0.50    0.00    0.00    0.00    0.00    7.54
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;pidstat-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;pidstat 1&lt;/h2&gt;
+&lt;h2 id=&#34;pidstat-1&#34;&gt;pidstat 1&lt;/h2&gt;
 
 &lt;p&gt;用这个命令可以观察到单个进程的运行情况。并且每个CPU会单独列出。&lt;/p&gt;
 
@@ -830,7 +968,7 @@ us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用
 02:44:57 PM     0     30423    1.50    0.00    0.00    1.50     0  java
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;iostat-xz-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;iostat -xz 1&lt;/h2&gt;
+&lt;h2 id=&#34;iostat-xz-1&#34;&gt;iostat -xz 1&lt;/h2&gt;
 
 &lt;p&gt;iostat 较好的反映IO密集型应用的负载情况。&lt;/p&gt;
 
@@ -851,7 +989,7 @@ sda               0.00     6.00    0.00   13.00     0.00  1364.00   209.85     0
 
 &lt;p&gt;针对IO的优化需要做到IO的异步处理即可。使得应用不直接阻塞在慢响应上面。适用的技术：提前读、写缓存。&lt;/p&gt;
 
-&lt;h2 id=&#34;free-m:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;free -m&lt;/h2&gt;
+&lt;h2 id=&#34;free-m&#34;&gt;free -m&lt;/h2&gt;
 
 &lt;p&gt;free命令用于展示系统内存的使用情况：&lt;/p&gt;
 
@@ -864,7 +1002,7 @@ Swap:         1905          0       1905
 
 &lt;p&gt;需要注意的是cache 的memory也应该算到free里面。&lt;/p&gt;
 
-&lt;h2 id=&#34;sar-n-dev-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;sar -n DEV 1&lt;/h2&gt;
+&lt;h2 id=&#34;sar-n-dev-1&#34;&gt;sar -n DEV 1&lt;/h2&gt;
 
 &lt;p&gt;用于监控网卡的传输性能，确定是否带宽已经达到极限。&lt;/p&gt;
 
@@ -885,7 +1023,7 @@ Swap:         1905          0       1905
 
 &lt;p&gt;通过rxkB/s和txkB/s可以得到网卡的负载情况。并可以确认是否已经超过带宽上限了。&lt;/p&gt;
 
-&lt;h2 id=&#34;sar-n-tcp-etcp-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;sar -n TCP,ETCP 1&lt;/h2&gt;
+&lt;h2 id=&#34;sar-n-tcp-etcp-1&#34;&gt;sar -n TCP,ETCP 1&lt;/h2&gt;
 
 &lt;p&gt;sar是个比较复杂的命令，有多种使用方式，上面的信息也是基于这个命令。要获得TCP相关的统计信息这个命令就格外重要了。&lt;/p&gt;
 
@@ -906,7 +1044,7 @@ Average:         0.00      0.05      0.00      0.00      0.25
 passive/s：每秒钟远程发起的TCP链接数，例如通过accept()调用建立的链接。
 retrans/s：每秒钟TCP重传的数量。这个如果过高的话说明网络状况较差。这个是比较粗略的统计。&lt;/p&gt;
 
-&lt;h2 id=&#34;top:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;top&lt;/h2&gt;
+&lt;h2 id=&#34;top&#34;&gt;top&lt;/h2&gt;
 
 &lt;p&gt;top 命令是使用比较频繁的。内存、CPU、进程还有每个核的CPU使用情况都能一目了然。&lt;/p&gt;
 
@@ -935,7 +1073,7 @@ KiB Swap:  1951740 total,        0 used,  1951740 free.  3726664 cached Mem
 
 &lt;p&gt;Ctrl+S 能让其先停止更新，Ctrl+Q让其继续执行。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;系统性能涉及很多的方面，遇到性能问题还是最好有个系统的方法，逐一解决每个问题。不然到了最后一团浆糊，还弄不清楚该优化那里。针对系统的性能优化需要一些经验的积累，慢慢就能轻车熟路，就像修车师父一样，老师父总能让人更放心些。
 所以呢，这种事情不能急，还是慢慢来吧。多总结、多实践、多解决些问题，就会水到渠成了。&lt;/p&gt;
