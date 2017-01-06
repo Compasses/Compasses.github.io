@@ -116,7 +116,7 @@ Session_tokens的更新是随着用户的login和 logout 更新的。Login时会
       <guid>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</guid>
       <description>
 
-&lt;h3 id=&#34;问题过程:e49eceb506a38a05be2413fef9771815&#34;&gt;问题过程&lt;/h3&gt;
+&lt;h3 id=&#34;问题过程&#34;&gt;问题过程&lt;/h3&gt;
 
 &lt;p&gt;最近优化了一个查询语句，使用到了straight_join这个查询提示，现对其做下总结。
 先看下这个查询语句：&lt;/p&gt;
@@ -463,7 +463,7 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
 可以通过explain extended 的方法获取最终的执行计划。虽然执行计划已经是最优的了，但是中间的过程代价太高了。
 这里就使用straight_join的优化提示来优化这个查询。由一开始的600多ms降低为十几ms了。&lt;/p&gt;
 
-&lt;h3 id=&#34;总结:e49eceb506a38a05be2413fef9771815&#34;&gt;总结&lt;/h3&gt;
+&lt;h3 id=&#34;总结&#34;&gt;总结&lt;/h3&gt;
 
 &lt;ol&gt;
 &lt;li&gt;大的SQL语句，这里主要说的是join次数过多的sql，需要进行查询优化。&lt;/li&gt;
@@ -484,18 +484,18 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
       <guid>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</guid>
       <description>
 
-&lt;h2 id=&#34;前言:9e70b3f53d84350226052075ce54e259&#34;&gt;前言&lt;/h2&gt;
+&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;
 
 &lt;p&gt;因工作需要，要不断的使用MySQL，前段时间还参与了MySQL的性能测试，及profiling。发现MySQL还是非常有意思的，自己也非常感兴趣，于是买了本牛逼的书：《高性能MySQL 第三版》。书是很好，但是第一遍基本没什么感觉，基本上是粗略了解，很多细节还是掌握不好。现在重新学习希望能够有更好的提高。
 读书摘要，既然是读书摘要就不会照搬原书，我会侧重点的做笔记，有意思的地方会多写，自己觉得不是很重要的东西会少写或者不写。但是内容的范围不会超出这本书。OK, Let&amp;rsquo;s Start。&lt;/p&gt;
 
-&lt;h3 id=&#34;mysql逻辑结构:9e70b3f53d84350226052075ce54e259&#34;&gt;MySQL逻辑结构&lt;/h3&gt;
+&lt;h3 id=&#34;mysql逻辑结构&#34;&gt;MySQL逻辑结构&lt;/h3&gt;
 
 &lt;p&gt;逻辑架构图如下：
 &lt;img src=&#34;http://compasses.github.io/img/MySqlCapture.PNG&#34; alt=&#34;Mysql&#34; /&gt;
 分为三层结构，需要重点研究的是存储引擎层和查询优化层。存储引擎也主要研究InnoDB。&lt;/p&gt;
 
-&lt;h2 id=&#34;并发控制:9e70b3f53d84350226052075ce54e259&#34;&gt;并发控制&lt;/h2&gt;
+&lt;h2 id=&#34;并发控制&#34;&gt;并发控制&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;读写锁： 在并发读写数据库表时使用，也叫共享锁和排他锁，读锁是共享的，是互不阻塞的，写锁是排他的，一个写锁会阻塞其他的读锁和写锁。&lt;/li&gt;
@@ -516,13 +516,13 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
 
 &lt;p&gt;MVCC工作在REAPTABLE READ 和 READ COMMIT两个隔离级别下。REAPTABLE READ 为可重复读，即同一个事务中多次读取同样的记录的结果是一致的。显然MVCC满足这点。READ COMMIT 提交读，一个事务开始时，只能更新到所有已提交事务的更改。即事务开始到提交前，所做的修改对其他事务都是不可见的。MVCC也天生支持。&lt;/p&gt;
 
-&lt;h2 id=&#34;mysql基准测试:9e70b3f53d84350226052075ce54e259&#34;&gt;MySQL基准测试&lt;/h2&gt;
+&lt;h2 id=&#34;mysql基准测试&#34;&gt;MySQL基准测试&lt;/h2&gt;
 
 &lt;p&gt;本章主要是说的针对MySQL的基准测试，这里重点看下&lt;strong&gt;sql-bench&lt;/strong&gt;和&lt;strong&gt;sysbench&lt;/strong&gt;。 其中&lt;strong&gt;sql-bench&lt;/strong&gt;只有在源码安装的时候才会有，二进制安装没有,&lt;strong&gt;sysbench&lt;/strong&gt;需要单独安装。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;sql-bench&lt;/strong&gt; 是由perl脚本组成的测试工具。&lt;strong&gt;sysbench&lt;/strong&gt;也可以不只是用来进行数据库的基准测试，比如CPU、I/O等。这些工具的使用咱不赘述，后续如有使用再更新到这里。&lt;/p&gt;
 
-&lt;h2 id=&#34;服务器性能剖析:9e70b3f53d84350226052075ce54e259&#34;&gt;服务器性能剖析&lt;/h2&gt;
+&lt;h2 id=&#34;服务器性能剖析&#34;&gt;服务器性能剖析&lt;/h2&gt;
 
 &lt;p&gt;服务器性能剖析包含两个方面，一是应用程序，而是数据库；对应用程序剖析需要有相应的统计方法。例如PHP则需要统计每个方法的执行时间，执行数据库查询的时间，都可以在应用层获取；数据库上的性能剖析，就是分析并发查询时的性能问题。
 针对PHP方面，目前正在开发性能剖析的脚本，保证能在生产环境上work。做完后会更新到这里。
@@ -569,15 +569,15 @@ I have tested these steps on my Ubuntu machine.
 
 &lt;p&gt;然后可以针对每一个查询进行分析，并剖析其性能问题。&lt;/p&gt;
 
-&lt;h2 id=&#34;schema与数据类型优化:9e70b3f53d84350226052075ce54e259&#34;&gt;Schema与数据类型优化&lt;/h2&gt;
+&lt;h2 id=&#34;schema与数据类型优化&#34;&gt;Schema与数据类型优化&lt;/h2&gt;
 
 &lt;p&gt;待续&lt;/p&gt;
 
-&lt;h2 id=&#34;创建高性能的索引:9e70b3f53d84350226052075ce54e259&#34;&gt;创建高性能的索引&lt;/h2&gt;
+&lt;h2 id=&#34;创建高性能的索引&#34;&gt;创建高性能的索引&lt;/h2&gt;
 
 &lt;p&gt;待续&lt;/p&gt;
 
-&lt;h2 id=&#34;查询性能优化:9e70b3f53d84350226052075ce54e259&#34;&gt;查询性能优化&lt;/h2&gt;
+&lt;h2 id=&#34;查询性能优化&#34;&gt;查询性能优化&lt;/h2&gt;
 
 &lt;p&gt;一个复杂查询还是多个简单查询：
 切分查询：将大查询切分成小查询。每个查询功能完全一样。
@@ -643,7 +643,7 @@ end
 
 &lt;p&gt;待续&lt;/p&gt;
 
-&lt;h2 id=&#34;参考文献:9e70b3f53d84350226052075ce54e259&#34;&gt;参考文献&lt;/h2&gt;
+&lt;h2 id=&#34;参考文献&#34;&gt;参考文献&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;《高性能MySQL 第三版》&lt;/li&gt;

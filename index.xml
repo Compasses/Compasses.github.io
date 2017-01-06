@@ -9,8 +9,27 @@
     <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Mon, 15 Aug 2016 13:57:02 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 06 Jan 2017 17:08:03 +0800</lastBuildDate>
     <atom:link href="http://compasses.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>RabbitMQ and ElasticSearch</title>
+      <link>http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/</link>
+      <pubDate>Fri, 06 Jan 2017 17:08:03 +0800</pubDate>
+      <author>gnhe2009@gmail.com (Jet He)</author>
+      <guid>http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/</guid>
+      <description>&lt;p&gt;项目需要产品中引入了ElasticSearch，第一阶段的使用场景是直接消费RabbitMQ来persist相关的业务数据，改变以前通过message driven走API Call 的方式persist数据。调整过后性能提升了一个数量级。第二阶段将会使用ElasticSearch作为产品的全文检索引擎使用，类似于Search加速组件。
+在这个过程中开发了不少原型代码，也做了一系列的笔记，项目是&lt;a href=&#34;http://compasses.github.io/compasses/elastic-rabbitmq&#34;&gt;elastic-rabbitmq&lt;/a&gt;，相关的notes：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;http://compasses.github.io/compasses/elastic-rabbitmq/blob/master/notes/basic&amp;amp;sourcestart.md&#34;&gt;ElasticSearch 深入理解 一：基础概念&amp;amp;源码启动&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://compasses.github.io/compasses/elastic-rabbitmq/blob/master/notes/optimisticlock&amp;amp;versionconflicthandle.md&#34;&gt;ElasticSearch 深入理解 二：乐观锁&amp;amp;版本冲突管理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://compasses.github.io/compasses/elastic-rabbitmq/blob/master/notes/cluster_relateddesign.md&#34;&gt;ElasticSearch 深入理解 三：集群部署设计&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;项目继续，也会持续更新。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>kubernetes start</title>
@@ -22,7 +41,7 @@
 
 &lt;p&gt;先从几个概念理解开始：&lt;/p&gt;
 
-&lt;h2 id=&#34;pods-http-kubernetes-io-docs-user-guide-pods:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/pods/&#34;&gt;Pods&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;pods-http-kubernetes-io-docs-user-guide-pods&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/pods/&#34;&gt;Pods&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;是一个container的集合，针对特定应用服务的建模，一个或者多个容器分布于相同的物理主机或者虚拟主机。位于相同pod的应用是共享存储的。容器位于相同的pod，共享IP address 和端口空间。类推到docker上，就是pod定义了一组containers。跟单个container部署类似，pods的生命周期也是跟随宿主node的。&lt;/p&gt;
 
@@ -36,32 +55,32 @@
 Pod的生命周期，通常情况下，用户不需要直接去创建pod，应该只有通过controllers RC来创建。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;rs-rc:091cda0b59885368668b194756b39d27&#34;&gt;RS &amp;amp; RC&lt;/h2&gt;
+&lt;h2 id=&#34;rs-rc&#34;&gt;RS &amp;amp; RC&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/replicasets/&#34;&gt;Replica Sets&lt;/a&gt; 和 &lt;a href=&#34;http://kubernetes.io/docs/user-guide/replication-controller/&#34;&gt;Replication Controller&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Replica Sets 是 Replication Controller的升级概念，共同的使命都是管理pod，让他们高可用。名字上也透漏了这一点，复制集。但是着两种东西基本都不会用，建议使用其更上层的deployment。这里还是看你的服务是通过什么方式部署的，是否通过deployment。&lt;/p&gt;
 
-&lt;h2 id=&#34;deployment-http-kubernetes-io-docs-user-guide-deployments:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/deployments/&#34;&gt;Deployment&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;deployment-http-kubernetes-io-docs-user-guide-deployments&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/deployments/&#34;&gt;Deployment&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;一个Deployment提供了更新Pod和Replica Set的机制。通过Deployment可以创建新的resource和替换已有的resource。
 常用的方法，更新deployment中的image，让其开始做rolling-update。deployment 是在实际使用中使用较多的API。&lt;/p&gt;
 
-&lt;h2 id=&#34;services-http-kubernetes-io-docs-user-guide-services:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/services/&#34;&gt;Services&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;services-http-kubernetes-io-docs-user-guide-services&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/services/&#34;&gt;Services&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;k8s中的service是构建在Pods之上的逻辑概念。打通Pods之间的通信。service正好建模于微服务。对于Service的endpoints对应于Pods，pods通过selector 确定。&lt;/p&gt;
 
-&lt;h2 id=&#34;resource-management-http-kubernetes-io-docs-user-guide-managing-deployments-in-place-updates-of-resources:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/managing-deployments/#in-place-updates-of-resources&#34;&gt;Resource management&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;resource-management-http-kubernetes-io-docs-user-guide-managing-deployments-in-place-updates-of-resources&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/managing-deployments/#in-place-updates-of-resources&#34;&gt;Resource management&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;k8s的强大之处在于管理集群中的资源，提供了方便的接口。升级、回滚等等。链接中的命令通过kubectrl提供，可以多多操作练习。&lt;/p&gt;
 
-&lt;h2 id=&#34;volumes-http-kubernetes-io-docs-user-guide-volumes:091cda0b59885368668b194756b39d27&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/volumes/&#34;&gt;Volumes&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id=&#34;volumes-http-kubernetes-io-docs-user-guide-volumes&#34;&gt;&lt;a href=&#34;http://kubernetes.io/docs/user-guide/volumes/&#34;&gt;Volumes&lt;/a&gt;&lt;/h2&gt;
 
 &lt;p&gt;volumes提供了一种持久化数据的功能，能够跨pods使用。有很多类型的volume可用。&lt;/p&gt;
 
 &lt;p&gt;还有其他非常有用的概念：&lt;a href=&#34;http://kubernetes.io/docs/user-guide/namespaces/&#34;&gt;Namespaces&lt;/a&gt;，&lt;a href=&#34;http://kubernetes.io/docs/user-guide/jobs/&#34;&gt;Job&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h2 id=&#34;实用操作:091cda0b59885368668b194756b39d27&#34;&gt;实用操作&lt;/h2&gt;
+&lt;h2 id=&#34;实用操作&#34;&gt;实用操作&lt;/h2&gt;
 
 &lt;p&gt;下面总结下平常使用较多的kubectl命令；
 先看配置:&lt;/p&gt;
@@ -762,7 +781,7 @@ em.put(ACTION_ONE, new Command() {
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
 
-&lt;h2 id=&#34;编码问题&#34;&gt;编码问题&lt;/h2&gt;
+&lt;h2 id=&#34;编码问题:a4408d7234fd43d2930eca48e7402255&#34;&gt;编码问题&lt;/h2&gt;
 
 &lt;p&gt;互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：&lt;/p&gt;
 
@@ -771,7 +790,7 @@ em.put(ACTION_ONE, new Command() {
 
 &lt;p&gt;UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看&lt;a href=&#34;http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html&#34;&gt;这篇文章&lt;/a&gt;，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。&lt;/p&gt;
 
-&lt;h2 id=&#34;精确获取字符长度&#34;&gt;精确获取字符长度&lt;/h2&gt;
+&lt;h2 id=&#34;精确获取字符长度:a4408d7234fd43d2930eca48e7402255&#34;&gt;精确获取字符长度&lt;/h2&gt;
 
 &lt;p&gt;由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。&lt;strong&gt;encodeURIComponent&lt;/strong&gt;方法是比较好用的：&lt;/p&gt;
 
@@ -798,7 +817,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 18
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;textarea-中的换行符&#34;&gt;textarea 中的换行符&lt;/h2&gt;
+&lt;h2 id=&#34;textarea-中的换行符:a4408d7234fd43d2930eca48e7402255&#34;&gt;textarea 中的换行符&lt;/h2&gt;
 
 &lt;p&gt;与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
 例如只有一个换行符的encode前端结果：&lt;/p&gt;
@@ -811,7 +830,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 产生这个问题的原因是换行符在HTTP&lt;a href=&#34;http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code&#34;&gt;传输的过程中发生转换&lt;/a&gt;，由‘\n’变成‘\r\n’。
 因此在计算textarea值时在遇到换行符时记得长度额外加1。&lt;/p&gt;
 
-&lt;h2 id=&#34;代码实现&#34;&gt;代码实现&lt;/h2&gt;
+&lt;h2 id=&#34;代码实现:a4408d7234fd43d2930eca48e7402255&#34;&gt;代码实现&lt;/h2&gt;
 
 &lt;p&gt;既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
 针对input：&lt;/p&gt;
@@ -864,7 +883,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结:a4408d7234fd43d2930eca48e7402255&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。&lt;/p&gt;
 </description>
@@ -880,7 +899,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;最近一直在做系统性能优化，包括性能问题定位，系统整体性能提升等。在性能测试环境上一边测试一边优化，从最开始的表象开始，修改代码和各种系统参数，然后就会出现新的表象，然后再修改代码和系统参数。性能测试涉及的节点很多，很多方面都有联动性，最后辛辛苦苦的搞了大半个月，确实有所进展但是总感觉缺少系统的方法。今天有幸看到这样的一篇文章&lt;a href=&#34;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&#34;&gt;Linux Performance Analysis in 60,000 Milliseconds&lt;/a&gt;，明确了在一个server上面，最开始你应该关注到什么。虽然里面的东西大家都有注意，但是可能还是不够全面。现在就结合这篇文章和自己的实践做下总结吧。&lt;/p&gt;
 
-&lt;h2 id=&#34;uptime&#34;&gt;uptime&lt;/h2&gt;
+&lt;h2 id=&#34;uptime:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;uptime&lt;/h2&gt;
 
 &lt;p&gt;首先出场的便是&lt;strong&gt;uptime&lt;/strong&gt;这个命令：&lt;/p&gt;
 
@@ -890,11 +909,11 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;这个命令明确告诉我们当前系统的时间，启动运行了多长时间，用户的登录数，以及当前系统分别在 1，5，15分钟内的进程平均数量，这些进程数量表示运行中或者处于不可中断的状态。这个命令是非常high level的总结，说明总体的系统负载情况。&lt;/p&gt;
 
-&lt;h2 id=&#34;dmesg-tail&#34;&gt;dmesg|tail&lt;/h2&gt;
+&lt;h2 id=&#34;dmesg-tail:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;dmesg|tail&lt;/h2&gt;
 
 &lt;p&gt;个人比较喜欢这个dmesg命令，一般是内核的日志，会有一些重要的信息抛出。例如进程异常退出，因为内存耗尽或者进程crash。还会记录些命令操作的异常。值得好好利用的命令。&lt;/p&gt;
 
-&lt;h2 id=&#34;vmstat-1&#34;&gt;vmstat 1&lt;/h2&gt;
+&lt;h2 id=&#34;vmstat-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;vmstat 1&lt;/h2&gt;
 
 &lt;p&gt;系统虚拟内存的统计信息，1表示没1秒输出一次。&lt;/p&gt;
 
@@ -918,7 +937,7 @@ free:剩余内存以kb为单位。
 si，so：换入换出，如果这些值非0，那么说明内存不足。
 us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用户时间，系统时间，空闲时间，wait IO时间和stolen time。需要注意的是system time也有IO处理的时间。如果比较高的系统时间占用说明内核处理IO不够高效。&lt;/p&gt;
 
-&lt;h2 id=&#34;mpstat-p-all-1&#34;&gt;mpstat -P ALL 1&lt;/h2&gt;
+&lt;h2 id=&#34;mpstat-p-all-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;mpstat -P ALL 1&lt;/h2&gt;
 
 &lt;p&gt;这个命令每个CPU的使用率情况，如果有单核CPU过载的情况，说明线程的任务分配有问题。需要做相应的调整。&lt;/p&gt;
 
@@ -934,7 +953,7 @@ us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用
 02:28:56 PM    7   86.93    0.00    5.03    0.00    0.50    0.00    0.00    0.00    0.00    7.54
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;pidstat-1&#34;&gt;pidstat 1&lt;/h2&gt;
+&lt;h2 id=&#34;pidstat-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;pidstat 1&lt;/h2&gt;
 
 &lt;p&gt;用这个命令可以观察到单个进程的运行情况。并且每个CPU会单独列出。&lt;/p&gt;
 
@@ -968,7 +987,7 @@ us, sy, id, wa, st: 这几项表明当前CPU的繁忙程度。分别代表了用
 02:44:57 PM     0     30423    1.50    0.00    0.00    1.50     0  java
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;iostat-xz-1&#34;&gt;iostat -xz 1&lt;/h2&gt;
+&lt;h2 id=&#34;iostat-xz-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;iostat -xz 1&lt;/h2&gt;
 
 &lt;p&gt;iostat 较好的反映IO密集型应用的负载情况。&lt;/p&gt;
 
@@ -989,7 +1008,7 @@ sda               0.00     6.00    0.00   13.00     0.00  1364.00   209.85     0
 
 &lt;p&gt;针对IO的优化需要做到IO的异步处理即可。使得应用不直接阻塞在慢响应上面。适用的技术：提前读、写缓存。&lt;/p&gt;
 
-&lt;h2 id=&#34;free-m&#34;&gt;free -m&lt;/h2&gt;
+&lt;h2 id=&#34;free-m:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;free -m&lt;/h2&gt;
 
 &lt;p&gt;free命令用于展示系统内存的使用情况：&lt;/p&gt;
 
@@ -1002,7 +1021,7 @@ Swap:         1905          0       1905
 
 &lt;p&gt;需要注意的是cache 的memory也应该算到free里面。&lt;/p&gt;
 
-&lt;h2 id=&#34;sar-n-dev-1&#34;&gt;sar -n DEV 1&lt;/h2&gt;
+&lt;h2 id=&#34;sar-n-dev-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;sar -n DEV 1&lt;/h2&gt;
 
 &lt;p&gt;用于监控网卡的传输性能，确定是否带宽已经达到极限。&lt;/p&gt;
 
@@ -1023,7 +1042,7 @@ Swap:         1905          0       1905
 
 &lt;p&gt;通过rxkB/s和txkB/s可以得到网卡的负载情况。并可以确认是否已经超过带宽上限了。&lt;/p&gt;
 
-&lt;h2 id=&#34;sar-n-tcp-etcp-1&#34;&gt;sar -n TCP,ETCP 1&lt;/h2&gt;
+&lt;h2 id=&#34;sar-n-tcp-etcp-1:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;sar -n TCP,ETCP 1&lt;/h2&gt;
 
 &lt;p&gt;sar是个比较复杂的命令，有多种使用方式，上面的信息也是基于这个命令。要获得TCP相关的统计信息这个命令就格外重要了。&lt;/p&gt;
 
@@ -1044,7 +1063,7 @@ Average:         0.00      0.05      0.00      0.00      0.25
 passive/s：每秒钟远程发起的TCP链接数，例如通过accept()调用建立的链接。
 retrans/s：每秒钟TCP重传的数量。这个如果过高的话说明网络状况较差。这个是比较粗略的统计。&lt;/p&gt;
 
-&lt;h2 id=&#34;top&#34;&gt;top&lt;/h2&gt;
+&lt;h2 id=&#34;top:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;top&lt;/h2&gt;
 
 &lt;p&gt;top 命令是使用比较频繁的。内存、CPU、进程还有每个核的CPU使用情况都能一目了然。&lt;/p&gt;
 
@@ -1073,7 +1092,7 @@ KiB Swap:  1951740 total,        0 used,  1951740 free.  3726664 cached Mem
 
 &lt;p&gt;Ctrl+S 能让其先停止更新，Ctrl+Q让其继续执行。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结:68dd4c03090e9872b9d81b1ce4e784ad&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;系统性能涉及很多的方面，遇到性能问题还是最好有个系统的方法，逐一解决每个问题。不然到了最后一团浆糊，还弄不清楚该优化那里。针对系统的性能优化需要一些经验的积累，慢慢就能轻车熟路，就像修车师父一样，老师父总能让人更放心些。
 所以呢，这种事情不能急，还是慢慢来吧。多总结、多实践、多解决些问题，就会水到渠成了。&lt;/p&gt;
@@ -1093,7 +1112,7 @@ Apache支持两种cache模块，分别是mod_cache和mod_file_cache。mod_file_c
 mod_cache是一种较为智能有效的、感知HTTP协议的cache方式，它有两种实现方案mod_mem_cache和mod_disk_cache，顾名思义mem是将响应内容缓存到内存中，disk是将响应内容缓存到磁盘中。mem是代价比较高的，因其缓存到内存中就会不可避免的导致Apache占用的系统内存增加。因此disk的缓存方案多被推荐使用。
 具体详细的信息可以参考Apache的官方文档&lt;a href=&#34;http://httpd.apache.org/docs/2.2/caching.html#inmemory&#34;&gt;Caching Guide&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;浏览器刷新原则&#34;&gt;浏览器刷新原则&lt;/h2&gt;
+&lt;h2 id=&#34;浏览器刷新原则:bca2f1e29878787021347a412fc3f8ce&#34;&gt;浏览器刷新原则&lt;/h2&gt;
 
 &lt;p&gt;不同的请求header，cache的响应行为是不一样的，所以要搞清楚你的请求header是什么样的，响应header是什么样的，搞清楚才能较好的测试Apache的cache。
 这里使用的测试浏览器是Firefox，也推荐使用Firefox，禁止Firefox的本地cache。
@@ -1151,7 +1170,7 @@ Mozilla/5.0 (Windows NT 6.1; WOW64; rv:42.0) Gecko/20100101 Firefox/42.0
 
 &lt;p&gt;以上三种不同的请求头会使得cache服务器的有着完全不同的行为。&lt;/p&gt;
 
-&lt;h2 id=&#34;实施apache缓存&#34;&gt;实施Apache缓存&lt;/h2&gt;
+&lt;h2 id=&#34;实施apache缓存:bca2f1e29878787021347a412fc3f8ce&#34;&gt;实施Apache缓存&lt;/h2&gt;
 
 &lt;p&gt;因Apache官方也是推荐使用mod_cache+mod_disk_cache的方式，所以这里实施的也是这种方式。Apache默认这两个mod都是安装好的，直接起用就好了：&lt;/p&gt;
 
@@ -1184,7 +1203,7 @@ CacheLock 配置是为了防止大量的资源刷新请求造成的&lt;a href=&#
 
 &lt;p&gt;配置Apache的log level为debug，可以 对的cache 执行结果检查。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache效果检查&#34;&gt;cache效果检查&lt;/h2&gt;
+&lt;h2 id=&#34;cache效果检查:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache效果检查&lt;/h2&gt;
 
 &lt;p&gt;按照上述配置Apache后，重启Apache。访问静态资源，注意不是刷新或者强制刷新。查看Apache的error log。
 例如能看到如下内容：&lt;/p&gt;
@@ -1226,7 +1245,7 @@ Accept-Encoding
 
 &lt;p&gt;看这个响应头里面的Age字段，如果不是从cache出去的话是没有这个Age字段的，Age的值是记录的这个资源当前的缓存时间单位为秒，每次请求这个字段都是会增加的。&lt;/p&gt;
 
-&lt;h2 id=&#34;cache的资源副本&#34;&gt;cache的资源副本&lt;/h2&gt;
+&lt;h2 id=&#34;cache的资源副本:bca2f1e29878787021347a412fc3f8ce&#34;&gt;cache的资源副本&lt;/h2&gt;
 
 &lt;p&gt;Apache的cache根据响应头的Vary域来决定cache的资源被相应的client请求使用。HTTP头域中的Vary本来就是用来标识不同的客户端即不同的浏览器。
 这个问题可以通过Firefox和chrome来验证，例如请求一个静态资源文件，都会带上&lt;code&gt;Accept-Encoding&lt;/code&gt;，响应头Vary域则是：&lt;code&gt;Vary: Accept-Encoding&lt;/code&gt;。
@@ -1235,7 +1254,7 @@ Accept-Encoding
 
 &lt;p&gt;当你看到不同的浏览器拿到的响应头里面的 Age 大小不一致时，就不用大惊小怪了，因为他们是不同的缓存副本。&lt;/p&gt;
 
-&lt;h2 id=&#34;缓存资源的更新周期&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
+&lt;h2 id=&#34;缓存资源的更新周期:bca2f1e29878787021347a412fc3f8ce&#34;&gt;缓存资源的更新周期&lt;/h2&gt;
 
 &lt;p&gt;使用Apache的缓存后，资源被缓存到disk上后，资源的更新首先由HTTP 的header字段决定，例如上面的响应头里面，那么这个资源的超时时间为max-age=31104000秒。
 如果Cache-Control没有指定则会根据Last-Modified时间计算得出，具体如何计算可以参考&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachelastmodifiedfactor&#34;&gt;官方文档&lt;/a&gt;。如果响应头里面也没有modify time，则会使用个默认的cache时间，当然这个可以&lt;a href=&#34;http://httpd.apache.org/docs/2.2/mod/mod_cache.html#cachemaxexpire&#34;&gt;自己配置任意时间&lt;/a&gt;。
@@ -1385,7 +1404,7 @@ Apache使能rewrite rule：&lt;/p&gt;
 
 &lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
 
-&lt;h2 id=&#34;interface-内部存储:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface 内部存储&lt;/h2&gt;
+&lt;h2 id=&#34;interface-内部存储&#34;&gt;interface 内部存储&lt;/h2&gt;
 
 &lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
 
@@ -1497,7 +1516,7 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 &lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&#34;interface使用:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface使用&lt;/h2&gt;
+&lt;h2 id=&#34;interface使用&#34;&gt;interface使用&lt;/h2&gt;
 
 &lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
@@ -1911,272 +1930,6 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 &lt;p&gt;Go相对于PHP、JAVA年轻很多，但自己相信它会成为后起之秀，也做好了这个准备。&lt;/p&gt;
 
 &lt;p&gt;很高兴开启Go语言之旅。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>WEB 开发点滴</title>
-      <link>http://compasses.github.io/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</link>
-      <pubDate>Tue, 07 Jul 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</guid>
-      <description>
-
-&lt;p&gt;WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。&lt;/p&gt;
-
-&lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
-
-&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
-
-&lt;p&gt;解释说明：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;position
-    
-&#39;position&#39;
-Value:  
-static | relative | absolute | fixed | inherit
-Initial:  
-static
-Applies to:  
-all elements
-Inherited:  
-no
-Percentages:  
-N/A
-Media:  
-visual
-Computed value:  
-as specified
-The values of this property have the following meanings:
-static
-The box is a normal box, laid out according to the normal flow. The &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;, and &#39;left&#39; properties do not apply.
-relative
-The box&#39;s position is calculated according to the normal flow (this is called the position in normal flow). Then the box is offset relative to its normal position. When a box B is relatively positioned, the position of the following box is calculated as though B were not offset. The effect of &#39;position:relative&#39; on table-row-group, table-header-group, table-footer-group, table-row, table-column-group, table-column, table-cell, and table-caption elements is undefined.
-absolute
-The box&#39;s position (and possibly size) is specified with the &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;, and &#39;left&#39; properties. These properties specify offsets with respect to the box&#39;s containing block. Absolutely positioned boxes are taken out of the normal flow. This means they have no impact on the layout of later siblings. Also, though absolutely positioned boxes have margins, they do not collapse with any other margins.
-fixed
-The box&#39;s position is calculated according to the &#39;absolute&#39; model, but in addition, the box is fixed with respect to some reference. As with the &#39;absolute&#39; model, the box&#39;s margins do not collapse with any other margins. In the case of handheld, projection, screen, tty, and tv media types, the box is fixed with respect to the viewport and doesn&#39;t move when scrolled. In the case of the print media type, the box is rendered on every page, and is fixed with respect to the page box, even if the page is seen through a viewport (in the case of a print-preview, for example). For other media types, the presentation is undefined. Authors may wish to specify &#39;fixed&#39; in a media-dependent way. For instance, an author may want a box to remain at the top of the viewport on the screen, but not at the top of each printed page. The two specifications may be separated by using an @media rule, as in:
-Example(s):
-  
-@media screen {
-  h1#first { position: fixed }
-}
-@media print {
-  h1#first { position: static }
-}
-UAs must not paginate the content of fixed boxes. Note that UAs may print invisible content in other ways. See &amp;quot;Content outside the page box&amp;quot; in chapter 13.
-User agents may treat position as &#39;static&#39; on the root element.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
-
-&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
-
-&lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
-
-&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
-
-&lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
-
-&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
-
-&lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
-
-&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
-
-&lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
-
-&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
-
-&lt;p&gt;解释：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;overflow
-    
-&#39;overflow&#39;
-Value:  
-visible | hidden | scroll | auto | inherit
-Initial:  
-visible
-Applies to:  
-non-replaced block-level elements, table cells, and inline-block elements
-Inherited:  
-no
-Percentages:  
-N/A
-Media:  
-visual
-Computed value:  
-as specified
-This property specifies whether content of a block-level element is clipped when it overflows the element&#39;s box. It affects the clipping of all of the element&#39;s content except any descendant elements (and their respective content and descendants) whose containing block is the viewport or an ancestor of the element. Values have the following meanings:
-visible
-This value indicates that content is not clipped, i.e., it may be rendered outside the block box.
-hidden
-This value indicates that the content is clipped and that no scrolling user interface should be provided to view the content outside the clipping region.
-scroll
-This value indicates that the content is clipped and that if the user agent uses a scrolling mechanism that is visible on the screen (such as a scroll bar or a panner), that mechanism should be displayed for a box whether or not any of its content is clipped. This avoids any problem with scrollbars appearing and disappearing in a dynamic environment. When this value is specified and the target medium is &#39;print&#39;, overflowing content may be printed.
-auto
-The behavior of the &#39;auto&#39; value is user agent-dependent, but should cause a scrolling mechanism to be provided for overflowing boxes.
-Even if &#39;overflow&#39; is set to &#39;visible&#39;, content may be clipped to a UA&#39;s document window by the native operating environment.
-UAs must apply the &#39;overflow&#39; property set on the root element to the viewport. HTML UAs must instead apply the &#39;overflow&#39; property from the BODY element to the viewport, if the value on the HTML element is &#39;visible&#39;. The &#39;visible&#39; value when used for the viewport must be interpreted as &#39;auto&#39;. The element from which the value is propagated must have a used value for &#39;overflow&#39; of &#39;visible&#39;.
-In the case of a scrollbar being placed on an edge of the element&#39;s box, it should be inserted between the inner border edge and the outer padding edge. The space taken up by the scrollbars affects the computation of the dimensions in the rendering model.
-Example(s):
-Consider the following example of a block quotation (&amp;lt;blockquote&amp;gt;) that is too big for its containing block (established by a &amp;lt;div&amp;gt;). Here is the source:
-&amp;lt;div&amp;gt;
-&amp;lt;blockquote&amp;gt;
-&amp;lt;p&amp;gt;I didn&#39;t like the play, but then I saw
-it under adverse conditions - the curtain was up.&amp;lt;/p&amp;gt;
-&amp;lt;cite&amp;gt;- Groucho Marx&amp;lt;/cite&amp;gt;
-&amp;lt;/blockquote&amp;gt;
-&amp;lt;/div&amp;gt;
-Here is the style sheet controlling the sizes and style of the generated boxes:
-div { width : 100px; height: 100px;
-      border: thin solid red;
-      }
-
-blockquote   { width : 125px; height : 100px;
-      margin-top: 50px; margin-left: 50px;
-      border: thin dashed black
-      }
-
-cite { display: block;
-       text-align : right;
-       border: none
-       }
-The initial value of &#39;overflow&#39; is &#39;visible&#39;, so the &amp;lt;blockquote&amp;gt; would be formatted without clipping, something like this:
-   [D]
-Setting &#39;overflow&#39; to &#39;hidden&#39; for the &amp;lt;div&amp;gt;, on the other hand, causes the &amp;lt;blockquote&amp;gt; to be clipped by the containing block:
-   [D]
-A value of &#39;scroll&#39; would tell UAs that support a visible scrolling mechanism to display one so that users could access the clipped content.
-Finally, consider this case where an absolutely positioned element is mixed with an overflow parent.
-Style sheet:
-  container { position: relative; border: solid; }
-  scroller { overflow: scroll; height: 5em; margin: 5em; }
-  satellite { position: absolute; top: 0; }
-  body { height: 10em; }
-Document fragment:
-  &amp;lt;container&amp;gt;
-   &amp;lt;scroller&amp;gt;
-    &amp;lt;satellite/&amp;gt;
-    &amp;lt;body/&amp;gt;
-   &amp;lt;/scroller&amp;gt;
-  &amp;lt;/container&amp;gt;
-In this example, the &amp;quot;scroller&amp;quot; element will not scroll the &amp;quot;satellite&amp;quot; element, because the latter&#39;s containing block is outside the element whose overflow is being clipped and scrolled.
-11.1. The ‘overflow’, ‘overflow-x’ and ‘overflow-y’ properties
-In the preceding sections, several things (such as flow roots) depend on the value of ‘overflow’. We probably need to rewrite them in terms of “overflow-x and/or -y” or similar.
-Name:
-overflow-x, overflow-y,
-Value:
-visible | hidden | scroll | auto | no-display | no-content
-Initial:
-visible
-Applies to:
-non-replaced block-level elements and non-replaced ‘inline-block’ elements
-Inherited:
-no
-Percentages:
-N/A
-Media:
-visual
-Computed value:
-as specified, except ‘visible’, see text
-Name:
-overflow
-Value:
-[ visible | hidden | scroll | auto | no-display | no-content ]{1,2}
-Initial:
-see individual properties
-Applies to:
-non-replaced block-level elements and non-replaced ‘inline-block’ elements
-Inherited:
-no
-Percentages:
-N/A
-Media:
-visual
-Computed value:
-as specified, except ‘visible’, see text
-These properties specify whether content is clipped when it overflows the element&#39;s content area. It affects the clipping of all of the element&#39;s content except any descendant elements (and their respective content and descendants) whose containing block is the viewport or an ancestor of the element. ‘Overflow-x’ determines clipping at the left and right edges, ‘overflow-y’ at the top and bottom edges.
-‘Overflow’ is a shorthand. If it has one keyword, it sets both ‘overflow-x’ and ‘overflow-y’ to that keyword; if it has two, it sets ‘overflow-x’ to the first and ‘overflow-y’ to the second. Keywords have the following meanings:
-visible
-This value indicates that content is not clipped, i.e., it may be rendered outside the content box.
-hidden
-This value indicates that the content is clipped and that no scrolling mechanism should be provided to view the content outside the clipping region.
-scroll
-This value indicates that the content is clipped and that if the user agent uses a scrolling mechanism that is visible on the screen (such as a scroll bar or a panner), that mechanism should be displayed for a box whether or not any of its content is clipped. This avoids any problem with scrollbars appearing and disappearing in a dynamic environment. When this value is specified and the target medium is ‘print’, overflowing content may be printed.
-auto
-The behavior of the ‘auto’ value is UA-dependent, but should cause a scrolling mechanism to be provided for overflowing boxes.
-no-display
-When the content doesn&#39;t fit in the content box, the whole box is removed, as if ‘display: none’ were specified. [This idea is due to Till Halbach &amp;lt;tillh@opera.com&amp;gt;, July 21, 2005]
-no-content
-When the content doesn&#39;t fit in the content box, the whole content is hidden, as if ‘visibility: hidden’ were specified. [This idea is due to Till Halbach &amp;lt;tillh@opera.com&amp;gt;, July 21, 2005]
-Even if ‘overflow’ is set to ‘visible’, content may be clipped to a UA&#39;s document window by the native operating environment.
-UAs must apply the ‘overflow’ property set on the root element to the viewport. HTML UAs must instead apply the ‘overflow’ property from the BODY element to the viewport, if the value on the HTML element is ‘visible’. The ‘visible’ value when used for the viewport must be interpreted as ‘auto’. The element from which the value is propagated must have a used value for ‘overflow’ of ‘visible’.
-The para above is from CSS 2.1. Need to check if the introduction of overflow-x/y changes anything.
-In the case of a scrollbar being placed on an edge of the element&#39;s box, it should be inserted between the inner border edge and the outer padding edge. The space taken up by the scrollbars affects the computation of the dimensions in the rendering model.
-A UA may use multiple scrolling mechanisms at the same time. E.g., if content overflows both to the right and to the bottom, it may use a marquee effect for the overflow to the right and a scrollbar for the overflow to the bottom.
-Note that a box with ‘overflow’ other than ‘visible’ is a flow root.
-Consider the following example of a block quotation (&amp;lt;blockquote&amp;gt;) that is too big for its containing block (established by a &amp;lt;div&amp;gt;). Here is the source:
-&amp;lt;div&amp;gt;
-&amp;lt;blockquote&amp;gt;
-&amp;lt;p&amp;gt;I didn&#39;t like the play, but then I saw
-it under adverse conditions - the curtain was up.&amp;lt;/p&amp;gt;
-&amp;lt;cite&amp;gt;- Groucho Marx&amp;lt;/cite&amp;gt;
-&amp;lt;/blockquote&amp;gt;
-&amp;lt;/div&amp;gt;
-Here is the style sheet controlling the sizes and style of the generated boxes:
-div { width : 100px; height: 100px;
-      border: thin solid red;
-      }
-
-blockquote   { width : 125px; height : 100px;
-      margin-top: 50px; margin-left: 50px;
-      border: thin dashed black
-      }
-
-cite { display: block;
-       text-align : right;
-       border: none
-       }
-The initial value of ‘overflow’ is ‘visible’, so the &amp;lt;blockquote&amp;gt; would be formatted without clipping, something like this:
-
-Possible rendering with ‘overflow: visible’
-Setting ‘overflow’ to ‘hidden’ for the &amp;lt;div&amp;gt;, on the other hand, causes the &amp;lt;blockquote&amp;gt; to be clipped by the containing block:
-
-Possible rendering with ‘overflow: hidden’
-A value of ‘scroll’ would tell UAs that support a visible scrolling mechanism to display one so that users could access the clipped content.
-Consider this case where an absolutely positioned element is mixed with an overflow parent. Style sheet:
-container { position: relative; border: solid; }
-scroller { overflow: scroll; height: 5em; margin: 5em; }
-satellite { position: absolute; top: 0; }
-body { height: 10em; }
-Document fragment:
-&amp;lt;container&amp;gt;
-&amp;lt;scroller&amp;gt;
-  &amp;lt;satellite/&amp;gt;
-  &amp;lt;body/&amp;gt;
-&amp;lt;/scroller&amp;gt;
-&amp;lt;/container&amp;gt;
-In this example, the “scroller” element will not scroll the “satellite” element, because the latter&#39;s containing block is outside the element whose overflow is being clipped and scrolled.
-The combination of collapsing margins, ‘max-height’ and ‘overflow: auto’ can lead to subtle differences in implementations, unless special care is taken. A UA should assume that an element can be rendered without a scrolling mechanism first, perform all the collapsing of margins, and check that the content height is indeed less than the ‘max-height’. If it is not, the process is repeated under the assumption that a scrolling mechanism is needed.
-In the following document fragment, the outer DIV has ‘height: auto’, but ‘max-height: 5em’. The inner DIV has large margins and would normally just fit:
-...
-    #d1 { overflow: auto; max-height: 5em }
-    #d2 { margin: 2em; line-height: 1 }
-...
-&amp;lt;div id=d1&amp;gt;
-  &amp;lt;div id=d2&amp;gt;
-    This DIV has big margins.
-  &amp;lt;/DIV&amp;gt;
-&amp;lt;/DIV&amp;gt;
-If we assume that d1 needs scroll bars, then the height of d1, including the single line of text and twice 2em of margins, adds up to 5em plus a scrollbar. Since that is greater than 5em, the maximum allowed height, it seems we made the right assumption and d1 indeed needs scrollbars.
-However, we should have started by assuming that no scrollbars are needed. In that case the content height of d1 is exactly the maximum height of 5em, proving that the assumption was correct and d1 indeed should not have scrollbars.
-The computed values of ‘overflow-x’ and ‘overflow-y’ are the same as their specified values, except that some combinations with ‘visible’ are not possible: if one is specified as ‘visible’ and the other is ‘scroll’ or ‘auto’, then ‘visible’ is set to ‘auto’. The computed value of ‘overflow’ is equal to the computed value of ‘overflow-x’ if ‘overflow-y’ is the same; otherwise it is the pair of computed values of ‘overflow-x’ and ‘overflow-y’.
-The scrolling mechanism depends on the UA. The most common mechanism is a scrollbar, but panners, hand cursors, page flickers, etc. are also possible. A value of ‘scroll’ would tell UAs that support a visible scrolling mechanism to display one so that users can access the clipped content. The ‘overflow-style’ property lets an author specify one or more preferred scrolling mechanism.
-Note that ‘overflow-x’ and ‘overflow-y’ did not exist in CSS2.
-Note that ‘text-overflow’ (see [CSS3TEXT] ) can be used to give a visual indication where text has been clipped.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;overflow，常与定高的元素配合使用，如果元素定高，通过overflow-y: auto, 如果内容高度大于定高元素就会出现滚动条。如果定高元素内部需要出现overflow：visiable的元素，需要重新更改overflow的属性值。因为默认元素的overflow是继承父节点的。&lt;/p&gt;
 </description>
     </item>
     

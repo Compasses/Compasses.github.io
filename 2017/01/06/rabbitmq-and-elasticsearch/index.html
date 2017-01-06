@@ -6,7 +6,7 @@
   
   <meta charset="UTF-8">
   <title>
-    libuv 初认识 | 三十重围
+    RabbitMQ and ElasticSearch | 三十重围
   </title>
 
 
@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width,user-scalable=no,maximum-scale=1,initial-scale=1">
 
   
-  <link rel="canonical" href="http://compasses.github.io/2015/06/03/libuv-%E5%88%9D%E8%AE%A4%E8%AF%86/"/>
+  <link rel="canonical" href="http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/"/>
 
   
   <link rel="stylesheet" href="/css/sanitize.css">
@@ -62,63 +62,25 @@
   
   <main id="single" role="main">
     <div class="article-header">
-      <h1>libuv 初认识</h1>
+      <h1>RabbitMQ and ElasticSearch</h1>
       <div class="meta">
-        Jun 3, 2015 &nbsp;
+        Jan 6, 2017 &nbsp;
         
-          #<a href="/tags/c">C&#43;&#43;</a>&nbsp;
+          #<a href="/tags/elasticsearch">ElasticSearch</a>&nbsp;
         
       </div>
     </div>
     <article>
-      
+      <p>项目需要产品中引入了ElasticSearch，第一阶段的使用场景是直接消费RabbitMQ来persist相关的业务数据，改变以前通过message driven走API Call 的方式persist数据。调整过后性能提升了一个数量级。第二阶段将会使用ElasticSearch作为产品的全文检索引擎使用，类似于Search加速组件。
+在这个过程中开发了不少原型代码，也做了一系列的笔记，项目是<a href="/compasses/elastic-rabbitmq">elastic-rabbitmq</a>，相关的notes：</p>
 
-<p>说明： 本篇文章主要从<a href="http://nikhilm.github.io/uvbook/">An Introduction to libuv</a>这本书翻译学习而来。</p>
+<ol>
+<li><a href="/compasses/elastic-rabbitmq/blob/master/notes/basic&amp;sourcestart.md">ElasticSearch 深入理解 一：基础概念&amp;源码启动</a></li>
+<li><a href="/compasses/elastic-rabbitmq/blob/master/notes/optimisticlock&amp;versionconflicthandle.md">ElasticSearch 深入理解 二：乐观锁&amp;版本冲突管理</a></li>
+<li><a href="/compasses/elastic-rabbitmq/blob/master/notes/cluster_relateddesign.md">ElasticSearch 深入理解 三：集群部署设计</a></li>
+</ol>
 
-<h2 id="开始:1fb7be80e02e4b29d4cf88eae1d66804">开始</h2>
-
-<p>libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。</p>
-
-<h3 id="事件循环:1fb7be80e02e4b29d4cf88eae1d66804">事件循环</h3>
-
-<p>libuv的编译就不用多说，参考libuv的<a href="https://github.com/libuv/libuv">github网址</a>。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。</p>
-
-<p>先从运行一个程序开始：</p>
-
-<pre><code>#include &quot;uv.h&quot;
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-
-int main() {
-    uv_loop_t *loop = malloc(sizeof(uv_loop_t));
-    uv_loop_init(loop);
-    printf(&quot;Now quitting.\n&quot;);
-    uv_run(loop, UV_RUN_DEFAULT);
-    uv_loop_close(loop);
-    free(loop);
-    return 0;
-}
-</code></pre>
-
-<p>编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：</p>
-
-<pre><code>{
-  'targets': [
-    {
-      'dependencies': ['../../uv.gyp:libuv'],
-      'target_name': 'helloword',
-      'type': 'executable',
-      'sources': [
-        'main.c',
-      ]
-    }
-  ],
-}
-</code></pre>
-
-<p>然后执行** gyp &ndash;format=make -Duv_library=static_library &ndash;depth=$PWD build.gyp <strong>生产相应的makefile，最后直接执行</strong>make**，就会生成自己想要的可执行文件。
-gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平台方面也表现很好，后续有时间也好好学习下。
-待续。</p>
+<p>项目继续，也会持续更新。</p>
 
 
       
@@ -133,7 +95,7 @@ gyp算上一个神器，比起自己写makefile轻松了很多，而且在跨平
     </article>
     
     
-	<div class="ds-thread" data-thread-key="" data-title="libuv 初认识" data-url="http://compasses.github.io/2015/06/03/libuv-%E5%88%9D%E8%AE%A4%E8%AF%86/"></div>
+	<div class="ds-thread" data-thread-key="" data-title="RabbitMQ and ElasticSearch" data-url="http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/"></div>
 
 
 <script type="text/javascript">
@@ -153,10 +115,8 @@ var duoshuoQuery = {short_name:"compasses"};
 
   <nav class="pagination">
     
-      <span class="previous">&larr; <a href="http://compasses.github.io/2015/05/24/%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E%E9%9D%9E%E9%98%BB%E5%A1%9Ei/o/" rel="prev">同步、异步、阻塞、非阻塞I/O</a></span>
+      <span class="previous">&larr; <a href="http://compasses.github.io/2016/08/15/kubernetes-start/" rel="prev">kubernetes start</a></span>
     
-    
-      <span class="next"><a href="http://compasses.github.io/2015/06/19/docker-docker/" rel="next">Docker Docker</a> &rarr;</span>
     
   </nav>
 

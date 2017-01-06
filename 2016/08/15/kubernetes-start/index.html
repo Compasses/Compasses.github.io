@@ -77,7 +77,7 @@
 
 <p>先从几个概念理解开始：</p>
 
-<h2 id="pods-http-kubernetes-io-docs-user-guide-pods:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/pods/">Pods</a></h2>
+<h2 id="pods-http-kubernetes-io-docs-user-guide-pods"><a href="http://kubernetes.io/docs/user-guide/pods/">Pods</a></h2>
 
 <p>是一个container的集合，针对特定应用服务的建模，一个或者多个容器分布于相同的物理主机或者虚拟主机。位于相同pod的应用是共享存储的。容器位于相同的pod，共享IP address 和端口空间。类推到docker上，就是pod定义了一组containers。跟单个container部署类似，pods的生命周期也是跟随宿主node的。</p>
 
@@ -91,32 +91,32 @@
 Pod的生命周期，通常情况下，用户不需要直接去创建pod，应该只有通过controllers RC来创建。</li>
 </ol>
 
-<h2 id="rs-rc:091cda0b59885368668b194756b39d27">RS &amp; RC</h2>
+<h2 id="rs-rc">RS &amp; RC</h2>
 
 <p><a href="http://kubernetes.io/docs/user-guide/replicasets/">Replica Sets</a> 和 <a href="http://kubernetes.io/docs/user-guide/replication-controller/">Replication Controller</a></p>
 
 <p>Replica Sets 是 Replication Controller的升级概念，共同的使命都是管理pod，让他们高可用。名字上也透漏了这一点，复制集。但是着两种东西基本都不会用，建议使用其更上层的deployment。这里还是看你的服务是通过什么方式部署的，是否通过deployment。</p>
 
-<h2 id="deployment-http-kubernetes-io-docs-user-guide-deployments:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/deployments/">Deployment</a></h2>
+<h2 id="deployment-http-kubernetes-io-docs-user-guide-deployments"><a href="http://kubernetes.io/docs/user-guide/deployments/">Deployment</a></h2>
 
 <p>一个Deployment提供了更新Pod和Replica Set的机制。通过Deployment可以创建新的resource和替换已有的resource。
 常用的方法，更新deployment中的image，让其开始做rolling-update。deployment 是在实际使用中使用较多的API。</p>
 
-<h2 id="services-http-kubernetes-io-docs-user-guide-services:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/services/">Services</a></h2>
+<h2 id="services-http-kubernetes-io-docs-user-guide-services"><a href="http://kubernetes.io/docs/user-guide/services/">Services</a></h2>
 
 <p>k8s中的service是构建在Pods之上的逻辑概念。打通Pods之间的通信。service正好建模于微服务。对于Service的endpoints对应于Pods，pods通过selector 确定。</p>
 
-<h2 id="resource-management-http-kubernetes-io-docs-user-guide-managing-deployments-in-place-updates-of-resources:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/managing-deployments/#in-place-updates-of-resources">Resource management</a></h2>
+<h2 id="resource-management-http-kubernetes-io-docs-user-guide-managing-deployments-in-place-updates-of-resources"><a href="http://kubernetes.io/docs/user-guide/managing-deployments/#in-place-updates-of-resources">Resource management</a></h2>
 
 <p>k8s的强大之处在于管理集群中的资源，提供了方便的接口。升级、回滚等等。链接中的命令通过kubectrl提供，可以多多操作练习。</p>
 
-<h2 id="volumes-http-kubernetes-io-docs-user-guide-volumes:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/volumes/">Volumes</a></h2>
+<h2 id="volumes-http-kubernetes-io-docs-user-guide-volumes"><a href="http://kubernetes.io/docs/user-guide/volumes/">Volumes</a></h2>
 
 <p>volumes提供了一种持久化数据的功能，能够跨pods使用。有很多类型的volume可用。</p>
 
 <p>还有其他非常有用的概念：<a href="http://kubernetes.io/docs/user-guide/namespaces/">Namespaces</a>，<a href="http://kubernetes.io/docs/user-guide/jobs/">Job</a>。</p>
 
-<h2 id="实用操作:091cda0b59885368668b194756b39d27">实用操作</h2>
+<h2 id="实用操作">实用操作</h2>
 
 <p>下面总结下平常使用较多的kubectl命令；
 先看配置:</p>
@@ -238,6 +238,8 @@ var duoshuoQuery = {short_name:"compasses"};
     
       <span class="previous">&larr; <a href="http://compasses.github.io/2016/07/26/book-review-thinking-in-java/" rel="prev">Book Review: Thinking in Java</a></span>
     
+    
+      <span class="next"><a href="http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/" rel="next">RabbitMQ and ElasticSearch</a> &rarr;</span>
     
   </nav>
 
