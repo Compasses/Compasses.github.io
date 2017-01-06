@@ -22,7 +22,7 @@
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
 
-&lt;h2 id=&#34;编码问题:a4408d7234fd43d2930eca48e7402255&#34;&gt;编码问题&lt;/h2&gt;
+&lt;h2 id=&#34;编码问题&#34;&gt;编码问题&lt;/h2&gt;
 
 &lt;p&gt;互联网上使用最为广泛的就是UTF-8的编码方式，查看网页源码的时候基本上都能看到字符集的编码设置：&lt;/p&gt;
 
@@ -31,7 +31,7 @@
 
 &lt;p&gt;UTF-8是Unicode的一种实现方式。是一种变长编码，想更多了解的可以看&lt;a href=&#34;http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html&#34;&gt;这篇文章&lt;/a&gt;，基本上能让大家明白。所以造成这个问题的主因也是由于变长编码导致的。javascript把每个汉字当成一个字符，而在后台PHP是按照UTF-8计算，每个汉字由三个字节组成，故中文输入到了后台长度会变成字数的三倍。所以在输入框里面有中文的时候maxlength限制就不再可靠了。&lt;/p&gt;
 
-&lt;h2 id=&#34;精确获取字符长度:a4408d7234fd43d2930eca48e7402255&#34;&gt;精确获取字符长度&lt;/h2&gt;
+&lt;h2 id=&#34;精确获取字符长度&#34;&gt;精确获取字符长度&lt;/h2&gt;
 
 &lt;p&gt;由于maxlength不再可靠，需要有方法获取任意输入的字节数。针对中文输入使用将其转码并使用特殊方法计算其长度便可达成精确控制输入长度的目的。&lt;strong&gt;encodeURIComponent&lt;/strong&gt;方法是比较好用的：&lt;/p&gt;
 
@@ -58,7 +58,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 18
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;textarea-中的换行符:a4408d7234fd43d2930eca48e7402255&#34;&gt;textarea 中的换行符&lt;/h2&gt;
+&lt;h2 id=&#34;textarea-中的换行符&#34;&gt;textarea 中的换行符&lt;/h2&gt;
 
 &lt;p&gt;与input相比，textarea还能输入回车换行，但是换行在javascript计算长度的时候却少计算一个字符，这样也会造成跟PHP后台不一致的情况，其实java后台也是一样的。
 例如只有一个换行符的encode前端结果：&lt;/p&gt;
@@ -71,7 +71,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 产生这个问题的原因是换行符在HTTP&lt;a href=&#34;http://stackoverflow.com/questions/462348/string-length-differs-from-javascript-to-java-code&#34;&gt;传输的过程中发生转换&lt;/a&gt;，由‘\n’变成‘\r\n’。
 因此在计算textarea值时在遇到换行符时记得长度额外加1。&lt;/p&gt;
 
-&lt;h2 id=&#34;代码实现:a4408d7234fd43d2930eca48e7402255&#34;&gt;代码实现&lt;/h2&gt;
+&lt;h2 id=&#34;代码实现&#34;&gt;代码实现&lt;/h2&gt;
 
 &lt;p&gt;既然问题原因找到了，解决的思路也基本清晰了，剩下的就是JS代码实现下了。
 针对input：&lt;/p&gt;
@@ -124,7 +124,7 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
 
 &lt;p&gt;上述代码已完整测试，中文、英文、中英文混合、复制粘贴等等，都能按照maxlength的值精确控制用户输入的长度了。&lt;/p&gt;
 
-&lt;h2 id=&#34;总结:a4408d7234fd43d2930eca48e7402255&#34;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;见微知著，看似不大的问题却涵盖很广的知识面。就是这样，注意细节问题，才能不断进步。厚积薄发，注意小问题，更不轻易放过，放过了小问题，对你来说就是大问题了。&lt;/p&gt;
 </description>
