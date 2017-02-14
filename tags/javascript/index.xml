@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Javascript on 三十重围</title>
-    <link>http://compasses.github.io/tags/javascript/</link>
+    <link>http://www.heguangnan.com/tags/javascript/</link>
     <description>Recent content in Javascript on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Thu, 28 Jan 2016 21:48:40 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>input 和 textarea的长度限制问题</title>
-      <link>http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</link>
+      <link>http://www.heguangnan.com/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</link>
       <pubDate>Thu, 28 Jan 2016 21:48:40 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</guid>
+      <guid>http://www.heguangnan.com/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</guid>
       <description>
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
@@ -132,10 +132,10 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
     
     <item>
       <title>同步、异步、阻塞、非阻塞I/O</title>
-      <link>http://compasses.github.io/2015/05/24/%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E%E9%9D%9E%E9%98%BB%E5%A1%9Ei/o/</link>
+      <link>http://www.heguangnan.com/2015/05/24/%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E%E9%9D%9E%E9%98%BB%E5%A1%9Ei/o/</link>
       <pubDate>Sun, 24 May 2015 14:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/05/24/%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E%E9%9D%9E%E9%98%BB%E5%A1%9Ei/o/</guid>
+      <guid>http://www.heguangnan.com/2015/05/24/%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5%E9%98%BB%E5%A1%9E%E9%9D%9E%E9%98%BB%E5%A1%9Ei/o/</guid>
       <description>&lt;p&gt;NodeJS倡导异步编程，高并发，高性能。他自然是异步非阻塞I/O。非阻塞I/O是不是就是异步的，跟异步编程又有什么区别呢？写到这里突然想到了大学里的辅导员，刚入大学的第一次开会，就告诫我们，&lt;strong&gt;学数学最重要的就是概念，概念不清就什么都学不好&lt;/strong&gt;。我深深记住了这句话，受用至今。&lt;/p&gt;
 
 &lt;p&gt;先看看阻塞和非阻塞，阻塞，顾名思义，即在读取数据时，阻塞在等待数据，或者监听事件时阻塞，有新的数据或者事件，事件是泛化概念，数据到达也是个事件。可以用事件代替一切吧，统称event。非阻塞即调用接口触发某种event，没有任何event也不会阻塞，而是直接返回。&lt;/p&gt;

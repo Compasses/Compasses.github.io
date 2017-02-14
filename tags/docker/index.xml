@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Docker on 三十重围</title>
-    <link>http://compasses.github.io/tags/docker/</link>
+    <link>http://www.heguangnan.com/tags/docker/</link>
     <description>Recent content in Docker on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Mon, 15 Aug 2016 13:57:02 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>kubernetes start</title>
-      <link>http://compasses.github.io/2016/08/15/kubernetes-start/</link>
+      <link>http://www.heguangnan.com/2016/08/15/kubernetes-start/</link>
       <pubDate>Mon, 15 Aug 2016 13:57:02 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/08/15/kubernetes-start/</guid>
+      <guid>http://www.heguangnan.com/2016/08/15/kubernetes-start/</guid>
       <description>
 
 &lt;p&gt;先从几个概念理解开始：&lt;/p&gt;
@@ -152,10 +152,10 @@ kubectl 的编译只需单独编译即可，cd到src/k8s.io/kubernetes/cmd/kubec
     
     <item>
       <title>Docker Docker</title>
-      <link>http://compasses.github.io/2015/06/19/docker-docker/</link>
+      <link>http://www.heguangnan.com/2015/06/19/docker-docker/</link>
       <pubDate>Fri, 19 Jun 2015 17:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/06/19/docker-docker/</guid>
+      <guid>http://www.heguangnan.com/2015/06/19/docker-docker/</guid>
       <description>&lt;p&gt;一直想把本地的开发环境切换到docker上，由于公司的CI出来的运行环境是docker的，所以把本地开发环境打造成docker的应该也很简单了。&lt;/p&gt;
 
 &lt;p&gt;首先安装虚拟机，使用Vmplayer，下载Ubuntu的安装镜像文件，安装会非常简单。接下来就是docker的安装，docker安装依照&lt;a href=&#34;https://docs.docker.com/installation/ubuntulinux/&#34;&gt;官网&lt;/a&gt;即可&lt;/p&gt;

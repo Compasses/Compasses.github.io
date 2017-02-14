@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Saas on 三十重围</title>
-    <link>http://compasses.github.io/tags/saas/</link>
+    <link>http://www.heguangnan.com/tags/saas/</link>
     <description>Recent content in Saas on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Sun, 29 May 2016 14:34:35 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/tags/saas/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/tags/saas/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>SaaS DataBase</title>
-      <link>http://compasses.github.io/2016/05/29/saas-database/</link>
+      <link>http://www.heguangnan.com/2016/05/29/saas-database/</link>
       <pubDate>Sun, 29 May 2016 14:34:35 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/05/29/saas-database/</guid>
+      <guid>http://www.heguangnan.com/2016/05/29/saas-database/</guid>
       <description>&lt;p&gt;距离上次日志已有将近半年的时间，由于经历了很多工作上的事情，少写了日志，算是自己的疏漏吧。后续要多写几篇，把最近落下的补上。&lt;/p&gt;
 
 &lt;p&gt;为什么会写这样的一篇日志，一来是公司最近推行MSA，即微服务化，现在很多公司都在推行，各种大会大家都在述说着自己的优秀实践。二来自己目前做的工作与数据存储有很大关系，由于之前的方案也存在着诸多问题，需要做些改变了。这里就记录下来看看心理路程吧。&lt;/p&gt;

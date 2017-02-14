@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Topic 1 on 三十重围</title>
-    <link>http://compasses.github.io/topics/topic-1/</link>
+    <link>http://www.heguangnan.com/topics/topic-1/</link>
     <description>Recent content in Topic 1 on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Mon, 15 Aug 2016 13:57:02 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/topics/topic-1/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/topics/topic-1/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>kubernetes start</title>
-      <link>http://compasses.github.io/2016/08/15/kubernetes-start/</link>
+      <link>http://www.heguangnan.com/2016/08/15/kubernetes-start/</link>
       <pubDate>Mon, 15 Aug 2016 13:57:02 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/08/15/kubernetes-start/</guid>
+      <guid>http://www.heguangnan.com/2016/08/15/kubernetes-start/</guid>
       <description>
 
 &lt;p&gt;先从几个概念理解开始：&lt;/p&gt;
@@ -152,10 +152,10 @@ kubectl 的编译只需单独编译即可，cd到src/k8s.io/kubernetes/cmd/kubec
     
     <item>
       <title>Book Review: Thinking in Java</title>
-      <link>http://compasses.github.io/2016/07/26/book-review-thinking-in-java/</link>
+      <link>http://www.heguangnan.com/2016/07/26/book-review-thinking-in-java/</link>
       <pubDate>Tue, 26 Jul 2016 09:50:57 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/07/26/book-review-thinking-in-java/</guid>
+      <guid>http://www.heguangnan.com/2016/07/26/book-review-thinking-in-java/</guid>
       <description>
 
 &lt;h2 id=&#34;reading-book&#34;&gt;Reading Book&lt;/h2&gt;
@@ -584,10 +584,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>人生不是演出</title>
-      <link>http://compasses.github.io/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</link>
+      <link>http://www.heguangnan.com/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</link>
       <pubDate>Tue, 19 Jul 2016 16:55:26 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</guid>
+      <guid>http://www.heguangnan.com/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</guid>
       <description>&lt;p&gt;最近看了两个电影《遇见你之前》和《初恋这首情歌》。一个关于死亡，一个关于青春，很是巧合。&lt;/p&gt;
 
 &lt;p&gt;两部电影都给了我很多很多感动，感动到哭。&lt;/p&gt;
@@ -611,10 +611,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>读书：微服务设计</title>
-      <link>http://compasses.github.io/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
+      <link>http://www.heguangnan.com/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
       <pubDate>Wed, 01 Jun 2016 13:32:34 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
+      <guid>http://www.heguangnan.com/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
       <description>
 
 &lt;p&gt;就是这样的一本书，来的非常及时。&lt;/p&gt;
@@ -712,10 +712,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>SaaS DataBase</title>
-      <link>http://compasses.github.io/2016/05/29/saas-database/</link>
+      <link>http://www.heguangnan.com/2016/05/29/saas-database/</link>
       <pubDate>Sun, 29 May 2016 14:34:35 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/05/29/saas-database/</guid>
+      <guid>http://www.heguangnan.com/2016/05/29/saas-database/</guid>
       <description>&lt;p&gt;距离上次日志已有将近半年的时间，由于经历了很多工作上的事情，少写了日志，算是自己的疏漏吧。后续要多写几篇，把最近落下的补上。&lt;/p&gt;
 
 &lt;p&gt;为什么会写这样的一篇日志，一来是公司最近推行MSA，即微服务化，现在很多公司都在推行，各种大会大家都在述说着自己的优秀实践。二来自己目前做的工作与数据存储有很大关系，由于之前的方案也存在着诸多问题，需要做些改变了。这里就记录下来看看心理路程吧。&lt;/p&gt;
@@ -754,10 +754,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>input 和 textarea的长度限制问题</title>
-      <link>http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</link>
+      <link>http://www.heguangnan.com/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</link>
       <pubDate>Thu, 28 Jan 2016 21:48:40 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</guid>
+      <guid>http://www.heguangnan.com/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</guid>
       <description>
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
@@ -872,10 +872,10 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
     
     <item>
       <title>系统性能 一</title>
-      <link>http://compasses.github.io/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</link>
+      <link>http://www.heguangnan.com/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</link>
       <pubDate>Sun, 17 Jan 2016 21:48:25 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</guid>
+      <guid>http://www.heguangnan.com/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</guid>
       <description>
 
 &lt;p&gt;最近一直在做系统性能优化，包括性能问题定位，系统整体性能提升等。在性能测试环境上一边测试一边优化，从最开始的表象开始，修改代码和各种系统参数，然后就会出现新的表象，然后再修改代码和系统参数。性能测试涉及的节点很多，很多方面都有联动性，最后辛辛苦苦的搞了大半个月，确实有所进展但是总感觉缺少系统的方法。今天有幸看到这样的一篇文章&lt;a href=&#34;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&#34;&gt;Linux Performance Analysis in 60,000 Milliseconds&lt;/a&gt;，明确了在一个server上面，最开始你应该关注到什么。虽然里面的东西大家都有注意，但是可能还是不够全面。现在就结合这篇文章和自己的实践做下总结吧。&lt;/p&gt;

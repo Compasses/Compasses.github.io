@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Elasticsearch on 三十重围</title>
-    <link>http://compasses.github.io/topics/elasticsearch/</link>
+    <link>http://www.heguangnan.com/topics/elasticsearch/</link>
     <description>Recent content in Elasticsearch on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Fri, 06 Jan 2017 17:08:03 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/topics/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/topics/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>RabbitMQ and ElasticSearch</title>
-      <link>http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/</link>
+      <link>http://www.heguangnan.com/2017/01/06/rabbitmq-and-elasticsearch/</link>
       <pubDate>Fri, 06 Jan 2017 17:08:03 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/</guid>
+      <guid>http://www.heguangnan.com/2017/01/06/rabbitmq-and-elasticsearch/</guid>
       <description>&lt;p&gt;项目需要产品中引入了ElasticSearch，第一阶段的使用场景是直接消费RabbitMQ来persist相关的业务数据，改变以前通过message driven走API Call 的方式persist数据。调整过后性能提升了一个数量级。第二阶段将会使用ElasticSearch作为产品的全文检索引擎使用，类似于Search加速组件。
 在这个过程中开发了不少原型代码，也做了一系列的笔记，项目是&lt;a href=&#34;https://github.com/compasses/elastic-rabbitmq&#34;&gt;elastic-rabbitmq&lt;/a&gt;，相关的notes：&lt;/p&gt;
 

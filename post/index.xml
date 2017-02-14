@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on 三十重围</title>
-    <link>http://compasses.github.io/post/</link>
+    <link>http://www.heguangnan.com/post/</link>
     <description>Recent content in Posts on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Fri, 06 Jan 2017 17:08:03 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>RabbitMQ and ElasticSearch</title>
-      <link>http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/</link>
+      <link>http://www.heguangnan.com/2017/01/06/rabbitmq-and-elasticsearch/</link>
       <pubDate>Fri, 06 Jan 2017 17:08:03 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2017/01/06/rabbitmq-and-elasticsearch/</guid>
+      <guid>http://www.heguangnan.com/2017/01/06/rabbitmq-and-elasticsearch/</guid>
       <description>&lt;p&gt;项目需要产品中引入了ElasticSearch，第一阶段的使用场景是直接消费RabbitMQ来persist相关的业务数据，改变以前通过message driven走API Call 的方式persist数据。调整过后性能提升了一个数量级。第二阶段将会使用ElasticSearch作为产品的全文检索引擎使用，类似于Search加速组件。
 在这个过程中开发了不少原型代码，也做了一系列的笔记，项目是&lt;a href=&#34;https://github.com/compasses/elastic-rabbitmq&#34;&gt;elastic-rabbitmq&lt;/a&gt;，相关的notes：&lt;/p&gt;
 
@@ -33,10 +33,10 @@
     
     <item>
       <title>kubernetes start</title>
-      <link>http://compasses.github.io/2016/08/15/kubernetes-start/</link>
+      <link>http://www.heguangnan.com/2016/08/15/kubernetes-start/</link>
       <pubDate>Mon, 15 Aug 2016 13:57:02 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/08/15/kubernetes-start/</guid>
+      <guid>http://www.heguangnan.com/2016/08/15/kubernetes-start/</guid>
       <description>
 
 &lt;p&gt;先从几个概念理解开始：&lt;/p&gt;
@@ -171,10 +171,10 @@ kubectl 的编译只需单独编译即可，cd到src/k8s.io/kubernetes/cmd/kubec
     
     <item>
       <title>Book Review: Thinking in Java</title>
-      <link>http://compasses.github.io/2016/07/26/book-review-thinking-in-java/</link>
+      <link>http://www.heguangnan.com/2016/07/26/book-review-thinking-in-java/</link>
       <pubDate>Tue, 26 Jul 2016 09:50:57 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/07/26/book-review-thinking-in-java/</guid>
+      <guid>http://www.heguangnan.com/2016/07/26/book-review-thinking-in-java/</guid>
       <description>
 
 &lt;h2 id=&#34;reading-book&#34;&gt;Reading Book&lt;/h2&gt;
@@ -603,10 +603,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>人生不是演出</title>
-      <link>http://compasses.github.io/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</link>
+      <link>http://www.heguangnan.com/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</link>
       <pubDate>Tue, 19 Jul 2016 16:55:26 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</guid>
+      <guid>http://www.heguangnan.com/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</guid>
       <description>&lt;p&gt;最近看了两个电影《遇见你之前》和《初恋这首情歌》。一个关于死亡，一个关于青春，很是巧合。&lt;/p&gt;
 
 &lt;p&gt;两部电影都给了我很多很多感动，感动到哭。&lt;/p&gt;
@@ -630,10 +630,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>读书：微服务设计</title>
-      <link>http://compasses.github.io/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
+      <link>http://www.heguangnan.com/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</link>
       <pubDate>Wed, 01 Jun 2016 13:32:34 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
+      <guid>http://www.heguangnan.com/2016/06/01/%E8%AF%BB%E4%B9%A6%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%AE%BE%E8%AE%A1/</guid>
       <description>
 
 &lt;p&gt;就是这样的一本书，来的非常及时。&lt;/p&gt;
@@ -731,10 +731,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>SaaS DataBase</title>
-      <link>http://compasses.github.io/2016/05/29/saas-database/</link>
+      <link>http://www.heguangnan.com/2016/05/29/saas-database/</link>
       <pubDate>Sun, 29 May 2016 14:34:35 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/05/29/saas-database/</guid>
+      <guid>http://www.heguangnan.com/2016/05/29/saas-database/</guid>
       <description>&lt;p&gt;距离上次日志已有将近半年的时间，由于经历了很多工作上的事情，少写了日志，算是自己的疏漏吧。后续要多写几篇，把最近落下的补上。&lt;/p&gt;
 
 &lt;p&gt;为什么会写这样的一篇日志，一来是公司最近推行MSA，即微服务化，现在很多公司都在推行，各种大会大家都在述说着自己的优秀实践。二来自己目前做的工作与数据存储有很大关系，由于之前的方案也存在着诸多问题，需要做些改变了。这里就记录下来看看心理路程吧。&lt;/p&gt;
@@ -773,10 +773,10 @@ em.put(ACTION_ONE, new Command() {
     
     <item>
       <title>input 和 textarea的长度限制问题</title>
-      <link>http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</link>
+      <link>http://www.heguangnan.com/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</link>
       <pubDate>Thu, 28 Jan 2016 21:48:40 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</guid>
+      <guid>http://www.heguangnan.com/2016/01/28/input-%E5%92%8C-textarea%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E9%97%AE%E9%A2%98/</guid>
       <description>
 
 &lt;p&gt;一些敏感的页面应用，对用户的输入都有较多的限制，长度便是其中之一。但是最近遇到一个长度限制的问题。HTML对 input 和 textarea都有maxlength 的属性，该属性的解释就是&lt;a href=&#34;http://www.w3school.com.cn/tags/att_input_maxlength.asp&#34;&gt;允许输入字段的最大字符数&lt;/a&gt;。这里说的字符数，对英文是完全没有问题的，能做到精确控制输入长度，但是汉字的长度就会有前后不一致的问题。&lt;/p&gt;
@@ -891,10 +891,10 @@ encodeURIComponent(&#39;abc我的问题abc&#39;).replace(/%[A-F\d]{2}/g, &#39;i&
     
     <item>
       <title>系统性能 一</title>
-      <link>http://compasses.github.io/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</link>
+      <link>http://www.heguangnan.com/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</link>
       <pubDate>Sun, 17 Jan 2016 21:48:25 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</guid>
+      <guid>http://www.heguangnan.com/2016/01/17/%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD-%E4%B8%80/</guid>
       <description>
 
 &lt;p&gt;最近一直在做系统性能优化，包括性能问题定位，系统整体性能提升等。在性能测试环境上一边测试一边优化，从最开始的表象开始，修改代码和各种系统参数，然后就会出现新的表象，然后再修改代码和系统参数。性能测试涉及的节点很多，很多方面都有联动性，最后辛辛苦苦的搞了大半个月，确实有所进展但是总感觉缺少系统的方法。今天有幸看到这样的一篇文章&lt;a href=&#34;http://techblog.netflix.com/2015/11/linux-performance-analysis-in-60s.html&#34;&gt;Linux Performance Analysis in 60,000 Milliseconds&lt;/a&gt;，明确了在一个server上面，最开始你应该关注到什么。虽然里面的东西大家都有注意，但是可能还是不够全面。现在就结合这篇文章和自己的实践做下总结吧。&lt;/p&gt;
@@ -1101,10 +1101,10 @@ KiB Swap:  1951740 total,        0 used,  1951740 free.  3726664 cached Mem
     
     <item>
       <title>Apache Cache 研究</title>
-      <link>http://compasses.github.io/2015/12/09/apache-cache-%E7%A0%94%E7%A9%B6/</link>
+      <link>http://www.heguangnan.com/2015/12/09/apache-cache-%E7%A0%94%E7%A9%B6/</link>
       <pubDate>Wed, 09 Dec 2015 21:48:04 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/12/09/apache-cache-%E7%A0%94%E7%A9%B6/</guid>
+      <guid>http://www.heguangnan.com/2015/12/09/apache-cache-%E7%A0%94%E7%A9%B6/</guid>
       <description>
 
 &lt;p&gt;Apache 作为一个hosting server，在2.2版本以上的也有较为强大的缓存功能。使其不管是作为web server还是代理server都能实现访问加速。
@@ -1270,10 +1270,10 @@ Apache只管缓存，缓存文件的清理需要借助一个deamon进程：htcac
     
     <item>
       <title>HTTP Cache</title>
-      <link>http://compasses.github.io/2015/11/27/http-cache/</link>
+      <link>http://www.heguangnan.com/2015/11/27/http-cache/</link>
       <pubDate>Fri, 27 Nov 2015 17:45:24 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/11/27/http-cache/</guid>
+      <guid>http://www.heguangnan.com/2015/11/27/http-cache/</guid>
       <description>
 
 &lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;
@@ -1394,10 +1394,10 @@ Apache使能rewrite rule：&lt;/p&gt;
     
     <item>
       <title>golang interface analysis by gdb</title>
-      <link>http://compasses.github.io/2015/10/23/golang-interface-analysis-by-gdb/</link>
+      <link>http://www.heguangnan.com/2015/10/23/golang-interface-analysis-by-gdb/</link>
       <pubDate>Fri, 23 Oct 2015 22:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/10/23/golang-interface-analysis-by-gdb/</guid>
+      <guid>http://www.heguangnan.com/2015/10/23/golang-interface-analysis-by-gdb/</guid>
       <description>
 
 &lt;p&gt;interface 在go语言中，是非常重要的一环，总有点让人感到很玄乎不定的感觉。官方的lib中有大量使用，似乎面向对象和动态绑定也能跟interface扯上关系。总之，如果能更好的理解interface的机理，就能更好的理解和使用Go了。&lt;/p&gt;
@@ -1614,10 +1614,10 @@ func main() {
     
     <item>
       <title>So Busy</title>
-      <link>http://compasses.github.io/2015/08/05/so-busy/</link>
+      <link>http://www.heguangnan.com/2015/08/05/so-busy/</link>
       <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/08/05/so-busy/</guid>
+      <guid>http://www.heguangnan.com/2015/08/05/so-busy/</guid>
       <description>&lt;p&gt;最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。
 整理下最近都是忙了点啥。
 由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。
@@ -1630,10 +1630,10 @@ func main() {
     
     <item>
       <title>前端经验</title>
-      <link>http://compasses.github.io/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</link>
+      <link>http://www.heguangnan.com/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</link>
       <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</guid>
+      <guid>http://www.heguangnan.com/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</guid>
       <description>
 
 &lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
@@ -1713,10 +1713,10 @@ func main() {
     
     <item>
       <title>PHP 框架之CodeIgniter &amp; Laravel</title>
-      <link>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</link>
+      <link>http://www.heguangnan.com/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</link>
       <pubDate>Sat, 18 Jul 2015 18:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
+      <guid>http://www.heguangnan.com/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
       <description>
 
 &lt;h1 id=&#34;说明:08afb798474a9037df6f2df800659b05&#34;&gt;说明&lt;/h1&gt;
@@ -1910,10 +1910,10 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
     
     <item>
       <title>Go Go</title>
-      <link>http://compasses.github.io/2015/07/09/go-go/</link>
+      <link>http://www.heguangnan.com/2015/07/09/go-go/</link>
       <pubDate>Thu, 09 Jul 2015 17:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/07/09/go-go/</guid>
+      <guid>http://www.heguangnan.com/2015/07/09/go-go/</guid>
       <description>&lt;p&gt;最近在学习Go语言。认识Go语言是个偶然，首选是Docker容器的使用，Docker的兴起目前可谓风生水起，应用部署和各种云平台都在推行。其使用Go语言开发，之前没有听说过的。断断续续的找相关的博客、资料进行了解。发现Go 是有很多吸引人的地方，自己非常感兴趣，最近买的一本《Go Web编程》今天到手了。&lt;/p&gt;
 
 &lt;p&gt;也说下自己的缘由，很多人都说Go 很容易上手，这应该对C系的开发人员而说的，Go语言的发明者也是C语言的作者，Go语言本身很多的语法、类型、结构等用法类似于C语言，如果编译运行的话二进制文件都能用GDB进行调试。Go语言是个集大成者，在里面你能看到或者重新认识一些语言特性，它有诸多动态语言特有的特性。&lt;/p&gt;

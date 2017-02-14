@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Php on 三十重围</title>
-    <link>http://compasses.github.io/topics/php/</link>
+    <link>http://www.heguangnan.com/topics/php/</link>
     <description>Recent content in Php on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Sat, 18 Jul 2015 18:45:07 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/topics/php/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/topics/php/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>PHP 框架之CodeIgniter &amp; Laravel</title>
-      <link>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</link>
+      <link>http://www.heguangnan.com/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</link>
       <pubDate>Sat, 18 Jul 2015 18:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
+      <guid>http://www.heguangnan.com/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
       <description>
 
 &lt;h1 id=&#34;说明:08afb798474a9037df6f2df800659b05&#34;&gt;说明&lt;/h1&gt;

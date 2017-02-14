@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mysql on 三十重围</title>
-    <link>http://compasses.github.io/topics/mysql/</link>
+    <link>http://www.heguangnan.com/topics/mysql/</link>
     <description>Recent content in Mysql on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Fri, 26 Jun 2015 15:45:07 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/topics/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/topics/mysql/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>deadlock of mysql</title>
-      <link>http://compasses.github.io/2015/06/26/deadlock-of-mysql/</link>
+      <link>http://www.heguangnan.com/2015/06/26/deadlock-of-mysql/</link>
       <pubDate>Fri, 26 Jun 2015 15:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/06/26/deadlock-of-mysql/</guid>
+      <guid>http://www.heguangnan.com/2015/06/26/deadlock-of-mysql/</guid>
       <description>&lt;p&gt;没有想到在看似简单的场景里面也能遇到mysql的deadlock。&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;[Thu Jun 25 05:18:40.589897 2015] [:error] [pid 737] [client 172.17.42.1:41290] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query UPDATE `wp_usermeta` SET `meta_value` = &#39;a:2:{s:64:\\&amp;quot;1161a6271c528045db428cc8698bbc8e3e26ad4fb9d7436e32cbbe01a00079d0\\&amp;quot;;i:1436419120;s:64:\\&amp;quot;bf2e3582e17c7dfa1e6b02c700f537b8095f2b31ef58e4b448939eb9406e11f7\\&amp;quot;;i:1435382320;}&#39; WHERE `user_id` = 188 AND `meta_key` = &#39;session_tokens&#39; made by require(&#39;wp-blog-header.php&#39;), require_once(&#39;wp-includes/template-loader.php&#39;), do_action(&#39;template_redirect&#39;), call_user_func_array, anw_template_redirect, ANW_Base_Controller-&amp;gt;process, call_user_func, ANW_AccountOnePage_Controller-&amp;gt;authenticate, wp_signon, wp_set_auth_cookie, WP_Session_Tokens-&amp;gt;create, WP_Session_Tokens-&amp;gt;update, WP_User_Meta_Session_Tokens-&amp;gt;update_session, WP_User_Meta_Session_Tokens-&amp;gt;update_sessions, update_user_meta, update_metadata
@@ -68,10 +68,10 @@ Session_tokens的更新是随着用户的login和 logout 更新的。Login时会
     
     <item>
       <title>straight_join when and why</title>
-      <link>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</link>
+      <link>http://www.heguangnan.com/2015/05/19/straight_join-when-and-why/</link>
       <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/05/19/straight_join-when-and-why/</guid>
+      <guid>http://www.heguangnan.com/2015/05/19/straight_join-when-and-why/</guid>
       <description>
 
 &lt;h3 id=&#34;问题过程&#34;&gt;问题过程&lt;/h3&gt;
@@ -436,10 +436,10 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
     
     <item>
       <title>高性能MySQL 读书摘要</title>
-      <link>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</link>
+      <link>http://www.heguangnan.com/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</link>
       <pubDate>Tue, 19 May 2015 10:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</guid>
+      <guid>http://www.heguangnan.com/2015/05/19/%E9%AB%98%E6%80%A7%E8%83%BDmysql-%E8%AF%BB%E4%B9%A6%E6%91%98%E8%A6%81/</guid>
       <description>
 
 &lt;h2 id=&#34;前言:9e70b3f53d84350226052075ce54e259&#34;&gt;前言&lt;/h2&gt;
@@ -450,7 +450,7 @@ statistics就是说明MySQL的查询优化器在不断的向存储引擎索取�
 &lt;h3 id=&#34;mysql逻辑结构:9e70b3f53d84350226052075ce54e259&#34;&gt;MySQL逻辑结构&lt;/h3&gt;
 
 &lt;p&gt;逻辑架构图如下：
-&lt;img src=&#34;http://compasses.github.io/img/MySqlCapture.PNG&#34; alt=&#34;Mysql&#34; /&gt;
+&lt;img src=&#34;http://www.heguangnan.com/img/MySqlCapture.PNG&#34; alt=&#34;Mysql&#34; /&gt;
 分为三层结构，需要重点研究的是存储引擎层和查询优化层。存储引擎也主要研究InnoDB。&lt;/p&gt;
 
 &lt;h2 id=&#34;并发控制:9e70b3f53d84350226052075ce54e259&#34;&gt;并发控制&lt;/h2&gt;
@@ -611,10 +611,10 @@ end
     
     <item>
       <title>WooCommerce variant product 表设计</title>
-      <link>http://compasses.github.io/2015/05/13/woocommerce-variant-product-%E8%A1%A8%E8%AE%BE%E8%AE%A1/</link>
+      <link>http://www.heguangnan.com/2015/05/13/woocommerce-variant-product-%E8%A1%A8%E8%AE%BE%E8%AE%A1/</link>
       <pubDate>Wed, 13 May 2015 20:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/05/13/woocommerce-variant-product-%E8%A1%A8%E8%AE%BE%E8%AE%A1/</guid>
+      <guid>http://www.heguangnan.com/2015/05/13/woocommerce-variant-product-%E8%A1%A8%E8%AE%BE%E8%AE%A1/</guid>
       <description>&lt;p&gt;随着功能越来越多，越来越复杂，如果数据库表设计的不好，就会遇到各种各样的问题。
 目前已经发现数据表设计的非常不合理，导致出现了大量tricky的PHP代码。由于是在Wordpress平台上搭建的电商平台，免不了要借鉴下&lt;a href=&#34;http://docs.woothemes.com/documentation/plugins/woocommerce/&#34;&gt;WooCommerce&lt;/a&gt;的表设计了。
 WooCommerce是基于Wordpress的一个插件，也能实现快速开店。下面就来分析下WooCommerce中是如何存储和组织产品数据的。在产品数据中，variant product有事最为复杂的一种。比方一件衬衫，它的variant就包含Color和Size，现就以这个例子来分析下WooCommerce中的实现。对于WooCommerce中怎么添加variant product请参照&lt;a href=&#34;http://docs.woothemes.com/document/variable-product/&#34;&gt;这个链接&lt;/a&gt;。但有个主意点就是添加variant product前在Product下面的Attributes tab页里面添加系统级的variants。
@@ -1059,10 +1059,10 @@ wp_term_taxonomy中新增：&lt;/p&gt;
     
     <item>
       <title>MYSQL的中文排序问题</title>
-      <link>http://compasses.github.io/2015/05/12/mysql%E7%9A%84%E4%B8%AD%E6%96%87%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98/</link>
+      <link>http://www.heguangnan.com/2015/05/12/mysql%E7%9A%84%E4%B8%AD%E6%96%87%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98/</link>
       <pubDate>Tue, 12 May 2015 13:45:07 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/05/12/mysql%E7%9A%84%E4%B8%AD%E6%96%87%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98/</guid>
+      <guid>http://www.heguangnan.com/2015/05/12/mysql%E7%9A%84%E4%B8%AD%E6%96%87%E6%8E%92%E5%BA%8F%E9%97%AE%E9%A2%98/</guid>
       <description>&lt;p&gt;最近在做一个产品filter的功能，遇到一个问题需要对中文的label进行排序，开始以为在数据库层就应该可以轻松解决。但是发现在英文的时候排序是ok的，但是中文的时候结果就不再让人满意了。
 例如：&lt;/p&gt;
 

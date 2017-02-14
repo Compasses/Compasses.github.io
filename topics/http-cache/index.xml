@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Http Cache on 三十重围</title>
-    <link>http://compasses.github.io/topics/http-cache/</link>
+    <link>http://www.heguangnan.com/topics/http-cache/</link>
     <description>Recent content in Http Cache on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Fri, 27 Nov 2015 17:45:24 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/topics/http-cache/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/topics/http-cache/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>HTTP Cache</title>
-      <link>http://compasses.github.io/2015/11/27/http-cache/</link>
+      <link>http://www.heguangnan.com/2015/11/27/http-cache/</link>
       <pubDate>Fri, 27 Nov 2015 17:45:24 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2015/11/27/http-cache/</guid>
+      <guid>http://www.heguangnan.com/2015/11/27/http-cache/</guid>
       <description>
 
 &lt;p&gt;目前估计很少有网站不会使用http cache了，http cache 的合理使用能极大的提高用户体验，另一方面还能减轻server端的负担。特别现在流行https，使用好http cache也变得更加重要了。&lt;/p&gt;

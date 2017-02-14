@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Container Management on 三十重围</title>
-    <link>http://compasses.github.io/tags/container-management/</link>
+    <link>http://www.heguangnan.com/tags/container-management/</link>
     <description>Recent content in Container Management on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
@@ -10,14 +10,14 @@
     <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Mon, 15 Aug 2016 13:57:02 +0800</lastBuildDate>
-    <atom:link href="http://compasses.github.io/tags/container-management/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/tags/container-management/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>kubernetes start</title>
-      <link>http://compasses.github.io/2016/08/15/kubernetes-start/</link>
+      <link>http://www.heguangnan.com/2016/08/15/kubernetes-start/</link>
       <pubDate>Mon, 15 Aug 2016 13:57:02 +0800</pubDate>
       <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://compasses.github.io/2016/08/15/kubernetes-start/</guid>
+      <guid>http://www.heguangnan.com/2016/08/15/kubernetes-start/</guid>
       <description>
 
 &lt;p&gt;先从几个概念理解开始：&lt;/p&gt;
