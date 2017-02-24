@@ -1,0 +1,546 @@
+    <!DOCTYPE html>
+<html lang="en-EN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Jet He">
+		<meta name="description" content="技术点滴">
+		<meta name="generator" content="Hugo 0.15" />
+		<title>Book Review: Thinking in Java &middot; 三十重围</title>
+		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+		
+
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://www.heguangnan.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/post'>Archive</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/tags'>Tags</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/about'>About</a>
+	
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>
+                        
+                            Thinking in java
+                        
+                    </h1>
+                    <h2 class="headline">
+                    Jul 26, 2016 09:50
+                    · 766 words
+                    · 4 minutes read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://www.heguangnan.com/tags/java">Java</a>
+                          
+                              <a href="http://www.heguangnan.com/tags/book-notes">Book Notes</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                <section id="post-body">
+                    
+
+<h2 id="reading-book:4af39f9da4817f250b5b39645428aec6">Reading Book</h2>
+
+<p>断断续续的看了将近一个多月，算是系统复习下，一来不能让书白买了，二来毕竟很长一段时间没有做过大规模的Java开发了，Java还是很有意思的，后面还会有很多Book Review。
+  需要说明的是，后面几个章节没有什么笔记。原因是他们都太工程化了，需要更多的实践，就没再记录。后面尽量每个topic都有单独的blog。
+                  学无止境</p>
+
+<h3 id="第五章-初始化与清理:4af39f9da4817f250b5b39645428aec6">第五章 初始化与清理</h3>
+
+<ol>
+<li>根据参数列表不同进行函数重载，无法根据返回值进行函数重载。因为函数调用者不关心函数的返回值，编译器就无法判定。参数列表的不同顺序也能区分不同的函数，但是这样维护性不够好，不建议这样做。</li>
+<li>如果自己类里面已经定义了一个构造器，无论是否有参数，编译器都不会再生成默认的构造器了，跟C++一样。</li>
+<li>this 关键字代表当前对象，可以用this调用一个构造器，但是不能同时调用两个；也必须将构造器调用置于最开始的地方，否则编译器会报错。</li>
+<li>finalize 用于验证终结条件。垃圾回收和终结，都不保证一定会发生。如果java虚拟机并未面临内存耗尽的情况。
+
+<ol>
+<li>对象可能不被垃圾回收</li>
+<li>垃圾回收不等价与析构</li>
+<li>垃圾回收只与内存有关。</li>
+<li>终结函数要避免使用</li>
+</ol></li>
+
+<li><p>在定义类成员变量的地方为其赋值。构造器初始化之前，类成员变量就已经进行了初始化。类内部，变量定义的先后顺序决定了初始化的顺序。即使变量定义散布于方法定义之间，他仍旧会在任何方法被调用之前得到初始化。</p>
+
+<ol>
+<li>初始化顺序是先静态对象，并只在Class对象首次加载时执行一次；</li>
+<li>new 分配内存；</li>
+<li>执行字段定义处的初始化动作；</li>
+<li>执行构造器。</li>
+</ol></li>
+
+<li><p>静态初始化只在Class 对象首次加载的时候进行一次。非静态实例初始化，与静态初始化子句一模一样，只是少了static关键字。这种语法对于支持匿名内部类的初始化是必须的。
+实例初始化字句：</p></li>
+</ol>
+
+<pre><code>  class Mug {
+  Mug(int marker) {
+    print(&quot;Mug(&quot; + marker + &quot;)&quot;);
+  }
+  void f(int marker) {
+    print(&quot;f(&quot; + marker + &quot;)&quot;);
+  }
+}
+
+public class Mugs {
+  Mug mug1;
+  Mug mug2;
+  {
+    mug1 = new Mug(1);
+    mug2 = new Mug(2);
+    print(&quot;mug1 &amp; mug2 initialized&quot;);
+  }
+  Mugs() {
+    print(&quot;Mugs()&quot;);
+  }
+  Mugs(int i) {
+    print(&quot;Mugs(int)&quot;);
+  }
+  public static void main(String[] args) {
+    print(&quot;Inside main()&quot;);
+    new Mugs();
+    print(&quot;new Mugs() completed&quot;);
+    new Mugs(1);
+    print(&quot;new Mugs(1) completed&quot;);
+  }
+} /* Output:
+Inside main()
+Mug(1)
+Mug(2)
+mug1 &amp; mug2 initialized
+Mugs()
+new Mugs() completed
+Mug(1)
+Mug(2)
+mug1 &amp; mug2 initialized
+Mugs(int)
+new Mugs(1) completed
+</code></pre>
+
+<ol>
+<li>可变参数列表：void f(Object&hellip; args),除了Object之外，其他的数据类型也可以作为可变参数列表。</li>
+</ol>
+
+<h3 id="第六章-访问权限控制:4af39f9da4817f250b5b39645428aec6">第六章 访问权限控制</h3>
+
+<ol>
+<li>访问权限等级：public，protected，包访问权限，private。</li>
+<li>一个java源文件为一个编译单元，每个编译单元只能有一个public类。java可运行程序是一组可以打包压缩为一个java文档文件的.class文件，java解释器负责这些文件的查找、装载和解释。</li>
+<li>包访问权限，默认包访问权限没有任何关键字。默认包：处于相同的目录并且没有给自己设定任何包名称，这样的文件自动看作是隶属于该目录的默认包之中。</li>
+<li>类既不可以是private的，也不可以是protected。如果没能为类访问权限指定一个访问修饰符，它就会默认得到包访问权限。相同目录下的所有不具有明确package声明的文件，都被视作该目录下默认包的一部分。</li>
+</ol>
+
+<h3 id="第七章-复用类:4af39f9da4817f250b5b39645428aec6">第七章 复用类</h3>
+
+<ol>
+<li>组合语法和继承语法，带参数的构造器，使用super调用，并传递适当的参数。组合技术通常用于在新类中使用现有类的功能而非它的接口这种情形。
+protected：任何继承于此类的导出类或者其他任何位于同一个包内的类来说，是可以访问的。protected提供了包内访问权限。</li>
+<li>代理：将一个成员对象置于所要构造的类中，就像组合，但与此同时我们在新类中暴露了该成员对象的所有方法，就像继承。</li>
+<li>覆写与重载：@Override</li>
+<li>向上转型：导出类转换为基类。</li>
+<li>final：一个既是static又是final的域只占据一段不能改变的存储空间。Blank Final：必须在域的定义处或者每个构造器中用表达式对final进行赋值。final参数，这一特性主要用来想匿名内部类传递数据。final方法，只有在想明确禁止覆盖时，才将方法设置为final。final和private关键字，所有的private的方法都隐式地指定为final的。final类，类不做任何改动，不能继承。</li>
+</ol>
+
+<h3 id="第八章-多态:4af39f9da4817f250b5b39645428aec6">第八章 多态</h3>
+
+<ol>
+<li>面向对象程序设计语言中，多态是继数据抽象和继承之后的第三种基本特征。</li>
+<li>java中除了static方法和final方法之外，其他所有的方法都是后期绑定。只有非private的方法才能被覆盖。</li>
+<li>初始化过程：将分配给对象的存储空间初始化成二进制的零；调用基类构造器；按照声明的顺序调用成员的初始化方法；调用导出类的构造器主体。基类构造器内调用final方法，既不能被覆盖的方法。</li>
+<li>用继承表达行为间的差异，并用字段表达状态上的变化。</li>
+</ol>
+
+<h3 id="第九章-接口:4af39f9da4817f250b5b39645428aec6">第九章 接口</h3>
+
+<ol>
+<li>接口和内部类为我们提供了一种将接口与实现分离的更加结构化的方法</li>
+<li>抽象方法，abstract void f（），包含抽象方法的类为抽象类。</li>
+<li>interface关键字使抽象的概念更向前迈进了一步。提供了接口部分，没有提供任何相应的具体实现，接口被用来建立类与类之间的协议。</li>
+
+<li><p>创建一个能够根据所传递的参数对象的不同而具有不同行为的方法，被称为策略设计模式。通过接口容易实现策略模式，同一个入口点，不同的实现实例来调用。
+适配器设计模式：适配器中的代码将接受你所拥有的接口，并产生你所需要的接口。将接口从具体实现中解耦使得接口可以应用于多种不同的的具体实现。</p>
+
+<pre><code>//FilterAdapter 为一个适配器，实现了process 接口。
+class FilterAdapter implements Processor {
+}
+</code></pre></li>
+
+<li><p>使用接口的原因：可以能够向上转型为多个基类型；使用抽象基类相同，防止客户端程序员创建该类的对象，并确保这仅仅是建立一个接口。接口的一种常见的用法就是策略设计模式。</p></li>
+
+<li><p>通过interface关键字提供伪多重继承机制，让方法接受接口类型，是一种让任何类都可以对该方法进行适配的方式。</p></li>
+
+<li><p>接口中的变量都是自动是static和final的。接口是实现多重继承的途径，而生成遵循某个接口对象的典型方式就是工厂方法设计模式，在工厂对象上调用的是创建方法，而该工厂对象将生成某个实现的对象。通过这种方式，代码完全与接口的实现分离，这样可以透明的使得我们将某个实现替换为另一种实现。</p></li>
+
+<li><p>优先选择类而不是接口，从类开始，如果接口的必需性变得非常明确，那么就进行重构。</p></li>
+
+<li><p>interface前面加上关键字public，则所有成员都是public的，否则只具有包访问权限。</p></li>
+</ol>
+
+<h3 id="第十章-内部类:4af39f9da4817f250b5b39645428aec6">第十章 内部类</h3>
+
+<ol>
+<li>内部类自动拥有对其外围类所有成员的访问权。构建内部类时，需要一个指向其外围类对象的引用。内部类对象会秘密的捕获一个外部类对象的引用。拥有外部类对象之前是不可能创建内部类对象的。因为内部类对象会暗暗地连接到创建外部类对象上，除非是嵌套类，即静态内部类。</li>
+<li>在拥有外部类对象之前是不可能创建内部类的。但如果创建是嵌套类，即静态内部类，那么它不需要对外部类对象的引用。</li>
+</ol>
+
+<pre><code>public class Parcel3 {
+  class Contents {
+    private int i = 11;
+    public int value() { return i; }
+  }
+  class Destination {
+    private String label;
+    Destination(String whereTo) { label = whereTo; }
+    String readLabel() { return label; }
+  }
+  public static void main(String[] args) {
+    Parcel3 p = new Parcel3();
+    // Must use instance of outer class
+    // to create an instance of the inner class:
+    Parcel3.Contents c = p.new Contents();
+    Parcel3.Destination d = p.new Destination(&quot;Tasmania&quot;);
+  }
+}
+</code></pre>
+
+<ol>
+<li>局部内部类：在方法的作用域内创建一个完整的内部类；匿名内部类，工厂方法可以使用匿名内部类实现。Java内部类主要分为成员内部类，局部内部类，匿名内部类，静态内部类。</li>
+<li>嵌套类：将内部类声明为static。创建嵌套类对象，不需要其外围类的对象；不能从嵌套类的对象中访问非静态的外围类对象。普通的内部类不能有static数据和字段，也不能包含嵌套类。嵌套类可以包含。</li>
+<li>为啥需要内部类：每个内部类都能独立继承自一个接口的实现，所以无论外围类是否已经继承了某个实现，对于内部类没有影响。它使得多重继承的解决方案变得完整，内部类允许继承多个非接口类型。内部类提供了更好的封装，除了外围类，其他类都不能访问。</li>
+<li>闭包：是一个可调用的对象，它记录了一些信息。内部类是面向对象的闭包，通过内部类实现闭包，即可实现回调。</li>
+</ol>
+
+<h3 id="第十一章-持有对象:4af39f9da4817f250b5b39645428aec6">第十一章 持有对象</h3>
+
+<ol>
+<li>通过使用泛型，就可以在编译期防止将错误的类型对象放置到容器中。</li>
+<li>迭代器是一个对象，它的工作是遍历并选择序列中的对象。iterator，ListIterator。</li>
+<li>当你有一个接口，并需要另一个接口时，编写适配器可以解决问题。</li>
+</ol>
+
+<h3 id="第十二章通过异常处理错误:4af39f9da4817f250b5b39645428aec6">第十二章通过异常处理错误</h3>
+
+<ol>
+<li>终止和恢复：大型程序一般不实用恢复。直接终止程序，利于代码编写和维护。
+2.</li>
+</ol>
+
+<h3 id="第十三章-字符串:4af39f9da4817f250b5b39645428aec6">第十三章 字符串</h3>
+
+<ol>
+<li>StringBuilder创建字符串更加高效；</li>
+</ol>
+
+<h3 id="第十四章-类型信息:4af39f9da4817f250b5b39645428aec6">第十四章 类型信息</h3>
+
+<ol>
+<li>Class对象就是用来创建类所有的常规对象的。使用Class的newInstance 创建的类必须有默认的构造函数。</li>
+<li>RTTI：运行时，识别一个对象的类型；java使用Class对象执行RTTI。RTTI必须在编译时已知的对象。instanceof保持了类型的概念，class比较没有考虑继承，只看是否为这个确切的类型。</li>
+<li>类字面常量，xxx.class，使用其创建对象时，并不会自动初始化该Class对象。初始化延迟到对静态方法或者非常数静态域即非编译期常量进行首次引用时。如果一个static域不是final的，那么在访问时总是要进行连接和初始化。</li>
+<li>向Class引用提供泛型语法的原因是为了提供编译器类型检查。</li>
+<li>工厂方法设计模式；将对象的创建工作交给类自己去完成:</li>
+</ol>
+
+<pre><code>//interface
+public interface Factory&lt;T&gt; { T create(); } ///:~
+
+class Part {
+  public String toString() {
+    return getClass().getSimpleName();
+  }
+  static List&lt;Factory&lt;? extends Part&gt;&gt; partFactories =
+    new ArrayList&lt;Factory&lt;? extends Part&gt;&gt;();
+  static {
+    // Collections.addAll() gives an &quot;unchecked generic
+    // array creation ... for varargs parameter&quot; warning.
+    partFactories.add(new FuelFilter.Factory());
+    partFactories.add(new AirFilter.Factory());
+    partFactories.add(new CabinAirFilter.Factory());
+    partFactories.add(new OilFilter.Factory());
+    partFactories.add(new FanBelt.Factory());
+    partFactories.add(new PowerSteeringBelt.Factory());
+    partFactories.add(new GeneratorBelt.Factory());
+  }
+  private static Random rand = new Random(47);
+  public static Part createRandom() {
+    int n = rand.nextInt(partFactories.size());
+    return partFactories.get(n).create();
+  }
+}
+
+class Filter extends Part {}
+
+class FuelFilter extends Filter {
+  // Create a Class Factory for each specific type:
+  public static class Factory
+  implements typeinfo.factory.Factory&lt;FuelFilter&gt; {
+    public FuelFilter create() { return new FuelFilter(); }
+  }
+}
+
+class AirFilter extends Filter {
+  public static class Factory
+  implements typeinfo.factory.Factory&lt;AirFilter&gt; {
+    public AirFilter create() { return new AirFilter(); }
+  }
+}
+
+class CabinAirFilter extends Filter {
+  public static class Factory
+  implements typeinfo.factory.Factory&lt;CabinAirFilter&gt; {
+    public CabinAirFilter create() {
+      return new CabinAirFilter();
+    }
+  }
+}
+
+class OilFilter extends Filter {
+  public static class Factory
+  implements typeinfo.factory.Factory&lt;OilFilter&gt; {
+    public OilFilter create() { return new OilFilter(); }
+  }
+}
+
+class Belt extends Part {}
+
+class FanBelt extends Belt {
+  public static class Factory
+  implements typeinfo.factory.Factory&lt;FanBelt&gt; {
+    public FanBelt create() { return new FanBelt(); }
+  }
+}
+
+class GeneratorBelt extends Belt {
+  public static class Factory
+  implements typeinfo.factory.Factory&lt;GeneratorBelt&gt; {
+    public GeneratorBelt create() {
+      return new GeneratorBelt();
+    }
+  }
+}
+
+class PowerSteeringBelt extends Belt {
+  public static class Factory
+  implements typeinfo.factory.Factory&lt;PowerSteeringBelt&gt; {
+    public PowerSteeringBelt create() {
+      return new PowerSteeringBelt();
+    }
+  }
+}
+
+public class RegisteredFactories {
+  public static void main(String[] args) {
+    for(int i = 0; i &lt; 10; i++)
+      System.out.println(Part.createRandom());
+  }
+}
+
+</code></pre>
+
+<ol>
+<li>动态代理：代理模式是为了提供额外的或不同的操作，而插入的用来代替实际对象的对象。任何时刻只要你想要从额外的操作从实际的对象分离出来，这就是代理模式要达到的目的，封装修改。</li>
+<li>反射：反射机制，.class文件在编译时是不可获取的，在运行时打开和检查class文件。</li>
+<li>类三个步骤：加载、链接、初始化。instanceof 保持了类型的概念。</li>
+</ol>
+
+<h3 id="第十五章-泛型:4af39f9da4817f250b5b39645428aec6">第十五章 泛型</h3>
+
+<ol>
+<li>主要目的之一：用来指定容器要持有什么类型的对象，而且编译器来保证类型的正确性。</li>
+
+<li><p>泛型方法，泛型方法不必指明参数类型，需要将泛型参数列表置于返回值前。编译器会为我们找出具体的类型，这称为类型参数推断。</p>
+
+<pre><code>public class GenericMethods {
+public &lt;T&gt; void f(T x) {
+System.out.println(x.getClass().getName());
+}
+public static void main(String[] args) {
+GenericMethods gm = new GenericMethods();
+gm.f(&quot;&quot;);
+gm.f(1);
+gm.f(1.0);
+gm.f(1.0F);
+gm.f('c');
+gm.f(gm);
+}
+}
+</code></pre></li>
+
+<li><p>在泛型代码内部，无法获得任何有关泛型参数类型的信息。数组可以向上转型，仅在编译时期：</p></li>
+</ol>
+
+<pre><code>class Fruit {}
+class Apple extends Fruit {}
+class Jonathan extends Apple {}
+class Orange extends Fruit {}
+
+public class CovariantArrays {
+  public static void main(String[] args) {
+    Fruit[] fruit = new Apple[10];
+    fruit[0] = new Apple(); // OK
+    fruit[1] = new Jonathan(); // OK
+    // Runtime type is Apple[], not Fruit[] or Orange[]:
+    try {
+      // Compiler allows you to add Fruit:
+      fruit[0] = new Fruit(); // ArrayStoreException
+    } catch(Exception e) { System.out.println(e); }
+    try {
+      // Compiler allows you to add Oranges:
+      fruit[0] = new Orange(); // ArrayStoreException
+    } catch(Exception e) { System.out.println(e); }
+  }
+}
+</code></pre>
+
+<ol>
+<li>通配符：List&lt;? extends MyClass&gt;， 读作 &ldquo;具有任何从MyClass继承的类型的列表&rdquo;，通配符引用的是明确的类型。超类型通配符：&lt;? super MyClass&gt;，可以接受MyClass类型或者从MyClass类型导出的类型。无界通配符&lt;?&gt;</li>
+<li>任何基本类型不能作为类型参数。autoboxing 提供了一种可行方案。</li>
+<li>装饰器模式使用分层对象来动态的透明地向单个对象添加责任。</li>
+<li>Java泛型是通过擦除来实现的。类型参数将擦除到它的第一个边界。类型变量在没有指定边界的情况下被擦除为Object。</li>
+</ol>
+
+<h3 id="第十六章-数组:4af39f9da4817f250b5b39645428aec6">第十六章 数组</h3>
+
+<ol>
+<li>数组与泛型不能很好地结合；数组必须知道它们所持有的确切类型。但是可以参数化数组本身的类型；</li>
+</ol>
+
+<h3 id="第十七章-容器深入研究:4af39f9da4817f250b5b39645428aec6">第十七章 容器深入研究</h3>
+
+<ol>
+<li>如果要使用自己的类作为HashMap的键，必须同时重载hashCode 和 equals 方法。</li>
+</ol>
+
+<h3 id="第十八章-java-i-o-系统:4af39f9da4817f250b5b39645428aec6">第十八章 Java I/O 系统</h3>
+
+<ol>
+<li>需要理解Java I/O 系统的演化过程，如果缺乏历史的眼光，很快我们就会对什么时候该使用哪些类，以及什么时候不该使用他们而感到迷惑。</li>
+<li>对象序列化的概念加入到语言中是为了支持两种特性：
+
+<ol>
+<li>RMI，使得存活于其他计算机上的对象使用起来像是存活于本机一样。</li>
+<li>Java Beans，Beans信息需要保存，在下一次启动时可以能够自动恢复。</li>
+</ol></li>
+<li>transient 关键字: 关闭字段的序列化</li>
+</ol>
+
+<h3 id="第十九章-枚举类型:4af39f9da4817f250b5b39645428aec6">第十九章 枚举类型</h3>
+
+<ol>
+<li>switch中可以直接使用enum。</li>
+<li>命令模式：需要有一个只有单一方法的接口，然后从该接口实现具有各种不同行为的多个子类。</li>
+</ol>
+
+<pre><code>interface Command {void action();}
+
+EnumMap&lt;enumType, Command&gt; em = new EnumMap&lt;enumType, Command&gt;(enumType.class);
+em.put(ACTION_ONE, new Command() {
+  public void action() {print(&quot;ACTION_ONE fired!&quot;);}
+  })
+</code></pre>
+
+<ol>
+<li>enum 实例可以编写方法，从而为每个enum实例赋予不同的行为。</li>
+<li>职责链模式：程序员以多种不同的方式来解决一个问题然后将它们链接在一起。当一个请求到来时，它遍历整个链，直到链中的某个解决方案能够处理该请求。</li>
+<li>enum类型非常适合创建状态机。</li>
+<li>多路分发，java只支持单路分发。例如a.plus(b)，不知道a，b的类型时，必须自己来判定其他的类型，从而实现自己的动态绑定行为。
+
+<ol>
+<li>使用接口超类，每个类型实现接口。</li>
+<li>使用enum分发。</li>
+</ol></li>
+</ol>
+
+<h3 id="第二十章-注解:4af39f9da4817f250b5b39645428aec6">第二十章 注解</h3>
+
+<h3 id="第二十一章-并发:4af39f9da4817f250b5b39645428aec6">第二十一章 并发</h3>
+
+<ol>
+<li>Java的线程机制来自C的低级pthread线程。</li>
+<li>synchronized，同步方法，不属于方法特征签名，覆盖方法上使用。volatile解决可视性问题。<code>javap -c classname</code> 看class字节码。</li>
+<li>临界区也叫同步控制块，一个代码段，多个线程同时访问。同一个互斥锁可以被同一个线程多次获得。</li>
+</ol>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://github.com/compasses">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="http://nodejh.com">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="http://www.heguangnan.com/js/main.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+    </body>
+</html>

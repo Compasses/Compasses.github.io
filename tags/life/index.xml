@@ -6,18 +6,16 @@
     <description>Recent content in Life on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
-    <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
-    <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Tue, 19 Jul 2016 16:55:26 +0800</lastBuildDate>
     <atom:link href="http://www.heguangnan.com/tags/life/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>人生不是演出</title>
-      <link>http://www.heguangnan.com/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</link>
+      <link>http://www.heguangnan.com/post/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</link>
       <pubDate>Tue, 19 Jul 2016 16:55:26 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://www.heguangnan.com/2016/07/19/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</guid>
+      
+      <guid>http://www.heguangnan.com/post/%E4%BA%BA%E7%94%9F%E4%B8%8D%E6%98%AF%E6%BC%94%E5%87%BA/</guid>
       <description>&lt;p&gt;最近看了两个电影《遇见你之前》和《初恋这首情歌》。一个关于死亡，一个关于青春，很是巧合。&lt;/p&gt;
 
 &lt;p&gt;两部电影都给了我很多很多感动，感动到哭。&lt;/p&gt;
@@ -41,10 +39,10 @@
     
     <item>
       <title>So Busy</title>
-      <link>http://www.heguangnan.com/2015/08/05/so-busy/</link>
+      <link>http://www.heguangnan.com/post/So-Busy/</link>
       <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://www.heguangnan.com/2015/08/05/so-busy/</guid>
+      
+      <guid>http://www.heguangnan.com/post/So-Busy/</guid>
       <description>&lt;p&gt;最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。
 整理下最近都是忙了点啥。
 由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。
@@ -57,10 +55,10 @@
     
     <item>
       <title>杂记 </title>
-      <link>http://www.heguangnan.com/2015/05/18/%E6%9D%82%E8%AE%B0/</link>
+      <link>http://www.heguangnan.com/post/zaji-1/</link>
       <pubDate>Mon, 18 May 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://www.heguangnan.com/2015/05/18/%E6%9D%82%E8%AE%B0/</guid>
+      
+      <guid>http://www.heguangnan.com/post/zaji-1/</guid>
       <description>&lt;p&gt;最近一直有所恍惚，不知道自己的定位是什么，未来要做什么。
 极力的从一个公司挣脱到另一个公司，发现其实这种跳槽其实意义不大，发生这种事情还是自己考虑不周，不清楚自己的定位导致。
 说到定位，想想自己想做什么样的人，未来要做什么样的事情。。。&lt;/p&gt;
@@ -77,10 +75,10 @@
     
     <item>
       <title>blog 路程开启。。。</title>
-      <link>http://www.heguangnan.com/2015/05/09/blog-%E8%B7%AF%E7%A8%8B%E5%BC%80%E5%90%AF/</link>
+      <link>http://www.heguangnan.com/post/Let-s-start/</link>
       <pubDate>Sat, 09 May 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://www.heguangnan.com/2015/05/09/blog-%E8%B7%AF%E7%A8%8B%E5%BC%80%E5%90%AF/</guid>
+      
+      <guid>http://www.heguangnan.com/post/Let-s-start/</guid>
       <description>&lt;p&gt;博客有了，就要开始写。
 为什么要写博客呢？看了很多人都推荐写一下博客，这也完全不只是博客那么简单。平时工作谁会有时间写博客呢，当然没有Evernote来的方便，记忆下重要的技术点，以供后续研究学习。&lt;/p&gt;
 

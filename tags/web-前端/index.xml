@@ -6,18 +6,16 @@
     <description>Recent content in Web 前端 on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
-    <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
-    <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Wed, 05 Aug 2015 20:45:07 +0800</lastBuildDate>
     <atom:link href="http://www.heguangnan.com/tags/web-%E5%89%8D%E7%AB%AF/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>前端经验</title>
-      <link>http://www.heguangnan.com/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</link>
+      <link>http://www.heguangnan.com/post/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</link>
       <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://www.heguangnan.com/2015/08/05/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</guid>
+      
+      <guid>http://www.heguangnan.com/post/%E5%89%8D%E7%AB%AF%E7%BB%8F%E9%AA%8C/</guid>
       <description>
 
 &lt;p&gt;最近还是比较忙，blog好久没有写了，当然也不排除自己有点懈怠。也没有什么太多要写的，就是些工作上的事情。最近做前端比较多，还是就写写前端的一些经验吧。之前也说过，前端就是一个积累的过程，另外多借鉴一些成熟的前端框架会对自己的水平提高很有帮助。&lt;/p&gt;
@@ -97,17 +95,17 @@
     
     <item>
       <title>WEB 开发点滴</title>
-      <link>http://www.heguangnan.com/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</link>
+      <link>http://www.heguangnan.com/post/web-tech-1/</link>
       <pubDate>Tue, 07 Jul 2015 20:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://www.heguangnan.com/2015/07/07/web-%E5%BC%80%E5%8F%91%E7%82%B9%E6%BB%B4/</guid>
+      
+      <guid>http://www.heguangnan.com/post/web-tech-1/</guid>
       <description>
 
 &lt;p&gt;WEB开发错综复杂，很多知识点让你抓不到重点，用过了忘记了，下次用还要重头开始。例如CSS，很多class，很多的取值，每个都有很多视觉效果。拿到UX的design，不同的人做出来的效果可以保持一致，但是对应的CSS和JS可能完全不一样。正是这种WEB开发的灵活性，更让人抓不到重点。&lt;/p&gt;
 
 &lt;p&gt;最近又在做一些UI的开发工作，集中在前端，需要CSS和JS，事情做完了，仔细想想里面用到的CSS class都理解了吗？发现并没用。如此众多，如何才能掌握这些class呢？突然想到CSS class虽然众多但是用到的不是全集，所以在学习上也要化整为零，化繁为简，各个击破。这次就好好记录下CSS中的overflow和position类。&lt;/p&gt;
 
-&lt;h1 id=&#34;position&#34;&gt;POSITION&lt;/h1&gt;
+&lt;h1 id=&#34;position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;POSITION&lt;/h1&gt;
 
 &lt;p&gt;解释说明：&lt;/p&gt;
 
@@ -151,23 +149,23 @@ User agents may treat position as &#39;static&#39; on the root element.
 
 &lt;p&gt;元素的位置定位影响它的视觉模型，例如：p, h1, div 为块级元素，块级元素在展示的时候是以垂直摆放的，元素之间的垂直距离由垂直间隔决定，即margin。又如：strong、span为inline elements，内联元素。展示为水平摆放，这种元素改变视觉效果只能通过line height、或者水平 border 、padding、margin。&lt;/p&gt;
 
-&lt;h2 id=&#34;relative-position&#34;&gt;relative position&lt;/h2&gt;
+&lt;h2 id=&#34;relative-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;relative position&lt;/h2&gt;
 
 &lt;p&gt;相对定位比较简单，就是可以通过属性 top、left、bottom、right来改变它的位置，改变是相对于它的原始位置开始计算的。它于正常的文档流定位类似。跟position的另一个取值static一样，如果不改变它的位置属性值。&lt;/p&gt;
 
-&lt;h2 id=&#34;absolute-position&#34;&gt;absolute position&lt;/h2&gt;
+&lt;h2 id=&#34;absolute-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;absolute position&lt;/h2&gt;
 
 &lt;p&gt;类似于relative position，absolute position是相对于其最近的父节点而摆放。如果没有最近的父节点，就绑定在body元素上。absolute position让其父节点必须是relative position。&lt;/p&gt;
 
-&lt;h2 id=&#34;fixed-position&#34;&gt;fixed position&lt;/h2&gt;
+&lt;h2 id=&#34;fixed-position:22153868a43551ee8f9f1515ff4cd978&#34;&gt;fixed position&lt;/h2&gt;
 
 &lt;p&gt;是absolute position的子类，不同的是它的视口是整个window， 利用它就可以固定一个元素在这个窗口视图上，无论怎么滚动这个元素会固定在这个窗口中。&lt;/p&gt;
 
-&lt;h2 id=&#34;floating&#34;&gt;floating&lt;/h2&gt;
+&lt;h2 id=&#34;floating:22153868a43551ee8f9f1515ff4cd978&#34;&gt;floating&lt;/h2&gt;
 
 &lt;p&gt;floatting也是重要的布局类，经常需要将一个元素靠左或者靠右对齐。靠左或者靠右直到它的外边缘与父节点边缘接壤，或者其他float元素的边缘。float元素并不在正常的文档流中。即只要元素变为float元素了，其所在的body就会将其视为不存在了。在实现那些文字环绕的效果时，都会使用到这个class，因为float元素会脱离正常的文档流，所以在制作这种效果的时候需要用clear配合使用。&lt;/p&gt;
 
-&lt;h1 id=&#34;overflow&#34;&gt;overflow&lt;/h1&gt;
+&lt;h1 id=&#34;overflow:22153868a43551ee8f9f1515ff4cd978&#34;&gt;overflow&lt;/h1&gt;
 
 &lt;p&gt;解释：&lt;/p&gt;
 

@@ -1,0 +1,252 @@
+    <!DOCTYPE html>
+<html lang="en-EN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Jet He">
+		<meta name="description" content="技术点滴">
+		<meta name="generator" content="Hugo 0.15" />
+		<title>kubernetes start &middot; 三十重围</title>
+		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+		
+
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://www.heguangnan.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/post'>Archive</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/tags'>Tags</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/about'>About</a>
+	
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>
+                        
+                            k8s
+                        
+                    </h1>
+                    <h2 class="headline">
+                    Aug 15, 2016 13:57
+                    · 190 words
+                    · 1 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://www.heguangnan.com/tags/docker">docker</a>
+                          
+                              <a href="http://www.heguangnan.com/tags/container-management">container management</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                <section id="post-body">
+                    
+
+<p>先从几个概念理解开始：</p>
+
+<h2 id="pods-http-kubernetes-io-docs-user-guide-pods:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/pods/">Pods</a></h2>
+
+<p>是一个container的集合，针对特定应用服务的建模，一个或者多个容器分布于相同的物理主机或者虚拟主机。位于相同pod的应用是共享存储的。容器位于相同的pod，共享IP address 和端口空间。类推到docker上，就是pod定义了一组containers。跟单个container部署类似，pods的生命周期也是跟随宿主node的。</p>
+
+<p>pod建模于多个相互合作的进程，整体表现为一个内聚的service。pod作为部署的独立单位，支持水平扩张，复制等，共享各种相互依赖的资源。使用pods会有诸多好处：</p>
+
+<ol>
+<li>透明化，pod中的容器在基础框架中变得可见，为提供各种服务提供了便利。</li>
+<li>解耦，pod中的容器可以被重新构建和升级。</li>
+<li>容易使用。</li>
+<li>高性能，基础框架会统一处理容器的管理。
+Pod的生命周期，通常情况下，用户不需要直接去创建pod，应该只有通过controllers RC来创建。</li>
+</ol>
+
+<h2 id="rs-rc:091cda0b59885368668b194756b39d27">RS &amp; RC</h2>
+
+<p><a href="http://kubernetes.io/docs/user-guide/replicasets/">Replica Sets</a> 和 <a href="http://kubernetes.io/docs/user-guide/replication-controller/">Replication Controller</a></p>
+
+<p>Replica Sets 是 Replication Controller的升级概念，共同的使命都是管理pod，让他们高可用。名字上也透漏了这一点，复制集。但是着两种东西基本都不会用，建议使用其更上层的deployment。这里还是看你的服务是通过什么方式部署的，是否通过deployment。</p>
+
+<h2 id="deployment-http-kubernetes-io-docs-user-guide-deployments:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/deployments/">Deployment</a></h2>
+
+<p>一个Deployment提供了更新Pod和Replica Set的机制。通过Deployment可以创建新的resource和替换已有的resource。
+常用的方法，更新deployment中的image，让其开始做rolling-update。deployment 是在实际使用中使用较多的API。</p>
+
+<h2 id="services-http-kubernetes-io-docs-user-guide-services:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/services/">Services</a></h2>
+
+<p>k8s中的service是构建在Pods之上的逻辑概念。打通Pods之间的通信。service正好建模于微服务。对于Service的endpoints对应于Pods，pods通过selector 确定。</p>
+
+<h2 id="resource-management-http-kubernetes-io-docs-user-guide-managing-deployments-in-place-updates-of-resources:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/managing-deployments/#in-place-updates-of-resources">Resource management</a></h2>
+
+<p>k8s的强大之处在于管理集群中的资源，提供了方便的接口。升级、回滚等等。链接中的命令通过kubectrl提供，可以多多操作练习。</p>
+
+<h2 id="volumes-http-kubernetes-io-docs-user-guide-volumes:091cda0b59885368668b194756b39d27"><a href="http://kubernetes.io/docs/user-guide/volumes/">Volumes</a></h2>
+
+<p>volumes提供了一种持久化数据的功能，能够跨pods使用。有很多类型的volume可用。</p>
+
+<p>还有其他非常有用的概念：<a href="http://kubernetes.io/docs/user-guide/namespaces/">Namespaces</a>，<a href="http://kubernetes.io/docs/user-guide/jobs/">Job</a>。</p>
+
+<h2 id="实用操作:091cda0b59885368668b194756b39d27">实用操作</h2>
+
+<p>下面总结下平常使用较多的kubectl命令；
+先看配置:</p>
+
+<pre><code>➜  ~ cat ~/.kube/config
+apiVersion: v1
+clusters:
+- cluster:
+    server: http://10.58.80.171:8080
+  name: demo
+- cluster:
+    server: 10.58.117.209:8080
+  name: dmz
+- cluster:
+    server: http://10.58.113.74:8080
+  name: hypercd
+- cluster:
+    server: 10.58.113.114:8080
+  name: u
+contexts:
+- context:
+    cluster: demo
+    user: &quot;&quot;
+  name: demo
+- context:
+    cluster: dmz
+    user: &quot;&quot;
+  name: dmz
+- context:
+    cluster: hypercd
+    user: &quot;&quot;
+  name: hypercd
+- context:
+    cluster: u
+    user: &quot;&quot;
+  name: u
+current-context: u
+kind: Config
+preferences: {}
+users: []
+</code></pre>
+
+<p>针对哪个cluster操作就更换当前的context：</p>
+
+<pre><code>kubectl config use-context dmz
+</code></pre>
+
+<p>对于工作在多个cluster上的服务操作，这种方式还是比较便利的。
+如何更新某个pod，例如修改了代码需要验证，不用重新部署整个cluster，只需要更新需要验证的服务即可：</p>
+
+<pre><code>kubectl edit deployment/crm --namespace=aw
+</code></pre>
+
+<p>namespace是用来指定namespace，edit 会打开crm 的deployment yaml 文件。修改就是拿到你的提交的image 的id，更新下image id即可。例如：</p>
+
+<pre><code>containers:
+        image: hyper.cd/occ/bff-web:b2c232c8e088aa1d3b3320b5e4c99782e6f85b79
+        imagePullPolicy: IfNotPresent
+</code></pre>
+
+<p>修改后，pods随后会被更新到最新的deployment对应的image。
+k8s有UI可用的，如何拿到UI信息？可通过cluster-info获得：</p>
+
+<pre><code>➜  ~ kubectl cluster-info               
+Kubernetes master is running at 10.58.117.209:8080
+KubeDNS is running at 10.58.117.209:8080/api/v1/proxy/namespaces/kube-system/services/kube-dns
+kubernetes-dashboard is running at 10.58.117.209:8080/api/v1/proxy/namespaces/kube-system/services/kubernetes-dashboard
+grafana is running at 10.58.117.209:8080/api/v1/proxy/namespaces/kube-system/services/monitoring-grafana
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+</code></pre>
+
+<p>kubernetes-dashboard 便是cluster的web前端。web前端可以做各种操作，也能看到cluster的资源利用率。</p>
+
+<p>describe也是个比较有用的命令，在做rolling-update的时候，可以看到具体的升级信息。</p>
+
+<p>获取deployment的yaml文件：</p>
+
+<pre><code>kubectl get deployment/bff-web -o yaml --namespace=jq
+</code></pre>
+
+<p>可以进行修改重新deploy。</p>
+
+<p>k8s作为一个开源的应用容器管理平台，已经得到了广泛的应用。看k8s的代码会是一个艰辛过程，代码量实在大，打算从kubectl入手。
+kubectl 的编译只需单独编译即可，cd到src/k8s.io/kubernetes/cmd/kubectl，直接运行<strong>go build</strong>编译即可。就会在当前目录下生成kubectl可执行文件。cmd目录下的都可以这样build。</p>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://github.com/compasses">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="http://nodejh.com">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="http://www.heguangnan.com/js/main.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+    </body>
+</html>

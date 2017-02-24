@@ -6,18 +6,16 @@
     <description>Recent content in Php on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
-    <managingEditor>gnhe2009@gmail.com (Jet He)</managingEditor>
-    <webMaster>gnhe2009@gmail.com (Jet He)</webMaster>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Sat, 18 Jul 2015 18:45:07 +0800</lastBuildDate>
     <atom:link href="http://www.heguangnan.com/tags/php/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>PHP 框架之CodeIgniter &amp; Laravel</title>
-      <link>http://www.heguangnan.com/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</link>
+      <link>http://www.heguangnan.com/post/php-framework/</link>
       <pubDate>Sat, 18 Jul 2015 18:45:07 +0800</pubDate>
-      <author>gnhe2009@gmail.com (Jet He)</author>
-      <guid>http://www.heguangnan.com/2015/07/18/php-%E6%A1%86%E6%9E%B6%E4%B9%8Bcodeigniter--laravel/</guid>
+      
+      <guid>http://www.heguangnan.com/post/php-framework/</guid>
       <description>
 
 &lt;h1 id=&#34;说明:08afb798474a9037df6f2df800659b05&#34;&gt;说明&lt;/h1&gt;
@@ -68,7 +66,7 @@
 
 &lt;tr&gt;
 &lt;td&gt;Route&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;default mapping ：&amp;raquo;example.com/class/function/id/&amp;raquo; can be remap, more code than Laravel&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;default mapping ：&amp;rdquo;example.com/class/function/id/&amp;rdquo; can be remap, more code than Laravel&lt;/td&gt;
 &lt;td align=&#34;center&#34;&gt;Simple and clear&lt;/td&gt;
 &lt;/tr&gt;
 

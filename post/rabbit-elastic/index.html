@@ -1,0 +1,131 @@
+    <!DOCTYPE html>
+<html lang="en-EN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Jet He">
+		<meta name="description" content="技术点滴">
+		<meta name="generator" content="Hugo 0.15" />
+		<title>RabbitMQ and ElasticSearch &middot; 三十重围</title>
+		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+		
+
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://www.heguangnan.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/post'>Archive</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/tags'>Tags</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/about'>About</a>
+	
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>
+                        
+                            ElasticSearch使用
+                        
+                    </h1>
+                    <h2 class="headline">
+                    Jan 6, 2017 17:08
+                    · 15 words
+                    · 1 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://www.heguangnan.com/tags/elasticsearch">ElasticSearch</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                <section id="post-body">
+                    <p>项目需要产品中引入了ElasticSearch，第一阶段的使用场景是直接消费RabbitMQ来persist相关的业务数据，改变以前通过message driven走API Call 的方式persist数据。调整过后性能提升了一个数量级。第二阶段将会使用ElasticSearch作为产品的全文检索引擎使用，类似于Search加速组件。
+在这个过程中开发了不少原型代码，也做了一系列的笔记，项目是<a href="https://github.com/compasses/elastic-rabbitmq">elastic-rabbitmq</a>，相关的notes：</p>
+
+<ol>
+<li><a href="https://github.com/compasses/elastic-rabbitmq/blob/master/notes/basic&amp;sourcestart.md">ElasticSearch 深入理解 一：基础概念&amp;源码启动</a></li>
+<li><a href="https://github.com/compasses/elastic-rabbitmq/blob/master/notes/optimisticlock&amp;versionconflicthandle.md">ElasticSearch 深入理解 二：乐观锁&amp;版本冲突管理</a></li>
+<li><a href="https://github.com/compasses/elastic-rabbitmq/blob/master/notes/cluster_relateddesign.md">ElasticSearch 深入理解 三：集群部署设计</a></li>
+</ol>
+
+<p>项目继续，也会持续更新。</p>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://github.com/compasses">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="http://nodejh.com">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="http://www.heguangnan.com/js/main.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+    </body>
+</html>

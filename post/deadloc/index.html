@@ -1,0 +1,166 @@
+    <!DOCTYPE html>
+<html lang="en-EN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Jet He">
+		<meta name="description" content="技术点滴">
+		<meta name="generator" content="Hugo 0.15" />
+		<title>deadlock of mysql &middot; 三十重围</title>
+		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+		
+
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://www.heguangnan.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/post'>Archive</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/tags'>Tags</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/about'>About</a>
+	
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>
+                        
+                            记一次wordpress中mysql的死锁分析
+                        
+                    </h1>
+                    <h2 class="headline">
+                    Jun 26, 2015 15:45
+                    · 177 words
+                    · 1 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://www.heguangnan.com/tags/mysql">MYSQL</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                <section id="post-body">
+                    <p>没有想到在看似简单的场景里面也能遇到mysql的deadlock。</p>
+
+<pre><code>[Thu Jun 25 05:18:40.589897 2015] [:error] [pid 737] [client 172.17.42.1:41290] WordPress database error Deadlock found when trying to get lock; try restarting transaction for query UPDATE `wp_usermeta` SET `meta_value` = 'a:2:{s:64:\\&quot;1161a6271c528045db428cc8698bbc8e3e26ad4fb9d7436e32cbbe01a00079d0\\&quot;;i:1436419120;s:64:\\&quot;bf2e3582e17c7dfa1e6b02c700f537b8095f2b31ef58e4b448939eb9406e11f7\\&quot;;i:1435382320;}' WHERE `user_id` = 188 AND `meta_key` = 'session_tokens' made by require('wp-blog-header.php'), require_once('wp-includes/template-loader.php'), do_action('template_redirect'), call_user_func_array, anw_template_redirect, ANW_Base_Controller-&gt;process, call_user_func, ANW_AccountOnePage_Controller-&gt;authenticate, wp_signon, wp_set_auth_cookie, WP_Session_Tokens-&gt;create, WP_Session_Tokens-&gt;update, WP_User_Meta_Session_Tokens-&gt;update_session, WP_User_Meta_Session_Tokens-&gt;update_sessions, update_user_meta, update_metadata
+</code></pre>
+
+<p>这是wordpress本身的缺陷导致的，死锁的场景也是不复杂。即session_tokens的更新机制所致。
+Session_tokens的更新是随着用户的login和 logout 更新的。Login时会增加session_tokens, 在不同的 浏览器 login会增加新的 tokens，在 logout时会删除这个 tokens。
+这个死锁用户有两个 session，场景可能就是不同的浏览器同时做 login或者 logout，或者一个 login另一个 logout。看这个环境上有大量的用户存在，并且每个用户至多有两个 session，也只有跑性能脚本会有这个问题。现实情况比较难复现。</p>
+
+<pre><code>                /**
+                * Update a user's sessions in the usermeta table.
+                *
+                * @since 4.0.0
+                * @access protected
+                *
+                * @param array $sessions Sessions.
+                */
+                protected function update_sessions( $sessions ) {
+                                if ( ! has_filter( 'attach_session_information' ) ) {
+                                                $sessions = wp_list_pluck( $sessions, 'expiration' );
+                                }
+
+                                if ( $sessions ) {
+                                                update_user_meta( $this-&gt;user_id, 'session_tokens', $sessions );
+                                } else {
+                                                delete_user_meta( $this-&gt;user_id, 'session_tokens' );
+                                }
+                }
+</code></pre>
+
+<p>看到这里应该要在仔细深入了解下mysql的加锁机制，当然这个会比较复杂，也不能一蹴而就。整体上重新熟悉下。
+事务的隔离级别有四种，分别是READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ、SERIALIZEABLE。mysql默认的是可重复读。</p>
+
+<pre><code>MariaDB [(none)]&gt; show global variables like '%isolation%';
++---------------+-----------------+
+| Variable_name | Value           |
++---------------+-----------------+
+| tx_isolation  | REPEATABLE-READ |
++---------------+-----------------+
+1 row in set (0.00 sec)
+</code></pre>
+
+<p>INNODB支持所有的事务隔离级别，但是MVCC只在REPEATABLE READ 和READ COMMITTED两个隔离级别下工作。
+回到开始的问题。session_tokens 是真对用户在不同的终端上登录时进行更新的，value是个array，如上代码所示。如果同一个用户在两个终端上，可以是不同的浏览器即可，就会有不同的session_tokens，在登录登出的时候就会update改用户的数据，即同一行数据就可能产生死锁。这里必须是同时有两个事务。
+现实中同一个用户在两个终端同时操作的可能性不大，但是也很难说。这也说明了wordpress的代码不够健壮吧。当然这里的死锁也并不可怕，INNODB会将持有最少行级排它锁的事务进行回滚。锁机制的了解还是要多多实践，网上也有较好的<a href="http://hedengcheng.com/?p=771">文章参考</a>。</p>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://github.com/compasses">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="http://nodejh.com">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="http://www.heguangnan.com/js/main.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+    </body>
+</html>

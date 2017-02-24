@@ -1,0 +1,560 @@
+    <!DOCTYPE html>
+<html lang="en-EN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Jet He">
+		<meta name="description" content="技术点滴">
+		<meta name="generator" content="Hugo 0.15" />
+		<title>WooCommerce variant product 表设计 &middot; 三十重围</title>
+		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+		
+
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://www.heguangnan.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/post'>Archive</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/tags'>Tags</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/about'>About</a>
+	
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>
+                        
+                            WooCommerce variant product 表设计借鉴分析
+                        
+                    </h1>
+                    <h2 class="headline">
+                    May 13, 2015 20:45
+                    · 309 words
+                    · 2 minutes read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://www.heguangnan.com/tags/mysql">MySQL</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                <section id="post-body">
+                    <p>随着功能越来越多，越来越复杂，如果数据库表设计的不好，就会遇到各种各样的问题。
+目前已经发现数据表设计的非常不合理，导致出现了大量tricky的PHP代码。由于是在Wordpress平台上搭建的电商平台，免不了要借鉴下<a href="http://docs.woothemes.com/documentation/plugins/woocommerce/">WooCommerce</a>的表设计了。
+WooCommerce是基于Wordpress的一个插件，也能实现快速开店。下面就来分析下WooCommerce中是如何存储和组织产品数据的。在产品数据中，variant product有事最为复杂的一种。比方一件衬衫，它的variant就包含Color和Size，现就以这个例子来分析下WooCommerce中的实现。对于WooCommerce中怎么添加variant product请参照<a href="http://docs.woothemes.com/document/variable-product/">这个链接</a>。但有个主意点就是添加variant product前在Product下面的Attributes tab页里面添加系统级的variants。
+首先添加两个attributes分别为Color和Size，添加完后会在wp_woocommerce_attribute_taxonomies出现以下数据：</p>
+
+<table>
+<thead>
+<tr>
+<th>attribute_id</th>
+<th align="left">attribute_name</th>
+<th align="center">attribute_label</th>
+<th align="right">attribute_type</th>
+<th align="right">attribute_orderby</th>
+<th align="right">attribute_public</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>4</td>
+<td align="left">color</td>
+<td align="center">Color</td>
+<td align="right">text</td>
+<td align="right">id</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td align="left">size</td>
+<td align="center">Size</td>
+<td align="right">text</td>
+<td align="right">id</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+
+<p><br\></p>
+
+<p>接下来去添加variant product，Color下面添加两个值：Red和Green，Size下面也增加两个值：Small和Large。添加完后会有几个表发生变化。首先，wp_terms会增加相应的variant value：</p>
+
+<table>
+<thead>
+<tr>
+<th>term_id</th>
+<th align="left">name</th>
+<th align="center">slug</th>
+<th align="right">term_group</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>15</td>
+<td align="left">Red</td>
+<td align="center">red</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>16</td>
+<td align="left">Green</td>
+<td align="center">green</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>17</td>
+<td align="left">Small</td>
+<td align="center">small</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>18</td>
+<td align="left">Large</td>
+<td align="center">large</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>19</td>
+<td align="left">variable</td>
+<td align="center">variable</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+
+<p><br\>
+wp_term_taxonomy中新增：</p>
+
+<table>
+<thead>
+<tr>
+<th>term_taxonomy_id</th>
+<th align="left">term_id</th>
+<th align="center">taxonomy</th>
+<th align="right">description</th>
+<th align="right">parent</th>
+<th align="right">count</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>15</td>
+<td align="left">15</td>
+<td align="center">pa_color</td>
+<td align="right"></td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+
+<tr>
+<td>16</td>
+<td align="left">16</td>
+<td align="center">pa_color</td>
+<td align="right"></td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+
+<tr>
+<td>17</td>
+<td align="left">17</td>
+<td align="center">pa_size</td>
+<td align="right"></td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+
+<tr>
+<td>18</td>
+<td align="left">18</td>
+<td align="center">pa_size</td>
+<td align="right"></td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+
+<tr>
+<td>19</td>
+<td align="left">19</td>
+<td align="center">product_type</td>
+<td align="right"></td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+
+<p><br\>
+  其对应的term meta储存在wp_woocommerce_termmeta表中：</p>
+
+<table>
+<thead>
+<tr>
+<th>meta_id</th>
+<th align="left">woocommerce_term_id</th>
+<th align="center">meta_key</th>
+<th align="right">meta_value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>10</td>
+<td align="left">15</td>
+<td align="center">order_pa_color</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>11</td>
+<td align="left">16</td>
+<td align="center">order_pa_color</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>12</td>
+<td align="left">17</td>
+<td align="center">order_pa_size</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>13</td>
+<td align="left">18</td>
+<td align="center">order_pa_size</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+
+<p><br\>
+现在看主表，因为创建产品的时候选择&rsquo;Link all variations&rsquo;，因此会产生4个SKU，post表会5条数据，但他们是自关联的，使用查询:</p>
+
+<pre><code> select id, post_title, post_name, post_type, post_parent from wp_posts;
+</code></pre>
+
+<p>得到结果如下：</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th align="left">post_title</th>
+<th align="center">post_name</th>
+<th align="right">post_type</th>
+<th align="right">post_parent</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>20</td>
+<td align="left">variant product</td>
+<td align="center">variant-product</td>
+<td align="right">product</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>21</td>
+<td align="left">Variation #21 of variant product</td>
+<td align="center">product-20-variation</td>
+<td align="right">product_variation</td>
+<td align="right">20</td>
+</tr>
+
+<tr>
+<td>22</td>
+<td align="left">Variation #22 of variant product</td>
+<td align="center">product-20-variation-2</td>
+<td align="right">product_variation</td>
+<td align="right">20</td>
+</tr>
+
+<tr>
+<td>23</td>
+<td align="left">Variation #23 of variant product</td>
+<td align="center">product-20-variation-3</td>
+<td align="right">product_variation</td>
+<td align="right">20</td>
+</tr>
+
+<tr>
+<td>24</td>
+<td align="left">Variation #24 of variant product</td>
+<td align="center">product-20-variation-4</td>
+<td align="right">product_variation</td>
+<td align="right">20</td>
+</tr>
+</tbody>
+</table>
+
+<p><br\>
+该主表对应的纵表即是这些属性的描述，产品在meta表里面存储了所有的属性序列化数组，例如id为20的是个产品，其在post_meta表中key为‘ _product_attributes’的值为所有属性描述的列表：</p>
+
+<pre><code>array (size=2)
+  'pa_color' =&gt; 
+    array (size=6)
+      'name' =&gt; string 'pa_color' (length=8)
+      'value' =&gt; string '' (length=0)
+      'position' =&gt; string '0' (length=1)
+      'is_visible' =&gt; int 1
+      'is_variation' =&gt; int 1
+      'is_taxonomy' =&gt; int 1
+  'pa_size' =&gt; 
+    array (size=6)
+      'name' =&gt; string 'pa_size' (length=7)
+      'value' =&gt; string '' (length=0)
+      'position' =&gt; string '1' (length=1)
+      'is_visible' =&gt; int 1
+      'is_variation' =&gt; int 1
+      'is_taxonomy' =&gt; int 1
+</code></pre>
+
+<p>即可以从产品表里面获取所有的variant值，当然需要关联上述的几个表。再如SKU的id为21的post_meta数据如下：例如SKU的id为21的post_meta数据如下：</p>
+
+<table>
+<thead>
+<tr>
+<th>meta_id</th>
+<th align="left">post_id</th>
+<th align="center">meta_key</th>
+<th align="right">meta_value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>295</td>
+<td align="left">21</td>
+<td align="center">attribute_pa_color</td>
+<td align="right">red</td>
+</tr>
+
+<tr>
+<td>296</td>
+<td align="left">21</td>
+<td align="center">attribute_pa_size</td>
+<td align="right">small</td>
+</tr>
+
+<tr>
+<td>326</td>
+<td align="left">21</td>
+<td align="center">_sku</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>327</td>
+<td align="left">21</td>
+<td align="center">_thumbnail_id</td>
+<td align="right">0</td>
+</tr>
+
+<tr>
+<td>328</td>
+<td align="left">21</td>
+<td align="center">_virtual</td>
+<td align="right">no</td>
+</tr>
+
+<tr>
+<td>329</td>
+<td align="left">21</td>
+<td align="center">_downloadable</td>
+<td align="right">no</td>
+</tr>
+
+<tr>
+<td>330</td>
+<td align="left">21</td>
+<td align="center">_weight</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>331</td>
+<td align="left">21</td>
+<td align="center">_length</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>332</td>
+<td align="left">21</td>
+<td align="center">_width</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>333</td>
+<td align="left">21</td>
+<td align="center">_height</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>334</td>
+<td align="left">21</td>
+<td align="center">_manage_stock</td>
+<td align="right">no</td>
+</tr>
+
+<tr>
+<td>335</td>
+<td align="left">21</td>
+<td align="center">_stock_status</td>
+<td align="right">instock</td>
+</tr>
+
+<tr>
+<td>336</td>
+<td align="left">21</td>
+<td align="center">_regular_price</td>
+<td align="right">56</td>
+</tr>
+
+<tr>
+<td>337</td>
+<td align="left">21</td>
+<td align="center">_sale_price</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>338</td>
+<td align="left">21</td>
+<td align="center">_sale_price_dates_from</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>339</td>
+<td align="left">21</td>
+<td align="center">_sale_price_dates_to</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>340</td>
+<td align="left">21</td>
+<td align="center">_price</td>
+<td align="right">56</td>
+</tr>
+
+<tr>
+<td>341</td>
+<td align="left">21</td>
+<td align="center">_download_limit</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>342</td>
+<td align="left">21</td>
+<td align="center">_download_expiry</td>
+<td align="right"></td>
+</tr>
+
+<tr>
+<td>343</td>
+<td align="left">21</td>
+<td align="center">_downloadable_files</td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+
+<p>通过这些表的相互关联即可完整描述所有的产品。</p>
+
+<p>上面分析完了WooCommerce对variant product表处理，但是实际的应用也不能完全照搬。其中产品数据表里面的default_attributs就不能满足我们的需求，需要重新加一张表做映射查询。具体就不再细说了。</p>
+
+                </section>
+            </article>
+
+            
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://github.com/compasses">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="http://nodejh.com">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="http://www.heguangnan.com/js/main.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+    </body>
+</html>
