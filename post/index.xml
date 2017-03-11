@@ -7,8 +7,58 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Fri, 06 Jan 2017 17:08:03 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 11 Mar 2017 17:08:03 +0800</lastBuildDate>
     <atom:link href="http://www.heguangnan.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>回顾下过去，坚定下未来。</title>
+      <link>http://www.heguangnan.com/post/retrospect/</link>
+      <pubDate>Sat, 11 Mar 2017 17:08:03 +0800</pubDate>
+      
+      <guid>http://www.heguangnan.com/post/retrospect/</guid>
+      <description>
+
+&lt;p&gt;从2011年毕业至今，差不多工作六年了。想回顾下过去，坚定下未来。&lt;/p&gt;
+
+&lt;h3 id=&#34;谈过去:001f250018247b5536b1b58c730495d6&#34;&gt;谈过去&lt;/h3&gt;
+
+&lt;p&gt;从研究生说起，研究生三年时间，基本上全部扑在科研上了。由于本科是学数学的，研究生期间做图像检索，机器学习。而毕业的时候
+并没有选择读博，而是去了华为，做网络通信相关的产品。做了三年后，跳槽去了南京的SAP，做ERP，Java、前端。
+不难发现六年的时间里其实跨越了两个领域，从传统的通信软件到业务驱动的ERP解决方案，而研究生三年的机器学习经验并没有在
+实际工作中给我带来帮助。&lt;/p&gt;
+
+&lt;p&gt;研究生三年，心思都扑在了科研上，做论文，看新的算法实现，找到改进点然后再写论文，如此往复。以至于在研二暑期的时候感觉一度抑郁。
+为什么会有这样的反应，因为写论文确实很劳神费力，并且往往碰到过很长一段时间才能明白的理论和算法。所以三年下来真的很辛苦。
+毕业的时候，也很想找个相关的工作，例如机器学习、图像检索，无奈那个时候机器学习或者说人工智能并没有现在这么火，可供选择的
+机会也寥寥无几。毕业的时候也对自己的研究厌倦了，因为发现实际当中应用并不广泛，做的太多也不会带来实际价值，便放弃了科研之路，
+踏上了华为的奋斗之旅。&lt;/p&gt;
+
+&lt;p&gt;华为的三年真的是奋斗者的三年，作为人生的第一份工作，华为还是给了我很多。工程商人的思维，技术人员也要有，客户至上等等。
+很多职业素养和规范，有了自己的理解。拼搏了三年学到了很多，成长了很多。忘记了多少个通宵达旦，夜以继日的修改版本等待上线。
+多少个开工会，多少个项目组聚餐。。。&lt;/p&gt;
+
+&lt;p&gt;还是要感谢华为的那些老师傅，又很多技术大牛，也有很多销售精英。华为还是非常锻炼人的地方，呆了三年，不能说是完美毕业，也算得上是合格毕业吧。&lt;/p&gt;
+
+&lt;p&gt;比起华为来，南京SAP还是有大外企的风范。不再需要急急忙忙打卡了，不那么闭塞，open自由了很多。可以有空闲时间好好研究下自己喜欢的东西。
+眼界开阔了许多。技术方面弥补了很多层面。&lt;/p&gt;
+
+&lt;h3 id=&#34;谈现在:001f250018247b5536b1b58c730495d6&#34;&gt;谈现在&lt;/h3&gt;
+
+&lt;p&gt;回顾这段六年的工作经历，跨越了软件开发的方方面面。在华为进行着较为底层的C++研发，例如Linux、协议解析，网络通信，Linux内核模块也写过。
+华为的三年为以后的软件研发打下了坚实的基础。SAP的工作，又偏向于前端，ERP应用，纯业务层的研发，所用的技术也感觉变得简单起来。
+Java、PHP、JavaScript，CSS。其中也用golang实现了几个实用工具。对自己希望再好好打磨一下，不管是从技术上还是从管理上。&lt;/p&gt;
+
+&lt;h3 id=&#34;想象一下以后:001f250018247b5536b1b58c730495d6&#34;&gt;想象一下以后&lt;/h3&gt;
+
+&lt;p&gt;技术人员的出路问题，网上已有很多讨论。每个人都有自己的路，不管怎样，尽力就好。技术上还要从广度和深度上多下功夫。回想过去的将近六年工作，
+自以为还是勤勤恳恳，脚踏实地的。这个行业每几年都会有不同的热点出现。比如刚毕业的时候其实通信行业已经不太好了，而互联网却是方兴未艾，
+没有达到最近几年的的火爆程度。跟随一个火爆的行业就像踏上了一艘巨轮，不出太多意外，自己差不多也会功成名就。&lt;/p&gt;
+
+&lt;p&gt;而现如今，机器学习和人工智能变成了一个新的风口，归功于很多成功的模型，成功的应用，让大家都能享受到机器学习、大数据处理带来的有利分析结果。
+而自己研究生三年的研究工作，现如今已有很多成熟的应用面世，例如图像检索、人脸识别。所以也计划从现在开始有时间，就开展些研究，争取做些成功的
+机器学习应用，说不定哪天做出个成功的原型呢。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>RabbitMQ and ElasticSearch</title>
@@ -1903,31 +1953,6 @@ Total:        351 3098 455.5   3170    3649&lt;/p&gt;
 
 &lt;p&gt;CodeIgniter 更轻便，代码可以做到100%掌控；Laravel相比CodeIgniter更加丰满些，使用composer管理扩展性增强了不少。
 如果选择从头开始的话，感觉CodeIgniter更好些。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Go Go</title>
-      <link>http://www.heguangnan.com/post/Go-Go/</link>
-      <pubDate>Thu, 09 Jul 2015 17:45:07 +0800</pubDate>
-      
-      <guid>http://www.heguangnan.com/post/Go-Go/</guid>
-      <description>&lt;p&gt;最近在学习Go语言。认识Go语言是个偶然，首选是Docker容器的使用，Docker的兴起目前可谓风生水起，应用部署和各种云平台都在推行。其使用Go语言开发，之前没有听说过的。断断续续的找相关的博客、资料进行了解。发现Go 是有很多吸引人的地方，自己非常感兴趣，最近买的一本《Go Web编程》今天到手了。&lt;/p&gt;
-
-&lt;p&gt;也说下自己的缘由，很多人都说Go 很容易上手，这应该对C系的开发人员而说的，Go语言的发明者也是C语言的作者，Go语言本身很多的语法、类型、结构等用法类似于C语言，如果编译运行的话二进制文件都能用GDB进行调试。Go语言是个集大成者，在里面你能看到或者重新认识一些语言特性，它有诸多动态语言特有的特性。&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;首选想说的就是函数闭包，闭包函数在JavaScript里面应用的最广泛，用于各种回调处理、变量的scope控制等，在Go语言里面也有，使用起来几乎没有什么差别，也能当成变量传递等等。&lt;/li&gt;
-&lt;li&gt;内置强大的数据结构，例如slice、map，开发的快捷易用性可以和Python媲美。slice 类似于Python、PHP里面的array，map也和Python里面的字典。&lt;/li&gt;
-&lt;li&gt;interface的类型使用，interface让Go有了面向对象的能力，interface是非常有魔力的东西，应该会是非常广泛的，把面向对象的能力放大了。Go里面的反射功能也是依赖于interface，这篇文章&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;Go Data Structures: Interfaces&lt;/a&gt;有较深入的讲解。&lt;/li&gt;
-&lt;li&gt;并发编程的支持，可以写并发执行的代码，通过go关键字来完成。goroutine确是是个好东西，用户层上的并发协程，能有效的利用多核计算能力。Go能原生的支持并发编程并能很好的利用多核能力是个极大的优势。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;有人说不能把Go作为偏向Web的语言，这应该是比较片面的。就像Python一样，一直都是当成工具使用，能快速的开发一些小工具，而现在呢，Python的Web框架为Python的流行应该是起了主要作用。Go的使用应该要偏向云平台开发、Web开发，高性能、高并发的场景。试想下Docker的流行，国内七牛公司对Go语言的推崇。&lt;/p&gt;
-
-&lt;p&gt;Go相对于PHP、JAVA年轻很多，但自己相信它会成为后起之秀，也做好了这个准备。&lt;/p&gt;
-
-&lt;p&gt;很高兴开启Go语言之旅。&lt;/p&gt;
 </description>
     </item>
     
