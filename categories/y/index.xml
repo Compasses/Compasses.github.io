@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Elasticsearch on 三十重围</title>
-    <link>http://www.heguangnan.com/tags/elasticsearch/</link>
-    <description>Recent content in Elasticsearch on 三十重围</description>
+    <title>Y on 三十重围</title>
+    <link>http://www.heguangnan.com/categories/y/</link>
+    <description>Recent content in Y on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
     <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Thu, 16 Mar 2017 14:59:49 +0800</lastBuildDate>
-    <atom:link href="http://www.heguangnan.com/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://www.heguangnan.com/categories/y/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Kibana and Grafana</title>
@@ -91,25 +91,6 @@ Grafana的安装也非常简单，解压启动就可以了。DataSource都是动
 &lt;h3 id=&#34;summary:c71d04dce76456acbb9e0fb11dd14402&#34;&gt;Summary&lt;/h3&gt;
 
 &lt;p&gt;不管是Kibana还是Grafana，都会容易联想到系统监控，日志分析。没错这是它们的强项，不管事序列化的数据还是Metrics Data都能很好的展示出来，让对应的DevOps做监控预警等。从另一方面讲，其他的任何数据，能把数据保存到ES，配合Grafana或者Kibana都能很好的做分析展示。当然更看好Grafana，随着Grafana的功能进一步增强，会变得功能更加强大，图表也会更加多样性。下一步结合Spark或者Hadoop，做个实时的BI也是个不错的方向哦。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>RabbitMQ and ElasticSearch</title>
-      <link>http://www.heguangnan.com/post/rabbit-elastic/</link>
-      <pubDate>Fri, 06 Jan 2017 17:08:03 +0800</pubDate>
-      
-      <guid>http://www.heguangnan.com/post/rabbit-elastic/</guid>
-      <description>&lt;p&gt;项目需要产品中引入了ElasticSearch，第一阶段的使用场景是直接消费RabbitMQ来persist相关的业务数据，改变以前通过message driven走API Call 的方式persist数据。调整过后性能提升了一个数量级。第二阶段将会使用ElasticSearch作为产品的全文检索引擎使用，类似于Search加速组件。
-在这个过程中开发了不少原型代码，也做了一系列的笔记，项目是&lt;a href=&#34;https://github.com/compasses/elastic-rabbitmq&#34;&gt;elastic-rabbitmq&lt;/a&gt;，相关的notes：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/compasses/elastic-rabbitmq/blob/master/notes/basic&amp;amp;sourcestart.md&#34;&gt;ElasticSearch 深入理解 一：基础概念&amp;amp;源码启动&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/compasses/elastic-rabbitmq/blob/master/notes/optimisticlock&amp;amp;versionconflicthandle.md&#34;&gt;ElasticSearch 深入理解 二：乐观锁&amp;amp;版本冲突管理&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/compasses/elastic-rabbitmq/blob/master/notes/cluster_relateddesign.md&#34;&gt;ElasticSearch 深入理解 三：集群部署设计&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;项目继续，也会持续更新。&lt;/p&gt;
 </description>
     </item>
     
