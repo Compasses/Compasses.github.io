@@ -1,0 +1,206 @@
+    <!DOCTYPE html>
+<html lang="en-EN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Jet He">
+		<meta name="description" content="技术点滴">
+		<meta name="generator" content="Hugo 0.15" />
+		<title>Native memory track use jemalloc for ES &middot; 三十重围</title>
+		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+		
+
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+
+		
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://www.heguangnan.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/post'>Archive</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/tags'>Tags</a>
+	
+
+	
+		<a href='http://www.heguangnan.com/about'>About</a>
+	
+
+	
+
+	
+</nav>
+
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>
+                        
+                            Native memory track &amp; memory leak
+                        
+                    </h1>
+                    <h2 class="headline">
+                    May 25, 2017 14:59
+                    · 84 words
+                    · 1 minute read
+                      <span class="tags">
+                      
+                      
+                          
+                              <a href="http://www.heguangnan.com/tags/java">java</a>
+                          
+                      
+                      
+                      </span>
+                    </h2>
+                </header>
+                <section id="post-body">
+                    <p>从<a href="https://www.elastic.co/blog/tracking-down-native-memory-leaks-in-elasticsearch">这篇文章</a>中得知ES在5.1版本中有原生内存泄露的问题，
+而碰巧我们生产环境中也在使用5.1系列的版本，但是场景不一样。比如我们并没有使用x-pack，但是还是放心不下，决定在我们的场景下利用文章中的方法进行下测试。</p>
+
+<p>先弄清楚要测试的问题，Java的内存问题，大多数集中在Java Heap上面，所以平时遇到native memory的问题几率较低。Heap是Java新对象创建的地方也是GC工作的
+主要区域，平时如果遇到Heap内存问题，通过收集GC日志，基本上就能看出端倪。例如GC时间过长、GC过于频繁的话需要进行GC算法参数的调优，老年代持续增长的话就要看对象是否分配的合理了，这也是一种泄露-导致GC无法回收。不同的GC算法调优的参数不一样，但目前还是用的CMS，有时间可以总结下。</p>
+
+<p>另外就是native memory的问题，例如出现了Outofmemory的错误：</p>
+
+<pre><code>Allocated 1953546736 bytes of native memory before running out
+Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: unable to create new native thread
+   at java.lang.Thread.start0(Native Method)
+   at java.lang.Thread.start(Thread.java:574)
+   at com.ibm.jtc.demos.StartingAThreadUnderNativeStarvation.main(
+StartingAThreadUnderNativeStarvation.java:22)
+</code></pre>
+
+<p>遇到这样的问题，首先要确定的是是不是由堆内存申请导致的，如果不是就有可能是下面两种：
+1. MetaSpace
+2. Native memory</p>
+
+<p>只要是JVM相关的内存问题，通过相关的监控工具都能很好的判定，例如如果集成了<a href="http://metrics.dropwizard.io/3.2.2/index.html">Metrics</a>，可以得到</p>
+
+<p><img src="./metrics.png" alt="metrics" /></p>
+
+<p>通过这样的监控可以很容易的可以看出内存问题是否是出自于JVM。</p>
+
+<p>扯得有点远了，回归主题：native memory tracking。
+需要清楚的是Native memory tracking是tracking Java进程申请的OS内存，即glibc申请内存的情况。而
+<a href="https://github.com/jemalloc/jemalloc">jemalloc</a>这个工具可以帮助我们抓取到Java进程的内存申请行为。过程也颇为简单：</p>
+
+<pre><code>git clone https://github.com/jemalloc/jemalloc
+git checkout stable-4
+./autogen.sh
+./configure --enable-perf
+make
+sudo make install
+</code></pre>
+
+<p>启动ES之前设置下环境变量：</p>
+
+<pre><code>export LD_PRELOAD=/usr/local/lib/libjemalloc.so
+export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_final:true
+</code></pre>
+
+<p>环境变量LD_PRELOAD用来替换原生的glibc malloc。
+然后启动ES，运行一段时间，停掉后会生成多个jeprof.{processId}的文件，通过下面命令生成内存tracking信息：</p>
+
+<pre><code>jeprof --show_bytes --gif ~/jre/bin/java jeprof*.heap &gt; ./app-profiling.gif
+</code></pre>
+
+<p><img src="./profiling.gif" alt="profiling" />
+有将近95%的内存来自于jvm本身，也由于运行时间不是很长，所以可以认为是安全的，如果再持续一段时间这个百分比降低了，说明有内存泄露的可能。</p>
+
+<p>参考：</p>
+
+<ol>
+<li><a href="http://www.evanjones.ca/java-native-leak-bug.html">http://www.evanjones.ca/java-native-leak-bug.html</a></li>
+<li><a href="https://gdstechnology.blog.gov.uk/2015/12/11/using-jemalloc-to-get-to-the-bottom-of-a-memory-leak/">https://gdstechnology.blog.gov.uk/2015/12/11/using-jemalloc-to-get-to-the-bottom-of-a-memory-leak/</a></li>
+</ol>
+
+                </section>
+            </article>
+
+            
+
+            
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'compasses'; 
+
+     
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+            
+
+            
+
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://github.com/compasses">
+        <i class="fa fa-github-square"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
+    
+    </p>
+    <p class="small">
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="http://nodejh.com">nodejh</a>
+    </p>
+</footer>
+
+        </section>
+
+        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="http://www.heguangnan.com/js/main.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+<script>
+var baiduAnalytics = '\x3cscript\x3e var _hmt = _hmt || [];(function() {var hm = document.createElement(\x22script\x22); hm.src = \x22https:\/\/hm.baidu.com\/hm.js?4a498b3d0d8c938e221ea01413a0ead3\x22;var s = document.getElementsByTagName(\x22script\x22)[0];s.parentNode.insertBefore(hm, s);})();\x3c\/script\x3e';
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?" + baiduAnalytics;
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+    </body>
+</html>

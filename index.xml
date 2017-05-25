@@ -7,8 +7,76 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Wed, 05 Apr 2017 17:36:47 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 25 May 2017 14:59:49 +0800</lastBuildDate>
     <atom:link href="http://www.heguangnan.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Native memory track use jemalloc for ES</title>
+      <link>http://www.heguangnan.com/post/Java_mem_track/</link>
+      <pubDate>Thu, 25 May 2017 14:59:49 +0800</pubDate>
+      
+      <guid>http://www.heguangnan.com/post/Java_mem_track/</guid>
+      <description>&lt;p&gt;从&lt;a href=&#34;https://www.elastic.co/blog/tracking-down-native-memory-leaks-in-elasticsearch&#34;&gt;这篇文章&lt;/a&gt;中得知ES在5.1版本中有原生内存泄露的问题，
+而碰巧我们生产环境中也在使用5.1系列的版本，但是场景不一样。比如我们并没有使用x-pack，但是还是放心不下，决定在我们的场景下利用文章中的方法进行下测试。&lt;/p&gt;
+
+&lt;p&gt;先弄清楚要测试的问题，Java的内存问题，大多数集中在Java Heap上面，所以平时遇到native memory的问题几率较低。Heap是Java新对象创建的地方也是GC工作的
+主要区域，平时如果遇到Heap内存问题，通过收集GC日志，基本上就能看出端倪。例如GC时间过长、GC过于频繁的话需要进行GC算法参数的调优，老年代持续增长的话就要看对象是否分配的合理了，这也是一种泄露-导致GC无法回收。不同的GC算法调优的参数不一样，但目前还是用的CMS，有时间可以总结下。&lt;/p&gt;
+
+&lt;p&gt;另外就是native memory的问题，例如出现了Outofmemory的错误：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Allocated 1953546736 bytes of native memory before running out
+Exception in thread &amp;quot;main&amp;quot; java.lang.OutOfMemoryError: unable to create new native thread
+   at java.lang.Thread.start0(Native Method)
+   at java.lang.Thread.start(Thread.java:574)
+   at com.ibm.jtc.demos.StartingAThreadUnderNativeStarvation.main(
+StartingAThreadUnderNativeStarvation.java:22)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;遇到这样的问题，首先要确定的是是不是由堆内存申请导致的，如果不是就有可能是下面两种：
+1. MetaSpace
+2. Native memory&lt;/p&gt;
+
+&lt;p&gt;只要是JVM相关的内存问题，通过相关的监控工具都能很好的判定，例如如果集成了&lt;a href=&#34;http://metrics.dropwizard.io/3.2.2/index.html&#34;&gt;Metrics&lt;/a&gt;，可以得到&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./metrics.png&#34; alt=&#34;metrics&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;通过这样的监控可以很容易的可以看出内存问题是否是出自于JVM。&lt;/p&gt;
+
+&lt;p&gt;扯得有点远了，回归主题：native memory tracking。
+需要清楚的是Native memory tracking是tracking Java进程申请的OS内存，即glibc申请内存的情况。而
+&lt;a href=&#34;https://github.com/jemalloc/jemalloc&#34;&gt;jemalloc&lt;/a&gt;这个工具可以帮助我们抓取到Java进程的内存申请行为。过程也颇为简单：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/jemalloc/jemalloc
+git checkout stable-4
+./autogen.sh
+./configure --enable-perf
+make
+sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;启动ES之前设置下环境变量：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export LD_PRELOAD=/usr/local/lib/libjemalloc.so
+export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_final:true
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;环境变量LD_PRELOAD用来替换原生的glibc malloc。
+然后启动ES，运行一段时间，停掉后会生成多个jeprof.{processId}的文件，通过下面命令生成内存tracking信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jeprof --show_bytes --gif ~/jre/bin/java jeprof*.heap &amp;gt; ./app-profiling.gif
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;./profiling.gif&#34; alt=&#34;profiling&#34; /&gt;
+有将近95%的内存来自于jvm本身，也由于运行时间不是很长，所以可以认为是安全的，如果再持续一段时间这个百分比降低了，说明有内存泄露的可能。&lt;/p&gt;
+
+&lt;p&gt;参考：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.evanjones.ca/java-native-leak-bug.html&#34;&gt;http://www.evanjones.ca/java-native-leak-bug.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://gdstechnology.blog.gov.uk/2015/12/11/using-jemalloc-to-get-to-the-bottom-of-a-memory-leak/&#34;&gt;https://gdstechnology.blog.gov.uk/2015/12/11/using-jemalloc-to-get-to-the-bottom-of-a-memory-leak/&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
     
     <item>
       <title>读书：Functional Programming In Scala （Part 1）</title>
@@ -1812,22 +1880,6 @@ func main() {
      fmt.Println(face)
 }
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>So Busy</title>
-      <link>http://www.heguangnan.com/post/So-Busy/</link>
-      <pubDate>Wed, 05 Aug 2015 20:45:07 +0800</pubDate>
-      
-      <guid>http://www.heguangnan.com/post/So-Busy/</guid>
-      <description>&lt;p&gt;最近几周，有点回到华为的感觉了，没想到在大外企也有这么紧张的时候，但主要是部门管理完全掌握在国人手里。
-整理下最近都是忙了点啥。
-由于产品定位是个电商平台，那么前端theme的开发其实变得不是那么的重要了，重要的是后台能力的构建。也就是提供足够强大、灵活的接口供前端消费，这个重构的过程就是要满足这个定位了。
-这其中有个恶心的地方就是本来平台开发是基于wordpress的，而wordpress本身是个开箱即用的东西，完全不是MVC的框架。但需要提供的接口要满足REST Ful 的。所以很多url 的route 规则需要自己去实现。这样下来发现如果最早使用一个PHP的MVC框架会省不小心啊。
-好在这个过程需要研究下PHP的MVC框架，为后续的演进做好了铺垫。
-另外一个项目就是需要开发自己的CMS系统，这个系统以OPEN API为基础。框架采用后端Java Spring， 前端使用angularJS。
-由于对java确是使用的较少，什么java框架也没玩过，所以就聚焦在了angularJS上了。angularJS是前端的MVC框架，能力出众。值得深入研究使用。最起码javaScripts方面的知识派上用场了。&lt;/p&gt;
 </description>
     </item>
     
