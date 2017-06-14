@@ -7,8 +7,26 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
     <copyright>(c) 2015 Jet He.</copyright>
-    <lastBuildDate>Thu, 25 May 2017 14:59:49 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 14 Jun 2017 16:32:36 +0800</lastBuildDate>
     <atom:link href="http://www.heguangnan.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ElasticSearch：Search &amp; Query DSL的生成</title>
+      <link>http://www.heguangnan.com/post/elastic_dsl/</link>
+      <pubDate>Wed, 14 Jun 2017 16:32:36 +0800</pubDate>
+      
+      <guid>http://www.heguangnan.com/post/elastic_dsl/</guid>
+      <description>&lt;p&gt;这是ES相关的第四篇日志，另外三篇由于是一起写完的，所以放在一起了：&lt;a href=&#34;http://www.heguangnan.com/post/rabbit-elastic/&#34;&gt;ElasticSearch使用&lt;/a&gt;。
+看到现在已经是5个月后，其实各种研究、验证和原型早就开发完了，由于项目需求的原因，用ES实现的电商平台垂直搜索功能直到最近才release。
+相关的代码也在这个project里面，具体内容请移步：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/compasses/elastic-rabbitmq/blob/master/notes/all_about_search&amp;amp;filter.md&#34;&gt;ElasticSearch 深入理解 四：Search &amp;amp; Query DSL的生成&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;项目使用过程中，ES的官方文档基本上捋了一遍，还是比较详尽的，你所想了解的东西都基本上都能得到满足。不得不说一个开源项目的成功不是随随便便的，有很多深厚的积累。另外针对ES的使用如果项目有深层次的需求，基于ES做二次开发，也是非常方便的，它的plugin机制也提供了另外一条各种定制之路。&lt;/p&gt;
+
+&lt;p&gt;以上是自己对ES的理解和总结，至于是『深入理解』也是对自己而言。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Native memory track use jemalloc for ES</title>
@@ -1660,226 +1678,6 @@ Apache使能rewrite rule：&lt;/p&gt;
 &lt;li&gt;没有引入更加复杂的缓存中间件，其实目前有较多的组件可直接使用的。比如&lt;a href=&#34;https://www.varnish-cache.org/&#34;&gt;Varnish&lt;/a&gt;如果有机会使用的话，再进行研究。&lt;/li&gt;
 &lt;li&gt;web 优化cache是比较重要的一环，当然还有其他的更多的零零碎碎的优化，还是需要建立在经验的基础上，多多思考这块就能不断提高了。&lt;/li&gt;
 &lt;/ol&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>golang interface analysis by gdb</title>
-      <link>http://www.heguangnan.com/post/golang-interface-analysis-by-gdb/</link>
-      <pubDate>Fri, 23 Oct 2015 22:45:07 +0800</pubDate>
-      
-      <guid>http://www.heguangnan.com/post/golang-interface-analysis-by-gdb/</guid>
-      <description>
-
-&lt;p&gt;interface 在go语言中，是非常重要的一环，总有点让人感到很玄乎不定的感觉。官方的lib中有大量使用，似乎面向对象和动态绑定也能跟interface扯上关系。总之，如果能更好的理解interface的机理，就能更好的理解和使用Go了。&lt;/p&gt;
-
-&lt;p&gt;interface的较为深层次的探讨在&lt;a href=&#34;http://research.swtch.com/interfaces&#34;&gt;这篇blog&lt;/a&gt;里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。&lt;/p&gt;
-
-&lt;h2 id=&#34;interface-内部存储:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface 内部存储&lt;/h2&gt;
-
-&lt;p&gt;interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// layout of Itab known to compilers
-// allocated in non-garbage-collected memory
-type itab struct {
-    inter  *interfacetype
-
-    _type  *_type
-
-    link   *itab
-
-    bad    int32
-    unused int32
-    fun    [1]uintptr // variable sized
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;在运行时该结构会被runtime库计算出来，保证interface的正常运转。
-使用&lt;strong&gt;go build -gcflags &amp;ldquo;-N -l&amp;rdquo;&lt;/strong&gt;编译便可以是用GDB来debug了。
-断点断在最后一行代码，代码在最后列出。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(gdb) info locals
-b = 200
-s = {tab = 0x7ffff7e0f1c0, data = 0xc82000a3b0}
-nothing = {_type = 0x4c1360, data = 0xc82000a430}
-face = {tab = 0x0, data = 0x0}
-any = {_type = 0x4e4a80, data = 0xc82000a3c0}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;首先看变量*s*，内部有个tab指针和data指针。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(gdb) p  *s.tab
-$24 = {inter = 0x4dffa0, _type = 0x4e4a80, link = 0x0, bad = 0, unused = 0, fun = {4200784}}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;结构就是上面的itab的数据结构，其中的interfacetype 和 _type的结构分别为：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;type interfacetype struct {
-    typ  _type
-
-    mhdr []imethod
-
-}
-// Needs to be in sync with ../cmd/internal/ld/decodesym.go:/^func.commonsize,
-// ../cmd/internal/gc/reflect.go:/^func.dcommontype and
-// ../reflect/type.go:/^type.rtype.
-type _type struct {
-    size       uintptr
-    ptrdata    uintptr // size of memory prefix holding all pointers
-    hash       uint32
-    _unused    uint8
-    align      uint8
-    fieldalign uint8
-    kind       uint8
-    alg        *typeAlg
-
-    // gcdata stores the GC type data for the garbage collector.
-    // If the KindGCProg bit is set in kind, gcdata is a GC program.
-    // Otherwise it is a ptrmask bitmap. See mbitmap.go for details.
-    gcdata  *byte
-    _string *string
-    x       *uncommontype
-
-    ptrto   *_type
-
-    zero    *byte // ptr to the zero value for this type
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;分别看下里面的内容：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(gdb) p  *s.tab.inter
-$26 = {typ = {size = 16, ptrdata = 16, hash = 3958674519, _unused = 0 &#39;\000&#39;, align = 8 &#39;\b&#39;, fieldalign = 8 &#39;\b&#39;, kind = 20 &#39;\024&#39;, alg = 0x592770 &amp;lt;runtime.algarray+240&amp;gt;,
-    gcdata = 0x537142 &amp;quot;\003\004\005\006\a\b\t\n\r\016\017\020\021\022\025\026\031\032\033\037,568&amp;gt;?Ur\236\237\325\365\377&amp;quot;, _string = 0x5161d0, x = 0x4e0018, ptrto = 0x4b6e80,
-    zero = 0x539c40 &amp;lt;runtime.zerovalue&amp;gt; &amp;quot;&amp;quot;}, mhdr = {array = 0x4e0000, len = 1, cap = 1}}
-(gdb) p  *s.tab._type
-$27 = {size = 8, ptrdata = 0, hash = 1148337467, _unused = 0 &#39;\000&#39;, align = 8 &#39;\b&#39;, fieldalign = 8 &#39;\b&#39;, kind = 139 &#39;\213&#39;, alg = 0x5926d0 &amp;lt;runtime.algarray+80&amp;gt;,
-  gcdata = 0x537140 &amp;quot;\001\002\003\004\005\006\a\b\t\n\r\016\017\020\021\022\025\026\031\032\033\037,568&amp;gt;?Ur\236\237\325\365\377&amp;quot;, _string = 0x5161c0, x = 0x4e4ac8, ptrto = 0x4e4d20,
-  zero = 0x539c40 &amp;lt;runtime.zerovalue&amp;gt; &amp;quot;&amp;quot;}
-(gdb) p  *s.tab.inter.typ._string
-$28 = 0x50b930 &amp;quot;main.Stringer&amp;quot;
-(gdb) p  *s.tab._type._string
-$29 = 0x50b920 &amp;quot;main.Binary&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;可以清晰的看出，itab的type是interface所包含值的type信息：&lt;strong&gt;main.Binary&lt;/strong&gt;，而tab的interface type为该interface的类型信息: &lt;strong&gt;main.Stringer&lt;/strong&gt;。
-他们的size是不一样的。Binary的size为8个字节，而interface是16个字节。
-&lt;strong&gt;想想为啥interface是16个字节的大小？这里可以大胆猜测16个字节是系统内存管理的对齐对齐最小字节数，即libc之前的内存管理里面分配内存都是以16字节作为对齐的，这样也是为了方便内存管理吧。&lt;/strong&gt;
-要想搞清楚tab里面所有变量的意义，那是不可能的了，在GDB调试过程中，发现中间穿插大量的汇编代码，特别是runtime库实现interface计算过程中。
-继续，s的data也是个指针可以直接将其值打印出来：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(gdb) p *uint64(s.data)
-$22 = 200
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;因为我们事先知道该值类型为64位的uint型。
-接着看下any和nothing这两个变量。该两个变量有着不同的类型。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(gdb) p nothing
-$51 = {_type = 0x4c1360, data = 0xc82000a430}
-(gdb) p any
-$52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;针对interface go的编译器有两种的内存优化策略，就像上面两个变量，他们就不再有itab了，只是type，原因是他们没有方法集。上面文章中说的第二种优化策略，在实际测试中并没有验证出来，即如果interface里面的data值是32位的，则该data字段会直接存该值，不会用指针多一层引用了，即代码中的s32。&lt;/p&gt;
-
-&lt;p&gt;通过上面可以看出interface是runtime的产物，是go运行时的对象。这个很像C++中的虚函数表的行为。
-从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
-&lt;strong&gt;这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;interface使用:9d53d84363d3fbdfe9ce199ea3491f41&#34;&gt;interface使用&lt;/h2&gt;
-
-&lt;p&gt;关于interface的使用方面，有不少文章做了介绍，比如：&lt;a href=&#34;http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go&#34;&gt; How to use interfaces in Go&lt;/a&gt;和&lt;a href=&#34;https://golang.org/doc/effective_go.html#interfaces&#34;&gt;Effective Go&lt;/a&gt;。
-从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。
-interface可以接纳任意类型，因interface内部的type信息是完备的：用type switch 可以获取interface内部value的类型信息，如下所示。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;type Stringer interface {
-    String() string
-}
-
-var value interface{} // Value provided by caller.
-switch str := value.(type) {
-case string:
-    return str
-case Stringer:
-    return str.String()
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;interface 更为抽象化的接口，通过interface来定义你的行为方法，行为方法里面会对对象数据产生变化，这个也是需要进行隔离的。跟与C++编码那种面向对象的思想有点出入，看起来不是那么直观。面向对象即先定义对象，和对象的行为。Go里面也是可以定义自己的对象和方法，然后再把这些方法抽象成一个类型：interface，interface就可以使用在函数接口当中，其实此时传递的时候还是你所定义的对象。&lt;/p&gt;
-
-&lt;p&gt;总体上感觉interface比面向对象更抽象了一层，需要在更多的实际开发过程中慢慢体会。&lt;/p&gt;
-
-&lt;p&gt;附：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;package main
-
-import (
-     &amp;quot;fmt&amp;quot;
-     &amp;quot;strconv&amp;quot;
-)
-
-type Stringer interface {
-    String() string
-}
-
-func ToString(any interface{}) string {
-    if v, ok := any.(Stringer); ok {
-        return v.String()
-    }
-    switch v := any.(type) {
-    case int:
-        return strconv.Itoa(v)
-    case float32:
-        return strconv.FormatFloat(float64(v), &#39;g&#39;, -1, 32)
-    }
-    return &amp;quot;???&amp;quot;
-}
-
-type Binary uint64
-type Binary32 uint32
-
-func (i Binary) String() string {
-    return strconv.FormatUint(i.Get(), 2)
-}
-
-func (i Binary) Get() uint64 {
-    return uint64(i)
-}
-
-func (i Binary32) String() string {
-    return strconv.FormatUint(uint64(i.Get()), 2)
-}
-
-func (i Binary32) Get() uint64 {
-    return uint64(i)
-}
-
-func main() {
-    
-     b := Binary(200)
-     b32 := Binary32(200)
-    
-     s := Stringer(b)
-     s32 := Stringer(b32)
-    
-     any := (interface{})(b)
-    
-     fmt.Println(s.String())
-     fmt.Println(s32.String())
-    
-     fmt.Println(ToString(any))
-    
-     var nothing interface{}
-
-     nothing = uint64(200)
-     fmt.Println(nothing)
-
-     var face Stringer
-    
-     fmt.Println(face)
-}
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
