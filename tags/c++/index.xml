@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C&#43;&#43; on 三十重围</title>
+    <link>http://www.heguangnan.com/tags/c&#43;&#43;/</link>
+    <description>Recent content in C&#43;&#43; on 三十重围</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-EN</language>
+    <lastBuildDate>Wed, 03 Jun 2015 19:45:07 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.heguangnan.com/tags/c++/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>libuv 初认识</title>
+      <link>http://www.heguangnan.com/post/libuv-start/</link>
+      <pubDate>Wed, 03 Jun 2015 19:45:07 +0800</pubDate>
+      
+      <guid>http://www.heguangnan.com/post/libuv-start/</guid>
+      <description>说明： 本篇文章主要从An Introduction to libuv这本书翻译学习而来。
+开始 libuv是NodeJS的底层库，实现了异步、事件驱动的编程模式。主要功能就是实现了事件循环，基于I/O或者其他事件的通知回调。比如广泛使用回调的定时器、非阻塞的网络通信、异步的文件读取、子线程相关的通信等等。
+事件循环 libuv的编译就不用多说，参考libuv的github网址。就能轻松搞定。我是在Linux上做的相关实验，版本是： Linux ubuntu 3.16.0-33-generic #44~14.04.1-Ubuntu SMP Fri Mar 13 10:33:29 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux。
+先从运行一个程序开始：
+#include &amp;quot;uv.h&amp;quot; #include &amp;lt;stdio.h&amp;gt; #include &amp;lt;stdlib.h&amp;gt; int main() { uv_loop_t *loop = malloc(sizeof(uv_loop_t)); uv_loop_init(loop); printf(&amp;quot;Now quitting.\n&amp;quot;); uv_run(loop, UV_RUN_DEFAULT); uv_loop_close(loop); free(loop); return 0; }  编译要使用gyp，因为源码包里面带有相应的samples，根据samples很容易的写出一个gyp 的build文件：
+{ &#39;targets&#39;: [ { &#39;dependencies&#39;: [&#39;../../uv.gyp:libuv&#39;], &#39;target_name&#39;: &#39;helloword&#39;, &#39;type&#39;: &#39;executable&#39;, &#39;sources&#39;: [ &#39;main.c&#39;, ] } ], }  然后执行** gyp &amp;ndash;format=make -Duv_library=static_library &amp;ndash;depth=$PWD build.</description>
+    </item>
+    
+  </channel>
+</rss>

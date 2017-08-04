@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="author" content="Jet He">
 		<meta name="description" content="技术点滴">
-		<meta name="generator" content="Hugo 0.15" />
+		<meta name="generator" content="Hugo 0.24.1" />
 		<title>Nginx &#43; Docker Cluster &amp; session sticky &middot; 三十重围</title>
 		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
 		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
@@ -71,7 +71,7 @@
                 <section id="post-body">
                     
 
-<h2 id="基本配置:52606dea592d3c735e79f2d8234d11ea">基本配置</h2>
+<h2 id="基本配置">基本配置</h2>
 
 <p>本地开发环境和生产环境还是有很大的区分，最近性能测试发现结果很不好，于是想自己去搭建一个类似生产环境的性能测试环境。</p>
 
@@ -160,7 +160,7 @@ server {
 3. https的crt和key需要<a href="http://www.lovelucy.info/nginx-ssl-certificate-https-website.html">自己生成</a>。
 另外这个Nginx 是跑在宿主机上的，修改配置有要执行reload命令使其生效。</p>
 
-<h2 id="session-persistence:52606dea592d3c735e79f2d8234d11ea">session persistence</h2>
+<h2 id="session-persistence">session persistence</h2>
 
 <p>生产环境需要将一个用户的请求要路由到同一个server上面，因为server很多的业务处理还是需要server里面的session配合。上面用ip_hash方式做load balance，但是考虑到用户使用proxy或者流量不均衡等因素。还是要使用session sticky的方式。
 Nginx默认不支持session sticky，需要重新编译安装这个插件；因为直接使用公司的Nginx版本，所以懒得重新编译了。使用很简单，直接拷贝个bin文件，然后修改成这个样子：</p>

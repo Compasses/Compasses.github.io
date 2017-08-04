@@ -6,9 +6,10 @@
     <description>Recent content in Abouts on 三十重围</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-EN</language>
-    <copyright>(c) 2015 Jet He.</copyright>
     <lastBuildDate>Sat, 20 Jun 2015 14:02:37 +0200</lastBuildDate>
-    <atom:link href="http://www.heguangnan.com/about/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://www.heguangnan.com/about/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>About</title>
@@ -16,38 +17,10 @@
       <pubDate>Sat, 20 Jun 2015 14:02:37 +0200</pubDate>
       
       <guid>http://www.heguangnan.com/about/</guid>
-      <description>&lt;p&gt;没错这是一首歌:&lt;/p&gt;
-
-&lt;p&gt;What if the storm ends and I don&amp;rsquo;t see you
-As you are now ever again?
-The perfect halo of gold hair and lightning
-Sets you off against the planet&amp;rsquo;s last dance&lt;/p&gt;
-
-&lt;p&gt;Just for a minute the silver-forked sky
-Lifts you up like a star that I will follow
-But now it&amp;rsquo;s found us like I have a found you
-I don&amp;rsquo;t wanna run, just overwhelm me&lt;/p&gt;
-
-&lt;p&gt;What if the storm ends? At least that&amp;rsquo;s nothing
-Except the memory, a distant echo I won&amp;rsquo;t pin down
-I&amp;rsquo;ve walked unsettled rattle cage after cage
-Until my blood boils&lt;/p&gt;
-
-&lt;p&gt;I wanna see you as you are now
-Every single day that I am living
-Painted in flames, a peeling thunder
-Be the lightning in me that strikes relentless&lt;/p&gt;
-
-&lt;p&gt;What if the storm ends and I don&amp;rsquo;t see you
-As you are now ever again?
-The perfect halo of gold hair and lightning
-Sets you off against the planet&amp;rsquo;s last dance&lt;/p&gt;
-
-&lt;p&gt;Just for a minute the silver-forked sky
-Lifts you up like a star that I will follow
-But now it&amp;rsquo;s found us like I have a found you
-I don&amp;rsquo;t wanna run, just overwhelm me&lt;/p&gt;
-</description>
+      <description>没错这是一首歌:
+What if the storm ends and I don&amp;rsquo;t see you As you are now ever again? The perfect halo of gold hair and lightning Sets you off against the planet&amp;rsquo;s last dance
+Just for a minute the silver-forked sky Lifts you up like a star that I will follow But now it&amp;rsquo;s found us like I have a found you I don&amp;rsquo;t wanna run, just overwhelm me
+What if the storm ends?</description>
     </item>
     
   </channel>

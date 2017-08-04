@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="author" content="Jet He">
 		<meta name="description" content="技术点滴">
-		<meta name="generator" content="Hugo 0.15" />
+		<meta name="generator" content="Hugo 0.24.1" />
 		<title>Kibana and Grafana &middot; 三十重围</title>
 		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
 		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
@@ -77,11 +77,11 @@
 
 <p>在研究怎么样更好的去检索ES时，利用了Kibana的Dev Tools并进一步了解到了他的visualize功能。因为之前也使用过Grafana，发现它也支持ES，发现其在可视化ES的数据时更加方便和自由。</p>
 
-<h3 id="es数据类型:c71d04dce76456acbb9e0fb11dd14402">ES数据类型</h3>
+<h3 id="es数据类型">ES数据类型</h3>
 
 <p>数据分析跟全文检索不一样，如果字段类型是text的，ES会做分词处理，这种主要用于全文检索。数据分析时，检索的时候可能会看到不想要的结果，所以如果单纯的做可视化，最好将Mapping修改下，将字段类型改为keyword。这个目前只在用Grafana的时候有些问题，Kibana倒是问题不大。</p>
 
-<h3 id="kibana-https-www-elastic-co-products-kibana:c71d04dce76456acbb9e0fb11dd14402"><a href="https://www.elastic.co/products/kibana">Kibana</a></h3>
+<h3 id="kibana-https-www-elastic-co-products-kibana"><a href="https://www.elastic.co/products/kibana">Kibana</a></h3>
 
 <p>Kibana安装非常方便，官网下载，并配置下ES的URL就可以连上了。Kibana使用的时候会有副作用，它会在你的ES里面创建一个它所需要的Index，并会有较为频繁的query。如果是生产环境，ES存的是核心数据要慎用了。安装好启动指定需要分析的Index，就能看到以下几个Tab。</p>
 
@@ -106,7 +106,7 @@
 
 <p>鼠标点上GET那一行就能发出去了。手写JSON也毫不费力。</p>
 
-<h3 id="grafana-https-grafana-com:c71d04dce76456acbb9e0fb11dd14402"><a href="https://grafana.com/">Grafana</a></h3>
+<h3 id="grafana-https-grafana-com"><a href="https://grafana.com/">Grafana</a></h3>
 
 <p>印象中Grafana是<a href="https://www.influxdata.com/">InfluxDB</a>可视化工具，但基于Grafana良好的架构，DataSource可以变得多样性了，现在是支持ElasticSearch作为DataSource的。
 Grafana的安装也非常简单，解压启动就可以了。DataSource都是动态添加上去的。Grafana作为一个纯粹的可视化工具，灵活性做到了极致。使用ElasticSearch作为DataSource，指定对应的Index，就可以建立DashBoard就行数据可视化了。相比Kibana，Grafana的template功能能把数据按照任意的维度进行切分展示，这就是它的强大之处。</p>
@@ -141,7 +141,7 @@ Grafana的安装也非常简单，解压启动就可以了。DataSource都是动
 
 <p>Grafana还有较为完善的用户管理，这也是强于Kibana的地方。</p>
 
-<h3 id="summary:c71d04dce76456acbb9e0fb11dd14402">Summary</h3>
+<h3 id="summary">Summary</h3>
 
 <p>不管是Kibana还是Grafana，都会容易联想到系统监控，日志分析。没错这是它们的强项，不管事序列化的数据还是Metrics Data都能很好的展示出来，让对应的DevOps做监控预警等。从另一方面讲，其他的任何数据，能把数据保存到ES，配合Grafana或者Kibana都能很好的做分析展示。当然更看好Grafana，随着Grafana的功能进一步增强，会变得功能更加强大，图表也会更加多样性。下一步结合Spark或者Hadoop，做个实时的BI也是个不错的方向哦。</p>
 

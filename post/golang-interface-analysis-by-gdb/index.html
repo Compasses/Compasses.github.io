@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="author" content="Jet He">
 		<meta name="description" content="技术点滴">
-		<meta name="generator" content="Hugo 0.15" />
+		<meta name="generator" content="Hugo 0.24.1" />
 		<title>golang interface analysis by gdb &middot; 三十重围</title>
 		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
 		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
@@ -55,7 +55,7 @@
                     </h1>
                     <h2 class="headline">
                     Oct 23, 2015 22:45
-                    · 566 words
+                    · 565 words
                     · 3 minutes read
                       <span class="tags">
                       
@@ -75,7 +75,7 @@
 
 <p>interface的较为深层次的探讨在<a href="http://research.swtch.com/interfaces">这篇blog</a>里面已经有较为详细的介绍。但是缺乏一些实践，本文遍结合此文，使用GDB实际研究一下。</p>
 
-<h2 id="interface-内部存储:9d53d84363d3fbdfe9ce199ea3491f41">interface 内部存储</h2>
+<h2 id="interface-内部存储">interface 内部存储</h2>
 
 <p>interface的值，其实是两个指针的组合：data 和 tab。data 实际指向值的指针，tab是go runtime的一个struct：</p>
 
@@ -187,7 +187,7 @@ $52 = {_type = 0x4e4a80, data = 0xc82000a3c0}
 从而也可以意识到interface是类型和接口同时兼备的，任何变量都可以赋值给interface，如果该变量是没有接口方法的话，那么interface就是只存其类型信息，否则如果有接口方法，就会多一个itab出来，里面会有其对应的函数列表。
 <strong>这样也就很容易理解，interface可以包容任何变量了，因为在运行时，interface变量会记录其所包含值的类型信息。</strong></p>
 
-<h2 id="interface使用:9d53d84363d3fbdfe9ce199ea3491f41">interface使用</h2>
+<h2 id="interface使用">interface使用</h2>
 
 <p>关于interface的使用方面，有不少文章做了介绍，比如：<a href="http://jordanorelli.com/post/32665860244/how-to-use-interfaces-in-go"> How to use interfaces in Go</a>和<a href="https://golang.org/doc/effective_go.html#interfaces">Effective Go</a>。
 从上面部分可以了解到，interface是一种运行时类型，既有函数集还有数据。interface本身定义只能定义方法集，你所要做的就是把这些方法赋予某个Object上面。这样Object就有了这个interface的能力，任意使用这个interface作为参数或者值的地方，Object也就可以畅通无阻了。

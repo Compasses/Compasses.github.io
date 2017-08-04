@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blcokchain on 三十重围</title>
+    <link>http://www.heguangnan.com/tags/blcokchain/</link>
+    <description>Recent content in Blcokchain on 三十重围</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-EN</language>
+    <lastBuildDate>Tue, 25 Jul 2017 14:59:49 +0800</lastBuildDate>
+    
+	<atom:link href="http://www.heguangnan.com/tags/blcokchain/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>加密算法</title>
+      <link>http://www.heguangnan.com/post/understanding_ecc/</link>
+      <pubDate>Tue, 25 Jul 2017 14:59:49 +0800</pubDate>
+      
+      <guid>http://www.heguangnan.com/post/understanding_ecc/</guid>
+      <description>密码学技术是区块链技术的基石，不管是比特币还是以太坊，交易的完成离不开密码学技术的应用。例如用户签名，P2P网络数据的传输等，整个系统的运转其实是个混合密码系统。 在理解区块链技术的过程中，避免不了密码学的认识，其中椭圆曲线密码使用的更为广泛，由于其效率高、强度大被比特币和以太坊大量使用。如果之前没有做过密码学相关的工作， 想做好区块链技术的话，还是要好好研究下密码学的。所以在理解认识椭圆曲线密码之前，先认识下RSA和DH密码交换。
+RSA RSA也称为非对称密码，椭圆曲线只不过是非对称密码的另一种实现和应用。 RSA计算过程： 从图中可以看出，一切从p和q出发，两个比较大的质数，求出E，D，N的过程。其中（E，N）组合成公钥，（D，N）组合成私钥。其中：
+L = lcm(p-1, q-1) 最小公倍数 gcd(E, L) = 1 最大公约数为1 1&amp;lt;E&amp;lt;L 1&amp;lt;D&amp;lt;L 加密过程：密文 = 明文^E mod N 解密过程：明文 = 密文^D mod N  算法看起来非常大简洁和清晰，但是背后的原理就复杂的多了，需要用到很多数论、代数的知识。 RSA在使用过程中大多数的场景都是用来进行密钥交换，因为安全性好，不存在共享密钥问题，但是效率上不如对称密钥，所以很多情况下都是混合使用对称和非对称加密。 同样的使用RSA也可以进行数字签名：
+签名 = 消息^D mod N 签名消息 = 签名^E mod N  可以看出数字签名和加密解密过程正好相反。 综上，RSA是利用了大数质数分解难题。
+密钥交换/协商 共享密钥就会有密钥配送问题，Diffie-Hellman是解决这一问题的重要算法。 其计算流程：
+对于可公开的数，G和P，P是一个非常大的质数，而G则是P的一个生成元。DH跟椭圆曲线加密算法一样，都是建立在离散对数问题上。 根据G^A mod P计算出A，就是所谓的有限域上的离散对数问题。目前还没有有效的算法来解决这个问题。 生成元的概念在近世代数中可以找到，是群论中的基础。G是P的生成元满足，G的乘方结果与1到p-1的数字一一对应。例如2是13的生成元，满足2的一次方到2的十二次方的结果 跟13取余，正好在1到12相对应。 与RSA不同，Diffie-Hellman是利用了离散对数问题，即以一个大质数P为模，已知G和G^x mod P，求x，同样的没有有效算法。
+椭圆曲线密码学 椭圆曲线密码学:Elliptic Curve Cryptography，是利用椭圆曲线来实现的密码技术，与RSA相比，密钥可以更短，但强度更高。现在已广泛使用。 特别blockchain技术中，加密是重要的一环，比特币中便是使用了椭圆曲线密码技术，以太坊中也是使用的椭圆曲线DSA， 更为一般的HTTPS中使用的TLS也是基于椭圆曲线实现的密码交换。
+椭圆曲线密码技术包含三个方面：
+ 基于椭圆曲线的公钥密码 基于椭圆曲线的数字签名 基于椭圆曲线的密钥交换  下面会对这些技术进行一一梳理，现在先看下椭圆曲线的定义：</description>
+    </item>
+    
+  </channel>
+</rss>
