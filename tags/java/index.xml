@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>Native memory track use jemalloc for ES</title>
-      <link>http://www.heguangnan.com/post/java_mem_track/</link>
+      <title>ES memory leak</title>
+      <link>http://www.heguangnan.com/post/es_memleak/</link>
       <pubDate>Thu, 25 May 2017 14:59:49 +0800</pubDate>
       
-      <guid>http://www.heguangnan.com/post/java_mem_track/</guid>
+      <guid>http://www.heguangnan.com/post/es_memleak/</guid>
       <description>从这篇文章中得知ES在5.1版本中有原生内存泄露的问题， 而碰巧我们生产环境中也在使用5.1系列的版本，但是场景不一样。比如我们并没有使用x-pack，但是还是放心不下，决定在我们的场景下利用文章中的方法进行下测试。
 先弄清楚要测试的问题，Java的内存问题，大多数集中在Java Heap上面，所以平时遇到native memory的问题几率较低。Heap是Java新对象创建的地方也是GC工作的 主要区域，平时如果遇到Heap内存问题，通过收集GC日志，基本上就能看出端倪。例如GC时间过长、GC过于频繁的话需要进行GC算法参数的调优，老年代持续增长的话就要看对象是否分配的合理了，这也是一种泄露-导致GC无法回收。不同的GC算法调优的参数不一样，但目前还是用的CMS，有时间可以总结下。
 另外就是native memory的问题，例如出现了Outofmemory的错误：
