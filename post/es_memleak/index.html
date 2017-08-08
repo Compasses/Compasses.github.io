@@ -10,11 +10,11 @@
 		<title>ES memory leak &middot; 三十重围</title>
 		<link rel="shortcut icon" href="http://www.heguangnan.com/images/favicon.ico">
 		<link rel="stylesheet" href="http://www.heguangnan.com/css/style.css">
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/styles/atom-one-light.min.css">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/highlight.css">
 		
 
 		
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="http://www.heguangnan.com/css/font-awesome.min.css">
 		
 
 		
@@ -26,18 +26,9 @@
 	
 		<a href='http://www.heguangnan.com/'> <span class="arrow">←</span>Home</a>
 	
-
-	
-		<a href='http://www.heguangnan.com/post'>Archive</a>
-	
-
-	
-		<a href='http://www.heguangnan.com/tags'>Tags</a>
-	
-
-	
-		<a href='http://www.heguangnan.com/about'>About</a>
-	
+	<a href='http://www.heguangnan.com/post'>Archive</a>
+	<a href='http://www.heguangnan.com/tags'>Tags</a>
+	<a href='http://www.heguangnan.com/about'>About</a>
 
 	
 
@@ -49,9 +40,7 @@
             <article class="post">
                 <header>
                     <h1>
-                        
-                            Native memory track use jemalloc for ES
-                        
+                        ES memory leak
                     </h1>
                     <h2 class="headline">
                     May 25, 2017 14:59
@@ -68,6 +57,7 @@
                       </span>
                     </h2>
                 </header>
+                
                 <section id="post-body">
                     <p>从<a href="https://www.elastic.co/blog/tracking-down-native-memory-leaks-in-elasticsearch">这篇文章</a>中得知ES在5.1版本中有原生内存泄露的问题，
 而碰巧我们生产环境中也在使用5.1系列的版本，但是场景不一样。比如我们并没有使用x-pack，但是还是放心不下，决定在我们的场景下利用文章中的方法进行下测试。</p>
@@ -170,19 +160,19 @@ export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_final:tr
     
     <p class="small">
     
-        © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
+       © Copyright 2017 <i class="fa fa-heart" aria-hidden="true"></i> Jet He
     
     </p>
     <p class="small">
-        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="http://nodejh.com">nodejh</a>
+        Powered by <a href="http://www.gohugo.io/">Hugo</a> Theme By <a href="https://github.com/nodejh/hugo-theme-cactus-plus">nodejh</a>
     </p>
 </footer>
 
         </section>
 
-        <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+        <script src="http://www.heguangnan.com/js/jquery-2.2.4.min.js"></script>
 <script src="http://www.heguangnan.com/js/main.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.7.0/highlight.min.js"></script>
+<script src="http://www.heguangnan.com/js/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 
 
@@ -191,7 +181,7 @@ export MALLOC_CONF=prof:true,lg_prof_interval:30,lg_prof_sample:17,prof_final:tr
 
 
 <script>
-var baiduAnalytics = '\x3cscript\x3e var _hmt = _hmt || [];(function() {var hm = document.createElement(\x22script\x22); hm.src = \x22https:\/\/hm.baidu.com\/hm.js?4a498b3d0d8c938e221ea01413a0ead3\x22;var s = document.getElementsByTagName(\x22script\x22)[0];s.parentNode.insertBefore(hm, s);})();\x3c\/script\x3e';
+var baiduAnalytics = '4a498b3d0d8c938e221ea01413a0ead3';
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
